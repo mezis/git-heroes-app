@@ -1,16 +1,19 @@
 source 'https://rubygems.org'
 
+#
+# Rails basics
+#
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.6'
+gem 'rails', '~> 4.2'
 # Use postgresql as the database for Active Record
-gem 'pg', '~> 0.15'
+gem 'pg'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails'
 # Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
+gem 'uglifier'
 # Use CoffeeScript for .coffee assets and views
-gem 'coffee-rails', '~> 4.1.0'
+gem 'coffee-rails'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
@@ -19,26 +22,84 @@ gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 2.0'
-# bundle exec rake doc:rails generates the API under doc/api.
-gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'jbuilder'
 
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
+#
+# Models
+#
 
-# Use Unicorn as the app server
-# gem 'unicorn'
+# Adds foreign keys to the migration DSL
+gem 'foreigner', '~> 1.7'
 
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
+#
+# Controllers
+#
+
+# Authentication
+gem 'omniauth-github'
+
+# Authorization
+gem 'pundit'
+
+#
+# Service layer
+#
+
+# HTTP client
+gem 'faraday'
+gem 'faraday_middleware'
+gem 'faraday-http-cache'
+gem 'net-http-persistent'
+
+# Github API client
+gem 'octokit'
+
+#
+# Background jobs
+#
+
+gem 'resque'
+gem 'resque-retry'
+gem 'resque-metrics'
+gem 'resque-lock-timeout'
+gem 'resque-lifecycle'
+
+#
+# Caching
+#
+
+# Rails, Rack, Session cache
+gem 'redis-rails'
+
+#
+# Serving & hosting
+#
+
+# 12factor support
+gem 'dotenv-rails'
+gem 'rails_12factor'
+gem 'foreman'
+
+# Use Puma as the app server
+gem 'puma'
+
+#
+# Development/test support
+#
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
-end
 
-group :development do
-  # Access an IRB console on exception pages or by using <%= console %> in views
-  gem 'web-console', '~> 2.0'
+  # REPLs
+  gem 'pry-nav'
+  gem 'pry-doc'
+  gem 'better_errors'
+
+  # Unit/integration testing
+  gem 'rspec-rails'
+
+  # Test factories
+  gem 'factory_girl_rails'
 end
 
