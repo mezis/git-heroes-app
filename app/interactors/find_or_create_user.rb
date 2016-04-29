@@ -2,18 +2,29 @@
 class FindOrCreateUser
   include Interactor
 
+  delegate :auth_hash, :user, to: :context
+
   def call
     # binding.pry
-    uid = context.auth_hash.uid
+    uid = auth_hash.uid
 
     context.user = User.find_or_create_by!(github_id: uid) do |u|
-      u.login      = context.auth_hash.info.nickname
-      u.name       = context.auth_hash.info.name
-      u.email      = context.auth_hash.info.email
-      u.avatar_url = context.auth_hash.info.image
+      assign_attributes(u, auth_hash)
       context.created = true
     end
 
-    context.user.update_attributes! github_token: context.auth_hash.credentials.token
+    assign_attributes(user, auth_hash)
+    user.update_attributes! github_token: auth_hash.credentials.token
+  end
+
+  private
+
+  def assign_attributes(user, hash)
+    user.assign_attributes(
+      login:      hash.info.nickname,
+      name:       hash.info.name,
+      email:      hash.info.email,
+      avatar_url: hash.info.image,
+    )
   end
 end
