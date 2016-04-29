@@ -36,8 +36,6 @@ gem 'haml-rails'
 # Models
 #
 
-# Adds foreign keys to the migration DSL
-gem 'foreigner', '~> 1.7'
 
 #
 # Controllers
@@ -104,8 +102,7 @@ group :development, :test do
   gem 'byebug'
 
   # REPLs
-  gem 'pry-nav'
-  gem 'pry-doc'
+  gem 'pry-rails'
   gem 'better_errors'
   gem 'binding_of_caller'
 
