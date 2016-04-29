@@ -24,6 +24,14 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder'
 
+
+#
+# Views
+#
+
+# Better view syntax
+gem 'haml-rails'
+
 #
 # Models
 #
@@ -44,6 +52,9 @@ gem 'pundit'
 #
 # Service layer
 #
+
+# Controller services
+gem 'interactor'
 
 # HTTP client
 gem 'faraday'
@@ -83,6 +94,7 @@ gem 'foreman'
 # Use Puma as the app server
 gem 'puma'
 
+
 #
 # Development/test support
 #
@@ -95,6 +107,7 @@ group :development, :test do
   gem 'pry-nav'
   gem 'pry-doc'
   gem 'better_errors'
+  gem 'binding_of_caller'
 
   # Unit/integration testing
   gem 'rspec-rails'

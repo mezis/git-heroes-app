@@ -1,0 +1,9 @@
+%h1 Homepage#show
+%p Find me in app/views/homepage/show.html.haml
+
+- if current_user
+  %p Logged in.
+  = link_to 'Log out', session_path, method: :delete
+- else
+  %p Logged out.
+  = link_to 'Log in', new_session_path
