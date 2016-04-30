@@ -3,4 +3,6 @@ class Organisation < ActiveRecord::Base
 
   has_many :organisation_users, dependent: :destroy
   has_many :users, through: :organisation_users
+
+  has_many :repositories, as: :owner
 end

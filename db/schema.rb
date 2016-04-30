@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160429201526) do
+ActiveRecord::Schema.define(version: 20160430145237) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,29 @@ ActiveRecord::Schema.define(version: 20160429201526) do
   add_index "organisations", ["github_id"], name: "index_organisations_on_github_id", unique: true, using: :btree
   add_index "organisations", ["name"], name: "index_organisations_on_name", unique: true, using: :btree
 
+  create_table "repositories", force: :cascade do |t|
+    t.integer  "owner_id",   null: false
+    t.string   "owner_type", null: false
+    t.string   "name",       null: false
+    t.integer  "github_id",  null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "repositories", ["github_id"], name: "index_repositories_on_github_id", unique: true, using: :btree
+  add_index "repositories", ["owner_id"], name: "index_repositories_on_owner_id", using: :btree
+  add_index "repositories", ["owner_type", "owner_id"], name: "index_repositories_on_owner_type_and_owner_id", using: :btree
+
+  create_table "user_repositories", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "repository_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+  end
+
+  add_index "user_repositories", ["repository_id"], name: "index_user_repositories_on_repository_id", using: :btree
+  add_index "user_repositories", ["user_id"], name: "index_user_repositories_on_user_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "token"
     t.integer  "github_id",    null: false
@@ -52,4 +75,6 @@ ActiveRecord::Schema.define(version: 20160429201526) do
 
   add_foreign_key "organisation_users", "organisations"
   add_foreign_key "organisation_users", "users"
+  add_foreign_key "user_repositories", "repositories"
+  add_foreign_key "user_repositories", "users"
 end

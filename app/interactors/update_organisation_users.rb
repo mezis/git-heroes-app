@@ -13,13 +13,11 @@ class UpdateOrganisationUsers
 
     client = GithubClient.new(user)
 
-    organisation.users = all_members.map do |hash|
-      User.find_or_create_by!(github_id: hash.id) do |o|
-        o.login      = hash.login
-        o.avatar_url = hash.avatar_url
-      end
-      # TODO: update users in background (to get name, email)
-    end
+    organisation.users = all_members.map { |hash|
+      result = FindOrCreateUser.call(data: hash)
+      context.fail! error: 'could not find/create user' unless result.success?
+      result.record
+    }.to_a
   end
 
   private
@@ -34,7 +32,7 @@ class UpdateOrganisationUsers
       while uri = client.last_response.rels[:next]&.href
         client.get(uri).each { |h| y << h }
       end
-    end
+    end.lazy
   end
 end
 

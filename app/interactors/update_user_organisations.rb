@@ -1,16 +1,21 @@
 class UpdateUserOrganisations
   include Interactor
 
+  delegate :user, to: :context
+
   def call
-    context.fail! 'missing user' unless context.user.present?
+    context.fail! 'missing user' unless user.present?
 
-    client = GithubClient.new(user)
+    user.organisations = client.organizations.map { |hash|
+      result = FindOrCreateOrganisation.call(data: hash)
+      context.fail! error: 'could not find/create org' unless result.success?
+      result.record
+    }
+  end
 
-    orgs = client.organizations.map do |hash|
-      Organisation.find_or_create_by!(github_id: hash.id) do |o|
-        o.name = hash.login
-      end
-    end
-    context.user.organisations = orgs
+  private
+
+  def client
+    @client ||= GithubClient.new(user)
   end
 end
