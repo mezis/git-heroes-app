@@ -4,10 +4,14 @@ class SessionsController < ApplicationController
   end
 
   def create
-    result = FindOrCreateUser.call(auth_hash: request.env['omniauth.auth'])
+    auth_hash = request.env['omniauth.auth']
+    result = FindOrCreateUser.call(
+      data:    auth_hash.extra.raw_info,
+      token:  auth_hash.credentials.token,
+    )
 
     if result.success?
-      authenticate! result.user
+      authenticate! result.record
 
       if result.created
         flash[:notice] = 'Account created'
