@@ -37,6 +37,12 @@ module GitHeroes
     # and deployment instructions.
     config.active_job.queue_adapter = :resque
 
+    # Avoid repeated log entries
+    # https://github.com/rails/rails/issues/11415
+    console do
+      ActiveRecord::Base.logger = Rails.logger = ActiveSupport::Logger.new(STDOUT)
+    end
+
     def redis
       @redis ||= begin
         uri = URI.parse(ENV.fetch('REDIS_URL'))
