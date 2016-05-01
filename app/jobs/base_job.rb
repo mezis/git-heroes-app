@@ -29,6 +29,7 @@ class BaseJob < ActiveJob::Base
 
   rescue_from(StandardError) do |e|
     Rails.logger.warn "failure in #{self.class}: #{e.class} (#{e.message}}"
+    Rails.logger.debug e.backtrace.take(5).join("\n")
     if job_stats.attempts > max_attempts
       Rails.logger.info "final failure"
       raise e

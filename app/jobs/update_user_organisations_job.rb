@@ -1,7 +1,7 @@
 class UpdateUserOrganisationsJob < BaseJob
 
   def perform(options = {})
-    user = User.find_by_id(options[:user_id])
+    user = User.find_by_id(options[:actor_id])
     result = UpdateUserOrganisations.call(user: user)
   
     if result.failure?
