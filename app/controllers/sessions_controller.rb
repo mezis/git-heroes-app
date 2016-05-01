@@ -10,15 +10,17 @@ class SessionsController < ApplicationController
       token:  auth_hash.credentials.token,
     )
 
-    if result.success?
-      authenticate! result.record
-
-      if result.created
-        flash[:notice] = 'Account created'
-      else
-        flash[:notice] = 'Welcome back'
-      end
+    unless result.success?
+      flash[:alert] = 'Oh now! Somehow we could not log you in.'
+      redirect_to root_path
+      return
     end
+    authenticate! result.record
+
+    UpdateUserOrganisationsJob.perform_later actor_id: current_user.id, user_id: current_user.id
+    UpdateUserRepositoriesJob.perform_later  actor_id: current_user.id, user_id: current_user.id
+
+    flash[:notice] = result.created ? 'Account created' : 'Welcome back'
 
     redirect_to root_path
   end
