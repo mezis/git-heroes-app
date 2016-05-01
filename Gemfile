@@ -67,11 +67,11 @@ gem 'octokit'
 # Background jobs
 #
 
+gem 'globalid'
 gem 'resque'
+gem 'resque-scheduler'
 gem 'resque-retry'
-gem 'resque-metrics'
-gem 'resque-lock-timeout'
-gem 'resque-lifecycle'
+gem 'redlock'
 
 #
 # Caching

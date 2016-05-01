@@ -1,3 +1,5 @@
+require 'resque/server'
+
 Rails.application.routes.draw do
   root to: 'homepage#show'
 
@@ -7,6 +9,8 @@ Rails.application.routes.draw do
   get  '/auth/failure'         => 'sessions#abort'
 
   resource :homepage, only: %i[show]
+
+  mount Resque::Server.new, at: '/resque'
 
   # get 'sessions/create'
   # get 'sessions/destroy'

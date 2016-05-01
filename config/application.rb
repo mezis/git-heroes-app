@@ -31,5 +31,25 @@ module GitHeroes
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+
+    # Be sure to have the adapter's gem in your Gemfile
+    # and follow the adapter's specific installation
+    # and deployment instructions.
+    config.active_job.queue_adapter = :resque
+
+    def redis
+      @redis ||= begin
+        uri = URI.parse(ENV.fetch('REDIS_URL'))
+        _, db, namespace = uri.path&.split('/')
+        db ||= 1
+        namespace ||= 'githeroes'
+        uri.path = "/#{db}"
+        Redis::Namespace.new(namespace, deprecations: true, redis: Redis.new(url: uri.to_s))
+      end
+    end
+
+    def locks
+      @_locks ||= Redlock::Client.new([redis])
+    end
   end
 end
