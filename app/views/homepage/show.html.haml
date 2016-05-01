@@ -11,3 +11,9 @@
 - else
   %p Logged out.
   = link_to 'Log in', new_session_path
+
+- if @jobs
+  %section
+    %h3 Running jobs
+    - @jobs.each do |job|
+      %p #{job.job_class}: #{job.status}
