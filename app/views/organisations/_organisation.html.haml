@@ -3,8 +3,8 @@
   %span.organisation--name
     = link_to organisation.name, organisation
   %span.organisation--info
-    = link_to "#{organisation.users_count} members", [organisation, :users]
+    = link_to "#{organisation.users_count} members", [organisation, OrganisationUser]
     ,
-    = link_to "#{organisation.teams.count} teams", [organisation, :teams]
+    = link_to "#{organisation.teams.count} teams", [organisation, Team]
     ,
-    = link_to "#{organisation.owned_repositories_count} repositories", [organisation, :repositories]
+    = link_to "#{organisation.owned_repositories_count} repositories", [organisation, Repository]

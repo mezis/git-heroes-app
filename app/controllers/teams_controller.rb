@@ -8,8 +8,15 @@ class TeamsController < ApplicationController
   def update
     # TODO: authorization
     update_to = _parse_boolean params.require(:enabled)
-    team.update_attributes!(enabled: update_to)
-    render team
+    if id = params[:id]
+      team = organisation.teams.find(id)
+      team.update_attributes!(enabled: update_to)
+      render team
+    else
+      teams = organisation.teams
+      teams.each { |t| t.update_attributes!(enabled: update_to) }
+      render teams
+    end
   end
 
   private
@@ -20,9 +27,5 @@ class TeamsController < ApplicationController
 
   def organisation
     @organisation ||= Organisation.find params.require(:organisation_id)
-  end
-
-  def team
-    @team ||= organisation.teams.find params.require(:id)
   end
 end

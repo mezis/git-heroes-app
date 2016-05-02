@@ -1,5 +1,9 @@
 = breadcrumbs 'Organisations' => Organisation, @organisation.name => @organisation, 'Repositories' => [@organisation, Repository]
 
-%ul
-  - @repositories.each do |repo|
-    = render repo
+
+.m-b-1
+  = link_to 'All Off', [@organisation, Repository, enabled:false], remote: true, method: :patch, 'data-disable-with': '...', class: 'btn btn-sm btn-secondary' 
+  = link_to 'All On',  [@organisation, Repository, enabled:true],  remote: true, method: :patch, 'data-disable-with': '...', class: 'btn btn-sm btn-secondary' 
+
+- @repositories.each do |repo|
+  = render repo

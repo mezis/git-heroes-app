@@ -1,10 +1,11 @@
 - users = team.users.to_a
-%li[team]
-  = button_toggles team.organisation, team
-  #{team.name}
-  = pluralize(users.count, 'member')
-  - if users.any?
-    (
-    - users.each do |u|
-      @#{u.login} 
-    )
+.row.m-b-1[team]
+  .col-lg-2= button_toggles team.organisation, team
+  .col-lg-2 #{team.name}
+  .col-lg-2= pluralize(users.count, 'member')
+  .col-lg-6
+    - if users.any?
+      (
+      - users.each do |u|
+        @#{u.login} 
+      )

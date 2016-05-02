@@ -8,8 +8,15 @@ class RepositoriesController < ApplicationController
   def update
     # TODO: authorization
     update_to = _parse_boolean params.require(:enabled)
-    repository.update_attributes!(enabled: update_to)
-    render repository
+    if id = params[:id]
+      repository = organisation.repositories.find(id)
+      repository.update_attributes!(enabled: update_to)
+      render repository
+    else
+      repositories = organisation.repositories
+      repositories.each { |t| t.update_attributes!(enabled: update_to) }
+      render repositories
+    end
   end
 
   private
@@ -20,9 +27,5 @@ class RepositoriesController < ApplicationController
 
   def organisation
     @organisation ||= Organisation.includes(:repositories).find(params.require(:organisation_id))
-  end
-
-  def repository
-    @repository ||= organisation.repositories.find params.require(:id)
   end
 end

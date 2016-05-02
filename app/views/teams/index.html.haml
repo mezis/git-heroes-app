@@ -1,4 +1,8 @@
 = breadcrumbs 'Organisations' => Organisation, @organisation.name => @organisation, 'Teams' => [@organisation, Team]
 
+.m-b-1
+  = link_to 'All Off', [@organisation, Team, enabled:false], remote: true, method: :patch, 'data-disable-with': '...', class: 'btn btn-sm btn-secondary' 
+  = link_to 'All On',  [@organisation, Team, enabled:true],  remote: true, method: :patch, 'data-disable-with': '...', class: 'btn btn-sm btn-secondary' 
+
 - @teams.each do |team|
   = render team

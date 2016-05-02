@@ -16,9 +16,11 @@ Rails.application.routes.draw do
   resource :homepage, only: %i[show]
 
   resources :organisations, only: %i[index show update] do
-    resources :repositories,  only: %i[index update]
     resources :organisation_users, only: %i[index], path: 'users'
-    resources :teams,         only: %i[index update]
+    resources :repositories,       only: %i[index update]
+    resource  :repositories,       only: %i[update]
+    resources :teams,              only: %i[index update] 
+    resource  :teams,              only: %i[update]
   end
 
   mount Resque::Server.new, at: '/resque'
