@@ -32,6 +32,9 @@ gem 'jbuilder'
 # Better view syntax
 gem 'haml-rails'
 
+# Less verbose assets
+gem 'quiet_assets'
+
 #
 # Models
 #

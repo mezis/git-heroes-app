@@ -15,6 +15,15 @@ require "sprockets/railtie"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# Monkey patching here so there aren't duplicate lines in console/server
+# https://github.com/rails/rails/issues/11415#issuecomment-57648388
+ActiveSupport::Logger.class_eval do 
+  def self.broadcast(logger) 
+    Module.new do
+    end
+  end
+end
+
 module GitHeroes
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
@@ -37,11 +46,8 @@ module GitHeroes
     # and deployment instructions.
     config.active_job.queue_adapter = :resque
 
-    # Avoid repeated log entries
-    # https://github.com/rails/rails/issues/11415
-    console do
-      ActiveRecord::Base.logger = Rails.logger = ActiveSupport::Logger.new(STDOUT)
-    end
+    # Do log asset requests in production
+    config.quiet_assets = false
 
     def redis
       @redis ||= begin
