@@ -1,5 +1,5 @@
 class UpdateUserOrganisations
-  include Interactor
+  include GithubInteractor
 
   delegate :user, to: :context
 
@@ -11,11 +11,5 @@ class UpdateUserOrganisations
       context.fail! error: 'could not find/create org' unless result.success?
       result.record
     }
-  end
-
-  private
-
-  def client
-    @client ||= GithubClient.new(user)
   end
 end

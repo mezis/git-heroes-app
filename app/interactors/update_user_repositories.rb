@@ -1,5 +1,5 @@
 class UpdateUserRepositories
-  include Interactor
+  include GithubInteractor
 
   delegate :user, to: :context
 
@@ -15,17 +15,8 @@ class UpdateUserRepositories
 
   private
 
-  def client
-    @client ||= GithubClient.new(user)
-  end
-
   def all_repositories
-    Enumerator.new do |y|
-      client.repositories.each { |h| y << h }
-      while uri = client.last_response.rels[:next]&.href
-        client.get(uri).each { |h| y << h }
-      end
-    end.lazy
+    paginate { client.repositories }
   end
 
   def get_owner(h)
@@ -36,9 +27,8 @@ class UpdateUserRepositories
       when 'User' then
         FindOrCreateUser.call(data: h)
       else
-        context.fail! error: "unknown owner type '#{h.type}'", metadata: h
+        raise "unknown owner type '#{h.type}'"
       end
-    context.fail! 'could not get owner' unless result.success?
     result.record
   end
 end

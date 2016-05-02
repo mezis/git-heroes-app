@@ -1,5 +1,5 @@
 class UpdateRepositoryPullRequests
-  include Interactor
+  include GithubInteractor
 
   delegate :repository, :records, to: :context
 
@@ -16,19 +16,14 @@ class UpdateRepositoryPullRequests
   # pick a user to fetch pull requests
   # FIXME: round robin?
   def user
-    @user ||= repository.users.order(:throttle_left).last
-  end
-
-  def client
-    @client ||= GithubClient.new(user)
+    @user ||= pick_user repository.users
   end
 
   def all_pull_requests
-    Enumerator.new do |y|
-      client.pull_requests(repository.full_name, state: 'all', sort: 'created').each { |h| y << h }
-      while uri = client.last_response.rels[:next]&.href
-        client.get(uri).each { |h| y << h }
-      end
-    end.lazy
+    paginate do
+      client.pull_requests(
+        repository.full_name, 
+        state: 'all', sort: 'created')
+    end
   end
 end

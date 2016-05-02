@@ -1,5 +1,5 @@
 class UpdateOrganisationUsers
-  include Interactor
+  include GithubInteractor
 
   delegate :user, :organisation, to: :context
 
@@ -22,17 +22,8 @@ class UpdateOrganisationUsers
 
   private
 
-  def client
-    @client ||= GithubClient.new(user)
-  end
-
   def all_members
-    Enumerator.new do |y|
-      client.organization_members(organisation.name).each { |h| y << h }
-      while uri = client.last_response.rels[:next]&.href
-        client.get(uri).each { |h| y << h }
-      end
-    end.lazy
+    paginate { client.organization_members(organisation.name) }
   end
 end
 

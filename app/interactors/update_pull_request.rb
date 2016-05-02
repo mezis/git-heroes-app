@@ -1,5 +1,5 @@
 class UpdatePullRequest
-  include Interactor
+  include GithubInteractor
 
   delegate :pull_request, :record, to: :context
 
@@ -17,10 +17,7 @@ class UpdatePullRequest
   # pick a user to fetch pull requests
   # FIXME: round robin?
   def user
-    @user ||= repository.users.order(:throttle_left).last
+    @user ||= pick_user repository.users
   end
 
-  def client
-    @client ||= GithubClient.new(user)
-  end
 end
