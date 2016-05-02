@@ -1,0 +1,10 @@
+%li[organisation]
+  = button_toggles organisation
+  %span.organisation--name #{organisation.name}
+  %span.organisation--info
+    #{organisation.users_count} members,
+    #{organisation.owned_repositories_count} repositories
+  %ul.repositories
+    - organisation.repositories.each do |repo|
+      = render repo
+

@@ -8,11 +8,18 @@ Rails.application.routes.draw do
     post 'callback'
     get 'failure'
   end
+  # get  '/auth/github'          => 'sessions#new' # convenience
+  # get  '/auth/github/callback' => 'sessions#create'
+  # post '/auth/github/callback' => 'sessions#create'
+  # get  '/auth/failure'         => 'sessions#abort'
 
   resource :homepage, only: %i[show]
 
-  mount Resque::Server.new, at: '/resque'
+  resources :organisations, only: %i[index update] do
+    resources :repositories,  only: %i[update]
+  end
 
+  mount Resque::Server.new, at: '/resque'
   # get 'sessions/create'
   # get 'sessions/destroy'
   # get 'sessions/abort'

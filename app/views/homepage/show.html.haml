@@ -17,3 +17,7 @@
     %h3 Running jobs
     - @jobs.each do |job|
       %p #{job.job_class}: #{job.status}
+%nav
+  %ul
+    %li= link_to 'Organisations', organisations_path
+
