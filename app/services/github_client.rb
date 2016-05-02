@@ -1,9 +1,10 @@
 require 'net/http/persistent'
 
 class GithubClient
+  Throttled = Class.new(StandardError)
+
   def initialize(user)
     @user = user
-    @last_time = Time.current
   end
 
   def respond_to_missing?(name, include_private=false)
@@ -11,12 +12,21 @@ class GithubClient
   end
 
   def method_missing(name, *args, &block)
-    client.public_send(name, *args, &block).tap do
-      if client.last_response && client.last_response.time != @last_time
-        UpdateUserRateLimit.new(user: @user, rate_limit: client.rate_limit).run
-        @last_time = client.last_response.time
-      end
+    # consider throttling
+    if @user.updated_at > 5.minutes.ago && 
+      @user.throttle_left &&
+      @user.throttle_left < @user.throttle_limit / 4 &&
+      @user.throttle_reset_at > Time.current
+      raise Throttled, @user.throttle_reset_at
     end
+
+    # make the call
+    result = client.public_send(name, *args, &block)
+
+    # update throttling metadata
+    UpdateUserRateLimit.new(user: @user, rate_limit: client.rate_limit).run
+
+    result
   end
 
   private
