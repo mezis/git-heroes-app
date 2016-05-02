@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160501151924) do
+ActiveRecord::Schema.define(version: 20160502115321) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,10 +27,13 @@ ActiveRecord::Schema.define(version: 20160501151924) do
   add_index "organisation_users", ["user_id"], name: "index_organisation_users_on_user_id", using: :btree
 
   create_table "organisations", force: :cascade do |t|
-    t.string   "name",       null: false
-    t.integer  "github_id",  null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "name",                                     null: false
+    t.integer  "github_id",                                null: false
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+    t.boolean  "enabled",                  default: false, null: false
+    t.integer  "users_count",              default: 0,     null: false
+    t.integer  "owned_repositories_count", default: 0,     null: false
   end
 
   add_index "organisations", ["github_id"], name: "index_organisations_on_github_id", unique: true, using: :btree
@@ -55,12 +58,14 @@ ActiveRecord::Schema.define(version: 20160501151924) do
   add_index "pull_requests", ["repository_id"], name: "index_pull_requests_on_repository_id", using: :btree
 
   create_table "repositories", force: :cascade do |t|
-    t.integer  "owner_id",   null: false
-    t.string   "owner_type", null: false
-    t.string   "name",       null: false
-    t.integer  "github_id",  null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "owner_id",                    null: false
+    t.string   "owner_type",                  null: false
+    t.string   "name",                        null: false
+    t.integer  "github_id",                   null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.boolean  "enabled",     default: false, null: false
+    t.integer  "users_count", default: 0,     null: false
   end
 
   add_index "repositories", ["github_id"], name: "index_repositories_on_github_id", unique: true, using: :btree
@@ -79,17 +84,19 @@ ActiveRecord::Schema.define(version: 20160501151924) do
 
   create_table "users", force: :cascade do |t|
     t.string   "token"
-    t.integer  "github_id",         null: false
+    t.integer  "github_id",                            null: false
     t.string   "github_token"
-    t.string   "login",             null: false
-    t.string   "avatar_url",        null: false
+    t.string   "login",                                null: false
+    t.string   "avatar_url",                           null: false
     t.string   "name"
     t.string   "email"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
     t.integer  "throttle_limit"
     t.integer  "throttle_left"
     t.datetime "throttle_reset_at"
+    t.integer  "owned_repositories_count", default: 0, null: false
+    t.integer  "repositories_count",       default: 0, null: false
   end
 
   add_index "users", ["github_id"], name: "index_users_on_github_id", using: :btree
