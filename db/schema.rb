@@ -11,10 +11,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160502115321) do
+ActiveRecord::Schema.define(version: 20160502164417) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "comments", force: :cascade do |t|
+    t.integer  "github_id"
+    t.integer  "pull_request_id"
+    t.integer  "user_id"
+    t.datetime "github_updated_at"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "comments", ["github_id"], name: "index_comments_on_github_id", using: :btree
+  add_index "comments", ["pull_request_id"], name: "index_comments_on_pull_request_id", using: :btree
+  add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
   create_table "organisation_users", force: :cascade do |t|
     t.integer  "organisation_id"
@@ -72,6 +85,28 @@ ActiveRecord::Schema.define(version: 20160502115321) do
   add_index "repositories", ["owner_id"], name: "index_repositories_on_owner_id", using: :btree
   add_index "repositories", ["owner_type", "owner_id"], name: "index_repositories_on_owner_type_and_owner_id", using: :btree
 
+  create_table "team_users", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "team_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "team_users", ["team_id"], name: "index_team_users_on_team_id", using: :btree
+  add_index "team_users", ["user_id"], name: "index_team_users_on_user_id", using: :btree
+
+  create_table "teams", force: :cascade do |t|
+    t.integer  "github_id",                      null: false
+    t.string   "name",                           null: false
+    t.integer  "organisation_id"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.boolean  "enabled",         default: true, null: false
+  end
+
+  add_index "teams", ["github_id"], name: "index_teams_on_github_id", using: :btree
+  add_index "teams", ["organisation_id"], name: "index_teams_on_organisation_id", using: :btree
+
   create_table "user_repositories", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "repository_id"
@@ -101,11 +136,16 @@ ActiveRecord::Schema.define(version: 20160502115321) do
 
   add_index "users", ["github_id"], name: "index_users_on_github_id", using: :btree
 
+  add_foreign_key "comments", "pull_requests"
+  add_foreign_key "comments", "users"
   add_foreign_key "organisation_users", "organisations"
   add_foreign_key "organisation_users", "users"
   add_foreign_key "pull_requests", "repositories"
   add_foreign_key "pull_requests", "users", column: "created_by_id"
   add_foreign_key "pull_requests", "users", column: "merged_by_id"
+  add_foreign_key "team_users", "teams"
+  add_foreign_key "team_users", "users"
+  add_foreign_key "teams", "organisations"
   add_foreign_key "user_repositories", "repositories"
   add_foreign_key "user_repositories", "users"
 end

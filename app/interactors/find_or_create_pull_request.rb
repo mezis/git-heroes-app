@@ -28,9 +28,7 @@ class FindOrCreatePullRequest
       created_at:         data.created_at,
       github_updated_at:  data.updated_at,
     )
-    record.created_by = FindOrCreateUser.call(data: data.user).record
-    if data.merged_by
-      record.merged_by = FindOrCreateUser.call(data: data.user).record
-    end
+    record.created_by ||= FindOrCreateUser.call(data: data.user).record
+    record.merged_by  ||= FindOrCreateUser.call(data: data.user).record if data.merged_by
   end
 end

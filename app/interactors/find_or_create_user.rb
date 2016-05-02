@@ -11,6 +11,7 @@ class FindOrCreateUser
     end
 
     assign_attributes(record, data)
+    context.updated = true if record.changed?
     record.github_token = token if token.present?
     record.save! if record.changed?
   end
@@ -20,8 +21,8 @@ class FindOrCreateUser
   def assign_attributes(user, data)
     user.assign_attributes(
       login:      data.login,
-      name:       data.name,
-      email:      data.email,
+      name:       user.name || data.name,
+      email:      user.email || data.email,
       avatar_url: data.avatar_url,
     )
   end

@@ -4,6 +4,7 @@ class UpdatePullRequest
   delegate :pull_request, :record, to: :context
 
   def call
+    Rails.logger.info "updating pull request: #{repository.full_name}##{pull_request.github_number}"
     data = client.pull_request(repository.full_name, pull_request.github_number)
     result = FindOrCreatePullRequest.call(repository: repository, data: data)
   end

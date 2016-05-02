@@ -7,10 +7,14 @@ class FindOrCreateOrganisation
   def call
     context.record = Organisation.find_or_create_by!(github_id: data.id) do |org|
       assign_attributes(org, data)
+      context.created = true
     end
 
     assign_attributes(record, data)
-    record.save! if record.changed?
+    if record.changed?
+      context.updated = true
+      record.save!
+    end
   end
 
   private

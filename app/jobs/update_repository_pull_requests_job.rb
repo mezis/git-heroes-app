@@ -6,7 +6,7 @@ class UpdateRepositoryPullRequestsJob < BaseJob
     # FIXME: catch failures / rate limits, retry
 
     result.records.each do |record|
-      UpdatePullRequestJob.perform_later options.slice(:actor_id).merge(pull_request_id: record.id)
+      UpdatePullRequestJob.perform_later pull_request_id: record.id
     end
   end
 end
