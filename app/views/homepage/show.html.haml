@@ -10,7 +10,7 @@
   = link_to 'Log out', session_path, method: :delete
 - else
   %p Logged out.
-  = link_to 'Log in', new_session_path
+  = link_to 'Log in', session_path
 
 - if @jobs
   %section

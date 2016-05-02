@@ -1,9 +1,5 @@
 class SessionsController < ApplicationController
-  def new
-    redirect_to '/auth/github'
-  end
-
-  def create
+  def callback
     auth_hash = request.env['omniauth.auth']
     result = FindOrCreateUser.call(
       data:    auth_hash.extra.raw_info,
@@ -22,7 +18,9 @@ class SessionsController < ApplicationController
 
     flash[:notice] = result.created ? 'Account created' : 'Welcome back'
 
-    redirect_to root_path
+    target = request.env['omniauth.origin']
+    target = root_path if target.blank?
+    redirect_to target
   end
 
   def destroy
@@ -31,7 +29,7 @@ class SessionsController < ApplicationController
     redirect_to root_path
   end
 
-  def abort
+  def failure
     flash[:alert] = 'Authentication failed'
     redirect_to root_url
   end

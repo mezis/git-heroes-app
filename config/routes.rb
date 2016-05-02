@@ -3,10 +3,11 @@ require 'resque/server'
 Rails.application.routes.draw do
   root to: 'homepage#show'
 
-  resource :session, only: %i[new destroy]
-  get  '/auth/github/callback' => 'sessions#create'
-  post '/auth/github/callback' => 'sessions#create'
-  get  '/auth/failure'         => 'sessions#abort'
+  resource :session, only: %i[show destroy], path: 'auth/github' do
+    get 'callback'
+    post 'callback'
+    get 'failure'
+  end
 
   resource :homepage, only: %i[show]
 
