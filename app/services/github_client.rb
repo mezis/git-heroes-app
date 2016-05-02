@@ -1,7 +1,12 @@
 require 'net/http/persistent'
 
 class GithubClient
-  Throttled = Class.new(StandardError)
+  class Throttled < StandardError
+    attr_reader :retry_at
+    def initialize(retry_at)
+      @retry_at = retry_at
+    end
+  end
 
   def initialize(user)
     @user = user

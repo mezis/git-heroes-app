@@ -17,9 +17,6 @@ unless Rails.application.config.cache_classes
   end
 end
 
-Resque::Failure::MultipleWithRetrySuppression.classes = [Resque::Failure::Redis]
-Resque::Failure.backend = Resque::Failure::MultipleWithRetrySuppression
-
 Resque::Scheduler.dynamic = true
 Resque.schedule = {}
 
