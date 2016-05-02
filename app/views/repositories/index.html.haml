@@ -1,0 +1,5 @@
+= breadcrumbs 'Organisations' => Organisation, @organisation.name => @organisation, 'Repositories' => [@organisation, Repository]
+
+%ul
+  - @repositories.each do |repo|
+    = render repo

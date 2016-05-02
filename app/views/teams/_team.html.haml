@@ -1,0 +1,10 @@
+- users = team.users.to_a
+%li[team]
+  = button_toggles team.organisation, team
+  #{team.name}
+  = pluralize(users.count, 'member')
+  - if users.any?
+    (
+    - users.each do |u|
+      @#{u.login} 
+    )

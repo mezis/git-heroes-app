@@ -1,0 +1,6 @@
+= breadcrumbs 'Organisations' => Organisation, @organisation.name => @organisation
+
+%ul
+  %li= link_to 'Repositories', [@organisation, Repository]
+  %li= link_to 'Teams',        [@organisation, Team]
+  %li= link_to 'Members',      [@organisation, OrganisationUser]

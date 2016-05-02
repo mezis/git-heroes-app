@@ -1,0 +1,4 @@
+= breadcrumbs 'Organisations' => Organisation, @organisation.name => @organisation, 'Teams' => [@organisation, Team]
+
+- @teams.each do |team|
+  = render team

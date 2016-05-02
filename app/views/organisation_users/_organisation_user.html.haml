@@ -1,0 +1,5 @@
+- user = organisation_user.user
+%p
+  @#{user.login}
+  - if user.name
+    (#{user.name})

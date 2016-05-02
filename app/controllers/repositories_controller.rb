@@ -1,6 +1,10 @@
 class RepositoriesController < ApplicationController
   require_authentication!
 
+  def index
+    @repositories = organisation.repositories
+  end
+
   def update
     # TODO: authorization
     update_to = _parse_boolean params.require(:enabled)
@@ -15,7 +19,7 @@ class RepositoriesController < ApplicationController
   end
 
   def organisation
-    @organisation ||= Organisation.find params.require(:organisation_id)
+    @organisation ||= Organisation.includes(:repositories).find(params.require(:organisation_id))
   end
 
   def repository

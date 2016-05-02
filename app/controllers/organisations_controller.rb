@@ -5,6 +5,10 @@ class OrganisationsController < ApplicationController
     @organisations = current_user.organisations
   end
 
+  def show
+    @organisation = organisation
+  end
+
   def update
     # TODO: authorization
     update_to = _parse_boolean params.require(:enabled)

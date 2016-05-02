@@ -1,0 +1,4 @@
+= breadcrumbs 'Organisations' => Organisation, @organisation.name => @organisation, 'Members' => [@organisation, OrganisationUser]
+
+- @organisation_users.each do |ou|
+  = render ou

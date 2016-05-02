@@ -1,10 +1,10 @@
 %li[organisation]
   = button_toggles organisation
-  %span.organisation--name #{organisation.name}
+  %span.organisation--name
+    = link_to organisation.name, organisation
   %span.organisation--info
-    #{organisation.users_count} members,
-    #{organisation.owned_repositories_count} repositories
-  %ul.repositories
-    - organisation.repositories.each do |repo|
-      = render repo
-
+    = link_to "#{organisation.users_count} members", [organisation, :users]
+    ,
+    = link_to "#{organisation.teams.count} teams", [organisation, :teams]
+    ,
+    = link_to "#{organisation.owned_repositories_count} repositories", [organisation, :repositories]
