@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160430145237) do
+ActiveRecord::Schema.define(version: 20160501151924) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,24 @@ ActiveRecord::Schema.define(version: 20160430145237) do
 
   add_index "organisations", ["github_id"], name: "index_organisations_on_github_id", unique: true, using: :btree
   add_index "organisations", ["name"], name: "index_organisations_on_name", unique: true, using: :btree
+
+  create_table "pull_requests", force: :cascade do |t|
+    t.integer  "github_id",         null: false
+    t.integer  "github_number",     null: false
+    t.integer  "repository_id",     null: false
+    t.integer  "created_by_id",     null: false
+    t.integer  "merged_by_id"
+    t.integer  "status",            null: false
+    t.datetime "merged_at"
+    t.datetime "github_updated_at", null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "pull_requests", ["created_by_id"], name: "index_pull_requests_on_created_by_id", using: :btree
+  add_index "pull_requests", ["github_id"], name: "index_pull_requests_on_github_id", unique: true, using: :btree
+  add_index "pull_requests", ["merged_by_id"], name: "index_pull_requests_on_merged_by_id", using: :btree
+  add_index "pull_requests", ["repository_id"], name: "index_pull_requests_on_repository_id", using: :btree
 
   create_table "repositories", force: :cascade do |t|
     t.integer  "owner_id",   null: false
@@ -61,20 +79,26 @@ ActiveRecord::Schema.define(version: 20160430145237) do
 
   create_table "users", force: :cascade do |t|
     t.string   "token"
-    t.integer  "github_id",    null: false
+    t.integer  "github_id",         null: false
     t.string   "github_token"
-    t.string   "login",        null: false
-    t.string   "avatar_url",   null: false
+    t.string   "login",             null: false
+    t.string   "avatar_url",        null: false
     t.string   "name"
     t.string   "email"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.integer  "throttle_limit"
+    t.integer  "throttle_left"
+    t.datetime "throttle_reset_at"
   end
 
   add_index "users", ["github_id"], name: "index_users_on_github_id", using: :btree
 
   add_foreign_key "organisation_users", "organisations"
   add_foreign_key "organisation_users", "users"
+  add_foreign_key "pull_requests", "repositories"
+  add_foreign_key "pull_requests", "users", column: "created_by_id"
+  add_foreign_key "pull_requests", "users", column: "merged_by_id"
   add_foreign_key "user_repositories", "repositories"
   add_foreign_key "user_repositories", "users"
 end

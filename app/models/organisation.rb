@@ -5,4 +5,8 @@ class Organisation < ActiveRecord::Base
   has_many :users, through: :organisation_users
 
   has_many :repositories, as: :owner
+
+  def login
+    name
+  end
 end
