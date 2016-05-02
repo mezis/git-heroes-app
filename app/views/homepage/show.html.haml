@@ -12,11 +12,6 @@
   %p Logged out.
   = link_to 'Log in', session_path
 
-- if @jobs
-  %section
-    %h3 Running jobs
-    - @jobs.each do |job|
-      %p #{job.job_class}: #{job.status}
 %nav
   %ul
     %li= link_to 'Organisations', organisations_path

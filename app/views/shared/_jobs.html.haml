@@ -1,0 +1,4 @@
+- if jobs
+  %ul.background-jobs
+    - jobs.each do |job|
+      %pli.background-jobs--job #{job.job_class}: #{job.status}
