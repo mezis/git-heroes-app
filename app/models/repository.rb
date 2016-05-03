@@ -6,6 +6,8 @@ class Repository < ActiveRecord::Base
 
   validates_presence_of :owner, :name, :github_id
 
+  scope :enabled, -> { where(enabled:true) }
+
   def full_name
     "#{owner.login}/#{name}"
   end

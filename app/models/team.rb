@@ -4,4 +4,6 @@ class Team < ActiveRecord::Base
   has_many :users, through: :team_users
 
   validates_presence_of :organisation
+
+  scope :enabled, -> { where(enabled:true) }
 end

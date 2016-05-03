@@ -4,8 +4,5 @@
   .col-lg-2 #{team.name}
   .col-lg-2= pluralize(users.count, 'member')
   .col-lg-6
-    - if users.any?
-      (
-      - users.each do |u|
-        @#{u.login} 
-      )
+    - users.each do |u|
+      @#{u.login} 

@@ -37,6 +37,7 @@ gem 'quiet_assets'
 
 # Chrome
 gem 'bootstrap', '~> 4.0.0.alpha3'
+gem 'rails-assets-tether'
 
 
 # Models

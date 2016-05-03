@@ -18,9 +18,13 @@ class SessionsController < ApplicationController
 
     flash[:notice] = result.created ? 'Account created' : 'Welcome back'
 
-    target = request.env['omniauth.origin']
-    target = root_path if target.blank?
-    redirect_to target
+    if target = request.env['omniauth.origin'] && target.present?
+      redirect_to target
+    elsif org = current_user.organisations.first
+      redirect_to org
+    else
+      redirect_to root_path
+    end
   end
 
   def destroy

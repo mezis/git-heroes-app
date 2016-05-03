@@ -7,7 +7,7 @@ class UpdateRepositoryPullRequests
     context.records = []
     all_pull_requests.each do |hash|
       result = FindOrCreatePullRequest.call(repository: repository, data: hash)
-      records << result.record if result.created || result.updated
+      context.records << result.record if result.created || result.updated
     end
   end
 

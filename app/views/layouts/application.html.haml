@@ -7,6 +7,44 @@
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = csrf_meta_tags
   %body
+    %nav.navbar.navbar-full.navbar-dark.bg-inverse
+      .container
+        %ul.nav.navbar-nav
+          %li.nav-item
+            = link_to 'Git Heroes', current_organisation || root_path, class: 'nav-link'
+
+          - [['Teams', Team], ['Repositories', Repository], ['Members', OrganisationUser]].each do |title, target|
+            %li.nav-item
+              - if current_organisation
+                = link_to title, [current_organisation, target], class: 'nav-link'
+              - else
+                = link_to title, '#', class: 'nav-link disabled'
+
+          -# user menu
+          %li.nav-item.pull-xs-right
+            - if !current_user
+              = link_to 'Log in', session_path, class: 'btn btn-secondary-outline'
+            - else
+              .dropdown
+                %a.btn.btn-secondary-outline.dropdown-toggle#userDropdown{ 'data-toggle': 'dropdown' }
+                  @#{current_user.login}
+                .dropdown-menu.dropdown-menu-right{ 'aria-labelledby': 'userDropdown' }
+                  = link_to 'Log out', session_path, method: :delete, class: 'dropdown-item'
+
+          -# organisation switcher
+          %li.nav-item.pull-xs-right
+            .dropdown
+              %a.btn.btn-secondary-outline.dropdown-toggle#orgDropdown{ 'data-toggle': 'dropdown', class: ('disabled' unless current_user) }
+                = current_organisation&.login || 'Organisation'
+              .dropdown-menu.dropdown-menu-right{ 'aria-labelledby': 'orgDropdown' }
+                - current_user&.organisations&.each do |org|
+                  = link_to org.name, org, class: "dropdown-item #{'disabled' if org == current_organisation}"
+
+    - flash.each do |key, value|
+      .alert.alert-danger(role=alert)
+        .container
+          #{key}: #{value}
+
     .container
       .row
         .col-sm-12

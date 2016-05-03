@@ -1,8 +1,10 @@
-= breadcrumbs 'Organisations' => Organisation, @organisation.name => @organisation, 'Teams' => [@organisation, Team]
+%p Enable teams that you wish to include in the leaderboard.
+
+= render 'dupe_users', dupe_users: @dupe_users
 
 .m-b-1
-  = link_to 'All Off', [@organisation, Team, enabled:false], remote: true, method: :patch, 'data-disable-with': '...', class: 'btn btn-sm btn-secondary' 
-  = link_to 'All On',  [@organisation, Team, enabled:true],  remote: true, method: :patch, 'data-disable-with': '...', class: 'btn btn-sm btn-secondary' 
+  = link_to 'All Off', [current_organisation, Team, enabled:false], remote: true, method: :patch, 'data-disable-with': '...', class: 'btn btn-sm btn-secondary' 
+  = link_to 'All On',  [current_organisation, Team, enabled:true],  remote: true, method: :patch, 'data-disable-with': '...', class: 'btn btn-sm btn-secondary' 
 
-- @teams.each do |team|
+- @teams.sort_by { |t| t.name.downcase }.each do |team|
   = render team
