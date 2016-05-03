@@ -88,11 +88,15 @@ class JobStats
     end
 
     def where(actor:nil)
-      _redis.smembers(_key_actor(actor&.id)).map do |id|
+      actor_key = _key_actor(actor&.id)
+      _redis.smembers(actor_key).lazy.map { |id|
         data = _redis.hgetall(_key_id(id))
-        next unless data && data.any?
+        unless data && data.any?
+          _redis.srem(actor_key, id)
+          next
+        end
         new(data.symbolize_keys.merge(id: id, persisted: true))
-      end
+      }.select(&:present?)
     end
   end
   extend ClassMethods

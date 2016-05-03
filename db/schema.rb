@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160502164417) do
+ActiveRecord::Schema.define(version: 20160503065038) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,9 +25,23 @@ ActiveRecord::Schema.define(version: 20160502164417) do
     t.datetime "updated_at",        null: false
   end
 
+  add_index "comments", ["created_at"], name: "index_comments_on_created_at", using: :btree
   add_index "comments", ["github_id"], name: "index_comments_on_github_id", using: :btree
   add_index "comments", ["pull_request_id"], name: "index_comments_on_pull_request_id", using: :btree
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
+
+  create_table "organisation_user_scores", force: :cascade do |t|
+    t.date     "date"
+    t.integer  "organisation_user_id"
+    t.integer  "points"
+    t.integer  "pull_request_count"
+    t.integer  "pull_request_merge_time"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
+  add_index "organisation_user_scores", ["date"], name: "index_organisation_user_scores_on_date", using: :btree
+  add_index "organisation_user_scores", ["organisation_user_id"], name: "index_organisation_user_scores_on_organisation_user_id", using: :btree
 
   create_table "organisation_users", force: :cascade do |t|
     t.integer  "organisation_id"
@@ -65,8 +79,10 @@ ActiveRecord::Schema.define(version: 20160502164417) do
     t.datetime "updated_at",        null: false
   end
 
+  add_index "pull_requests", ["created_at"], name: "index_pull_requests_on_created_at", using: :btree
   add_index "pull_requests", ["created_by_id"], name: "index_pull_requests_on_created_by_id", using: :btree
   add_index "pull_requests", ["github_id"], name: "index_pull_requests_on_github_id", unique: true, using: :btree
+  add_index "pull_requests", ["merged_at"], name: "index_pull_requests_on_merged_at", using: :btree
   add_index "pull_requests", ["merged_by_id"], name: "index_pull_requests_on_merged_by_id", using: :btree
   add_index "pull_requests", ["repository_id"], name: "index_pull_requests_on_repository_id", using: :btree
 
@@ -138,6 +154,7 @@ ActiveRecord::Schema.define(version: 20160502164417) do
 
   add_foreign_key "comments", "pull_requests"
   add_foreign_key "comments", "users"
+  add_foreign_key "organisation_user_scores", "organisation_users"
   add_foreign_key "organisation_users", "organisations"
   add_foreign_key "organisation_users", "users"
   add_foreign_key "pull_requests", "repositories"
