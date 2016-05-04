@@ -14,15 +14,37 @@ class MetricsController < ApplicationController
 
   private
 
+  def scope_for(model)
+    send "_#{model.name.underscore}_scope"
+  end
+
+  def _organisation_user_score_scope
+    scope = OrganisationUserScore.where(organisation_id: current_organisation.id)
+    scope = scope.where(user_id: team_user_ids) if team_user_ids
+    scope
+  end
+
+  def _comment_scope
+    scope = Comment.joins(:pull_request).
+      where(pull_requests: { repository_id: repository_ids })
+    scope = scope.where(user_id: team_user_ids) if team_user_ids
+    scope
+  end
+
+
+  def _pull_request_scope
+    scope = PullRequest.where(repository_id: repository_ids)
+    scope = scope.where(created_by_id: team_user_ids) if team_user_ids
+    scope
+  end
+
   def _contributions_over_time
-    OrganisationUserScore.
-      where(organisation_id: current_organisation.id).
+    scope_for(OrganisationUserScore).
       group(:date).sum(:points)
   end
 
   def _contributors_over_time
-    OrganisationUserScore.
-      where(organisation_id: current_organisation.id).
+    scope_for(OrganisationUserScore).
       group(:date).
       distinct.count(:user_id)
   end
@@ -37,11 +59,8 @@ class MetricsController < ApplicationController
   end
 
   def _contribution_per_contributor
-    data = OrganisationUserScore.
-      where(
-        organisation_id: current_organisation.id,
-        date:            4.weeks.ago..Time.now
-      ).
+    data = scope_for(OrganisationUserScore).
+      where(date: 4.weeks.ago..Time.now).
       group(:user_id).
       sum(:points).
       sort_by(&:last).reverse
@@ -52,8 +71,7 @@ class MetricsController < ApplicationController
   end
 
   def _comments_over_time
-    Comment.joins(:pull_request).
-      where(pull_requests: { repository_id: repository_ids }).
+    scope_for(Comment).
       group_by_week('comments.created_at', week_start: :mon).
       count.
       map { |time,count| [time.to_date, count] }
@@ -69,26 +87,30 @@ class MetricsController < ApplicationController
   end
 
   def _hour_of_pull_request_created
-    PullRequest.where(repository_id: repository_ids).
+    scope_for(PullRequest).
       group_by_hour_of_day(:created_at).
       count
   end
 
   def _hour_of_comment_created
-    Comment.joins(:pull_request).
-      where(pull_requests: { repository_id: repository_ids }).
+    scope_for(Comment).
       group_by_hour_of_day('comments.created_at').
       count
   end
 
   def _hour_of_pull_request_marged
-    PullRequest.where(repository_id: repository_ids).
+    scope_for(PullRequest).
       group_by_hour_of_day(:merged_at).
       count
   end
 
   def repository_ids
     current_organisation.repositories.enabled.pluck(:id)
+  end
+
+  def team_user_ids
+    return unless team_id = params[:team_id]
+    @team_user_ids ||= Team.find(team_id).users.pluck(:id)
   end
 
   def load_organisation

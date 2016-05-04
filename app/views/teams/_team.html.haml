@@ -1,7 +1,7 @@
 - users = team.users.to_a
 .row.m-b-1[team]
   .col-lg-2= button_toggles team.organisation, team
-  .col-lg-2 #{team.name}
+  .col-lg-2= link_to team.name, [current_organisation, team]
   .col-lg-2= pluralize(users.count, 'member')
   .col-lg-6
     - users.each do |u|

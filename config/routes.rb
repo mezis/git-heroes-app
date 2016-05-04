@@ -19,7 +19,7 @@ Rails.application.routes.draw do
     resources :organisation_users, only: %i[index], path: 'users'
     resources :repositories,       only: %i[index update]
     resource  :repositories,       only: %i[update]
-    resources :teams,              only: %i[index update] 
+    resources :teams,              only: %i[index show update] 
     resource  :teams,              only: %i[update]
     resources :metrics,            only: %i[show]
   end

@@ -8,6 +8,10 @@ class TeamsController < ApplicationController
     @dupe_users = compute_dupe_users
   end
 
+  def show
+    @team = current_organisation.teams.find params.require(:id)
+  end
+
   def update
     # TODO: authorization
     update_to = _parse_boolean params.require(:enabled)

@@ -15,9 +15,16 @@
  */
 
 
-$enable-rounded:      false;
-$enable-gradients:    true;
-$enable-transitions:  false;
-$enable-flex:         true;
+$enable-rounded:        false;
+$enable-gradients:      true;
+$enable-transitions:    false;
+$enable-flex:           true;
+
+$headings-font-weight:  300;
 
 @import "bootstrap";
+
+.title {
+  @extend .m-t-2;
+  @extend .m-b-1;
+}

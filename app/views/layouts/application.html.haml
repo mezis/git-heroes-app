@@ -14,7 +14,22 @@
           %li.nav-item
             = link_to 'Git Heroes', current_organisation || root_path, class: 'nav-link'
 
-          - [['Teams', Team], ['Repositories', Repository], ['Members', OrganisationUser]].each do |title, target|
+          %li.nav-item
+            - if org = current_organisation
+              -# = link_to title, [current_organisation, target], class: 'nav-link'
+              .dropdown
+                %a.nav-link.dropdown-toggle#teamDropdown{ 'data-toggle': 'dropdown', class: ('disabled' unless current_user) }
+                  Team
+                .dropdown-menu{ 'aria-labelledby': 'teamDropdown' }
+                  - org.teams.enabled.each do |team|
+                    = link_to team.name, [org, team], class: 'dropdown-item'
+                  .dropdown-divider
+                  = link_to 'Configure', [org, Team], class: 'dropdown-item'
+            - else
+              .dropdown
+                %a.nav-link.dropdown-toggle#orgDropdown{ 'data-toggle': 'dropdown', class: ('disabled' unless current_user) }
+
+          - [['Repositories', Repository], ['Members', OrganisationUser]].each do |title, target|
             %li.nav-item
               - if current_organisation
                 = link_to title, [current_organisation, target], class: 'nav-link'
