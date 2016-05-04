@@ -14,4 +14,10 @@
  *= require_self
  */
 
+
+$enable-rounded:      false;
+$enable-gradients:    true;
+$enable-transitions:  false;
+$enable-flex:         true;
+
 @import "bootstrap";

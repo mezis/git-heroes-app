@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     resource  :repositories,       only: %i[update]
     resources :teams,              only: %i[index update] 
     resource  :teams,              only: %i[update]
+    resources :metrics,            only: %i[show]
   end
 
   mount Resque::Server.new, at: '/resque'

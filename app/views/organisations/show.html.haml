@@ -1,1 +1,48 @@
-%h1= current_organisation.name
+
+.row
+  .col-md-6
+    .card
+      .card-block
+        %h5 Total contribution points
+        = gh_line_chart [current_organisation, :metric, id:'contributions_over_time']
+  .col-md-6
+    .card
+      .card-block
+        %h5 Unique contributors
+        = gh_line_chart [current_organisation, :metric, id:'contributors_over_time']
+
+  .col-md-6
+    .card
+      .card-block
+        %h5 Contribution per contributor
+        = gh_line_chart [current_organisation, :metric, id:'contribution_per_contributor_over_time']
+  .col-md-6
+    .card
+      .card-block
+        %h5 Comments per contributor
+        = gh_line_chart [current_organisation, :metric, id:'comments_per_contributor_over_time']
+
+  .col-md-4
+    .card
+      .card-block
+        %h5 Pull requests issued
+        = gh_column_chart [current_organisation, :metric, id:'hour_of_pull_request_created']
+  .col-md-4
+    .card
+      .card-block
+        %h5 Comment written
+        = gh_column_chart [current_organisation, :metric, id:'hour_of_comment_created']
+  .col-md-4
+    .card
+      .card-block
+        %h5 Pull request merged
+        = gh_column_chart [current_organisation, :metric, id:'hour_of_comment_created']
+
+  .col-md-12
+    .card
+      .card-block
+        %h5 
+          Leaderboard
+          %span.small (past 4 weeks)
+        = gh_bar_chart [current_organisation, :metric, id:'contribution_per_contributor'], height: '600px'
+

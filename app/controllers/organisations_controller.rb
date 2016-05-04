@@ -14,8 +14,8 @@ class OrganisationsController < ApplicationController
   def update
     # TODO: authorization
     update_to = _parse_boolean params.require(:enabled)
-    organisation.update_attributes!(enabled: update_to)
-    render organisation
+    current_organisation.update_attributes!(enabled: update_to)
+    render current_organisation
   end
 
   private

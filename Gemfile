@@ -39,10 +39,14 @@ gem 'quiet_assets'
 gem 'bootstrap', '~> 4.0.0.alpha3'
 gem 'rails-assets-tether'
 
+# Graphs!
+gem 'chartkick'
 
+#
 # Models
 #
 
+gem 'groupdate'
 
 #
 # Controllers
