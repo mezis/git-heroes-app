@@ -32,7 +32,8 @@ ActiveRecord::Schema.define(version: 20160503065038) do
 
   create_table "organisation_user_scores", force: :cascade do |t|
     t.date     "date"
-    t.integer  "organisation_user_id"
+    t.integer  "user_id"
+    t.integer  "organisation_id"
     t.integer  "points"
     t.integer  "pull_request_count"
     t.integer  "pull_request_merge_time"
@@ -40,8 +41,9 @@ ActiveRecord::Schema.define(version: 20160503065038) do
     t.datetime "updated_at",              null: false
   end
 
-  add_index "organisation_user_scores", ["date"], name: "index_organisation_user_scores_on_date", using: :btree
-  add_index "organisation_user_scores", ["organisation_user_id"], name: "index_organisation_user_scores_on_organisation_user_id", using: :btree
+  add_index "organisation_user_scores", ["date", "user_id", "organisation_id"], name: "organisation_user_scores_on_date_user_org", unique: true, using: :btree
+  add_index "organisation_user_scores", ["organisation_id"], name: "index_organisation_user_scores_on_organisation_id", using: :btree
+  add_index "organisation_user_scores", ["user_id"], name: "index_organisation_user_scores_on_user_id", using: :btree
 
   create_table "organisation_users", force: :cascade do |t|
     t.integer  "organisation_id"
@@ -154,7 +156,8 @@ ActiveRecord::Schema.define(version: 20160503065038) do
 
   add_foreign_key "comments", "pull_requests"
   add_foreign_key "comments", "users"
-  add_foreign_key "organisation_user_scores", "organisation_users"
+  add_foreign_key "organisation_user_scores", "organisations"
+  add_foreign_key "organisation_user_scores", "users"
   add_foreign_key "organisation_users", "organisations"
   add_foreign_key "organisation_users", "users"
   add_foreign_key "pull_requests", "repositories"

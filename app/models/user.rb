@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
   has_many :comments, dependent: :destroy, inverse_of: :user
   has_many :team_users, dependent: :destroy
   has_many :teams, through: :team_users
+  has_many :scores, class_name: 'OrganisationUserScore', dependent: :destroy
 
   validates_presence_of :github_id, :login
 end

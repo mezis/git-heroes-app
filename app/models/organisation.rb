@@ -5,6 +5,7 @@ class Organisation < ActiveRecord::Base
   has_many :users, through: :organisation_users
   has_many :repositories, as: :owner, dependent: :destroy
   has_many :teams, dependent: :destroy, inverse_of: :organisation
+  has_many :scores, class_name: 'OrganisationUserScore', dependent: :destroy
 
   def login
     name

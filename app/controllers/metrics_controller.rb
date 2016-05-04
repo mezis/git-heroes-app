@@ -15,11 +15,16 @@ class MetricsController < ApplicationController
   private
 
   def _contributions_over_time
-    OrganisationUserScore.group(:date).sum(:points)
+    OrganisationUserScore.
+      where(organisation_id: current_organisation.id).
+      group(:date).sum(:points)
   end
 
   def _contributors_over_time
-    OrganisationUserScore.group(:date).distinct.count(:organisation_user_id)
+    OrganisationUserScore.
+      where(organisation_id: current_organisation.id).
+      group(:date).
+      distinct.count(:user_id)
   end
 
   def _contribution_per_contributor_over_time
@@ -33,13 +38,16 @@ class MetricsController < ApplicationController
 
   def _contribution_per_contributor
     data = OrganisationUserScore.
-      where(date: 4.weeks.ago..Time.now).
-      group(:organisation_user_id).
+      where(
+        organisation_id: current_organisation.id,
+        date:            4.weeks.ago..Time.now
+      ).
+      group(:user_id).
       sum(:points).
       sort_by(&:last).reverse
-    org_users = OrganisationUser.includes(:user).where(id: data.map(&:first)).to_a.index_by(&:id)
-    data.map do |org_user_id, points|
-      [org_users[org_user_id].user.login, points]
+    users = User.where(id: data.map(&:first)).to_a.index_by(&:id)
+    data.map do |user_id, points|
+      [users[user_id].login, points]
     end
   end
 

@@ -10,7 +10,7 @@ class ScoreUsers
       repository_id: repository_ids,
       created_at: start_at..end_at
     ).find_each do |pr|
-      scores[org_users[pr.created_by]].points += POINT_RULES.create
+      scores[pr.created_by].points += POINT_RULES.create
     end
 
     # merged PRs
@@ -18,12 +18,12 @@ class ScoreUsers
       repository_id: repository_ids,
       merged_at: start_at..end_at
     ).find_each do |pr|
-      scores[org_users[pr.merged_by]].points += 
+      scores[pr.merged_by].points += 
         (pr.merged_by == pr.created_by) ?
         POINT_RULES.self_merge :
         POINT_RULES.other_merge
-      scores[org_users[pr.created_by]].pull_request_count += 1
-      merge_times[org_users[pr.created_by]] << (pr.merged_at - pr.created_at)
+      scores[pr.created_by].pull_request_count += 1
+      merge_times[pr.created_by] << (pr.merged_at - pr.created_at)
     end
 
     # comments
@@ -31,20 +31,20 @@ class ScoreUsers
       pull_requests: { repository_id: repository_ids },
       created_at: start_at..end_at
     ).find_each do |c|
-      scores[org_users[c.user]].points +=
+      scores[c.user].points +=
         (c.user == c.pull_request.created_by) ?
         POINT_RULES.self_comment :
         POINT_RULES.other_comment
       # TODO: comments on other teams
     end
 
-    merge_times.each_pair do |org_user, times|
-      scores[org_user].pull_request_merge_time = times.median
+    merge_times.each_pair do |user, times|
+      scores[user].pull_request_merge_time = times.median
     end
 
     OrganisationUserScore.transaction do
-      scores.each_pair do |org_user, score|
-        next if org_user.nil? # contributions by people no longer in the org
+      scores.each_pair do |user, score|
+        # next if user.nil? # contributions by people no longer in the org
         score.save!
       end
     end
@@ -72,18 +72,12 @@ class ScoreUsers
     @end_at ||= start_at + 1.week
   end
 
-  # User -> OrganisationUser
-  def org_users
-    @org_users ||= Hash[
-      organisation.organisation_users.includes(:user).map { |ou| [ou.user, ou] }
-    ]
-  end
-
-  # OrganisationUser -> OrganisationUserScore
+  # User -> OrganisationUserScore
   def scores
-    @scores ||= Hash.new do |h,org_user|
-      h[org_user] = OrganisationUserScore.find_or_initialize_by(
-        organisation_user: org_user,
+    @scores ||= Hash.new do |h,user|
+      h[user] = OrganisationUserScore.find_or_initialize_by(
+        organisation:      organisation,
+        user:              user,
         date:              start_at.to_date
       ).tap do |score|
         score.points = 0
@@ -92,10 +86,10 @@ class ScoreUsers
     end
   end
 
-  # OrganisationUser -> numeric array
+  # User -> numeric array
   def merge_times
-    @merge_times ||= Hash.new do |h,org_user|
-      h[org_user] = StatsArray.new
+    @merge_times ||= Hash.new do |h,user|
+      h[user] = StatsArray.new
     end
   end
 
