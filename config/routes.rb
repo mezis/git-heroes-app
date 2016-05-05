@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   resource :homepage, only: %i[show]
 
   resources :organisations, only: %i[index show update] do
-    resources :organisation_users, only: %i[index], path: 'users'
+    resources :users,              only: %i[index show]
     resources :repositories,       only: %i[index update]
     resource  :repositories,       only: %i[update]
     resources :teams,              only: %i[index show update] 

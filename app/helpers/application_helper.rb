@@ -37,5 +37,38 @@ module ApplicationHelper
       buffer.reverse.join.html_safe
     end
   end
+
+  def link_to_user(user, &block)
+    if block_given?
+      link_to [current_organisation, user], &block
+    else 
+      link_to "@#{user.login}", [current_organisation, user]
+    end
+  end
+
+  def github_team_url
+    "https://github.com/orgs/#{current_organisation.name}/teams"
+  end
+
+  def github_members_url
+    "https://github.com/orgs/#{current_organisation.name}/people"
+  end
+
+  def github_link(object, message:nil, target:nil)
+    case object
+    when User, Organisation
+      url = "https://github.com/#{object.login}"
+    when Team
+      url = "https://github.com/orgs/#{object.organisation.login}/teams/#{object.name.downcase.gsub(' ', '-')}"
+    when PullRequest
+      url = "https://github.com/#{object.repository.owner.login}/#{object.repository.name}/pull/#{object.github_number}"
+    else
+      url = object.to_s
+      target ||= '_blank'
+    end
+    message ||= 'View on Github →'
+    target ||= "_#{object.class.name.underscore}_#{object.id}"
+    link_to message, url, target: target
+  end
 end
 

@@ -4,5 +4,6 @@
   .col-lg-2= link_to team.name, [current_organisation, team]
   .col-lg-2= pluralize(users.count, 'member')
   .col-lg-6
-    - users.each do |u|
-      @#{u.login} 
+    %ul.list-inline<>
+      - users.each do |u|
+        %li<>= link_to_user u

@@ -1,0 +1,17 @@
+.title
+  %h3
+    @#{@user.login}
+  = github_link(@user)
+
+%section
+  %h5 Teams
+  - if @teams.any?
+    %ul.list-inline<>
+      - @teams.each do |team|
+        %li<>
+          - if team.enabled?
+            = link_to team.name, [current_organisation, team]
+          - else
+            = team.name
+  - else
+    %p Not member of any team.

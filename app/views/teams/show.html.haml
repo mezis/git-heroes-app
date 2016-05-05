@@ -1,4 +1,11 @@
-%h3.title Team #{@team.name}
+.title
+  %h3 Team #{@team.name}
+  = github_link(@team)
+
+
+%section.m-b-2
+  Members:
+  = render 'users/list', collection: @team.users
 
 .row
   .col-md-6

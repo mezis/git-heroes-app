@@ -53,11 +53,12 @@ class ScoreUsers
   private
 
   POINT_RULES = Hashie::Mash.new(
-    create:         1,
-    self_merge:     2,
-    other_merge:    3,
-    self_comment:   1,
-    other_comment:  1,
+    create:             1,
+    self_merge:         2,
+    other_merge:        3,
+    self_comment:       1,
+    other_comment:      2,
+    cross_team_comment: 3,
   )
 
   def repository_ids

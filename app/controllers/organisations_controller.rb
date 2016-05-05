@@ -9,6 +9,9 @@ class OrganisationsController < ApplicationController
 
   def show
     @organisation = current_organisation
+    @hottest_pull_requests = leaderboard_service.hottest_pull_requests
+    @slowest_pull_requests = leaderboard_service.slowest_pull_requests
+    @fastest_pull_requests = leaderboard_service.fastest_pull_requests
   end
 
   def update
@@ -22,6 +25,10 @@ class OrganisationsController < ApplicationController
 
   def _parse_boolean(x)
     !!(x =~ /^true$/i)
+  end
+
+  def leaderboard_service
+    @leaderboard_service ||= LeaderboardService.new(organisation: current_organisation)
   end
 
   def load_organisation

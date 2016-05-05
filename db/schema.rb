@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160503065038) do
+ActiveRecord::Schema.define(version: 20160504161154) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,16 +69,18 @@ ActiveRecord::Schema.define(version: 20160503065038) do
   add_index "organisations", ["name"], name: "index_organisations_on_name", unique: true, using: :btree
 
   create_table "pull_requests", force: :cascade do |t|
-    t.integer  "github_id",         null: false
-    t.integer  "github_number",     null: false
-    t.integer  "repository_id",     null: false
-    t.integer  "created_by_id",     null: false
+    t.integer  "github_id",                     null: false
+    t.integer  "github_number",                 null: false
+    t.integer  "repository_id",                 null: false
+    t.integer  "created_by_id",                 null: false
     t.integer  "merged_by_id"
-    t.integer  "status",            null: false
+    t.integer  "status",                        null: false
     t.datetime "merged_at"
-    t.datetime "github_updated_at", null: false
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "github_updated_at",             null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.integer  "comments_count",    default: 0, null: false
+    t.integer  "merge_time"
   end
 
   add_index "pull_requests", ["created_at"], name: "index_pull_requests_on_created_at", using: :btree

@@ -1,5 +1,7 @@
 .row.m-b-1[repository]
   .col-md-2
     = button_toggles repository.owner, repository
-  .col-md-10
+  .col-md-2
     #{repository.name}
+  .col-md-8.repository-users.user--no-name
+    = render 'users/list', collection: repository.contributors

@@ -28,6 +28,13 @@ class FindOrCreatePullRequest
       created_at:         data.created_at,
       github_updated_at:  data.updated_at,
     )
+    record.status =
+      case [data.state, !!data.merged_at]
+      when ['open',   false] then :open
+      when ['closed', true]  then :merged
+      when ['closed', false] then :closed
+      else raise 'unrecognized PR status'
+      end
     record.created_by ||= FindOrCreateUser.call(data: data.user).record
     record.merged_by  ||= FindOrCreateUser.call(data: data.user).record if data.merged_by
   end

@@ -1,0 +1,5 @@
+%div[pull_request]
+  %span.pull-request-author= render pull_request.created_by
+  %span.pull-request-link= github_link pull_request, message: "#{pull_request.repository.name}/##{pull_request.github_number}"
+  %span.pull-request-time= distance_of_time_in_words pull_request.created_at, (pull_request.merged_at || Time.current)
+  %span.pull-request-comments= pluralize pull_request.comments_count, 'comment'

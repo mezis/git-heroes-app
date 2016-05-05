@@ -1,0 +1,17 @@
+.title
+  %h3 #{current_organisation.name.titleize} members
+  = github_link github_members_url, message: 'View on Github →', target: "_#{current_organisation.login}_members"
+
+.row.users-grid
+  - @users.sort_by { |u| u.login.downcase }.each do |u|
+    .col-xl-2.col-lg-3.col-md-4.col-sm-6.col-xs-12
+      = render u
+
+- if @former_users.any?
+  .title
+    %h3 Former members
+
+  .row.users-grid
+    - @former_users.sort_by { |u| u.login.downcase }.each do |u|
+      .col-xl-2.col-lg-3.col-md-4.col-sm-6.col-xs-12
+        = render u, with_link: false

@@ -18,13 +18,126 @@
 $enable-rounded:        false;
 $enable-gradients:      true;
 $enable-transitions:    false;
-$enable-flex:           true;
+// $enable-flex:           true;
 
 $headings-font-weight:  300;
 
 @import "bootstrap";
 
+// overrides
+
+// no extra space at the bottom of cards
+.card-block {
+  > ul:last-child {
+    @extend .m-b-0;
+  }
+}
+
+// cross component utilities
+
 .title {
   @extend .m-t-2;
   @extend .m-b-1;
+}
+
+.list-inline {
+  display: inline;
+  li {
+    display: inline-block;
+    &::after {
+      content: ', ';
+    }
+    &:last-child::after {
+      content: '.';
+    }
+    &:last-child::before {
+      content: 'and ';
+    }
+    &:first-child::before {
+      content: '';
+    }
+  }
+}
+
+// components
+
+.user--avatar {
+  display: inline-block;
+  width:   1rem;
+  height:  1rem;
+}
+
+.user--login {
+  display: inline-block;
+}
+
+
+
+// collections
+
+.users-grid {
+  .user {
+    @extend .m-b-1;
+    text-align:   center;
+  }
+  .user--avatar {
+    width:   5rem;
+    height:  5rem;
+  }
+  .user--login,
+  .user--name {
+    display: block;
+  }
+}
+
+.users-list {
+  @extend .list-inline;
+
+  .user {
+    display: inline-block;
+  }
+  .user--avatar {
+    margin-right: .2rem;
+  }
+  .user--name {
+    display: inline-block;
+    margin-left: .2rem;
+  }
+}
+
+.pull-requests {
+  .user {
+    @extend .user-avatar-only;
+    display: inline-block;
+  }
+  ul, & {
+    padding-left: 0;
+  }
+  li {
+    list-style-type: none;
+  }
+}
+
+// component variants
+
+.user-avatar-only {
+  .user--login {
+    display: none;
+  }
+  .user--name {
+    display: none;
+  }
+}
+
+.user--no-name {
+  .user--name {
+    display: none;
+  }
+}
+
+.pull-request--no-time .pull-request-time {
+  display: none;
+}
+.pull-request--no-comments .pull-request-comments {
+  display: none;
 }

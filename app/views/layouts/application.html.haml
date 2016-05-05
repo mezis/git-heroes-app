@@ -28,8 +28,9 @@
             - else
               .dropdown
                 %a.nav-link.dropdown-toggle#orgDropdown{ 'data-toggle': 'dropdown', class: ('disabled' unless current_user) }
+                  Team
 
-          - [['Repositories', Repository], ['Members', OrganisationUser]].each do |title, target|
+          - [['Repositories', Repository], ['Members', User]].each do |title, target|
             %li.nav-item
               - if current_organisation
                 = link_to title, [current_organisation, target], class: 'nav-link'

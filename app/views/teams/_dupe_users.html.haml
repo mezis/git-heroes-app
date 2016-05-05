@@ -8,3 +8,4 @@
       = dupe_users.map do |u|
         - "@#{u.login}"
       - end.to_sentence
+    %p= github_link github_team_url, message: 'Edit teams on Github →', target: "_#{current_organisation.login}_teams"
