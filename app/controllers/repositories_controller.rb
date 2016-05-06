@@ -37,6 +37,6 @@ class RepositoriesController < ApplicationController
   end
 
   def load_organisation
-    current_organisation! Organisation.includes(:repositories).find_by_name(params.require(:organisation_id))
+    current_organisation! Organisation.find_by_name(params.require(:organisation_id))
   end
 end

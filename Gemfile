@@ -46,7 +46,13 @@ gem 'chartkick'
 # Models
 #
 
+# Easy GROUP BY with ActiveRecord
 gem 'groupdate'
+
+# Spot missing indices, bad queries
+gem 'lol_dba', group: :development
+gem 'bullet', group: :development
+
 
 #
 # Controllers
