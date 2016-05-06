@@ -1,27 +1,6 @@
 %h3.title #{current_organisation.name} stats
 
-.row
-  .col-xl-4
-    .card
-      .card-block.pull-request--no-time
-        %h5.card-title Hottest pull requests
-        = render 'pull_requests/list', collection: @hottest_pull_requests
-      .card-footer.text-muted.small
-        Go help the discussion, or read through to learn new tricks.
-  .col-xl-4
-    .card
-      .card-block.pull-request--no-comments
-        %h5.card-title Fastest pull requests
-        = render 'pull_requests/list', collection: @fastest_pull_requests
-      .card-footer.text-muted.small
-        Hold your horses! If it's merged too quickly, it's not reviewed or tested.
-  .col-xl-4
-    .card
-      .card-block.pull-request--no-comments
-        %h5.card-title Slowest pull requests
-        = render 'pull_requests/list', collection: @slowest_pull_requests
-      .card-footer.text-muted.small
-        Too big? Too complicated? Or maybe they need your help?
+= render 'pull_requests/top', hottest: @hottest_pull_requests, fastest: @fastest_pull_requests, slowest: @slowest_pull_requests
 
 .row
   .col-md-12
@@ -33,43 +12,6 @@
         = gh_bar_chart [current_organisation, :metric, id:'contribution_per_contributor'], height: '100px'
       .card-footer.text-muted.small
         Let's hear it for these folks!
-.row
-  .col-md-6
-    .card
-      .card-block
-        %h5.card-title Total contribution points
-        = gh_line_chart [current_organisation, :metric, id:'contributions_over_time']
-  .col-md-6
-    .card
-      .card-block
-        %h5.card-title Unique contributors
-        = gh_line_chart [current_organisation, :metric, id:'contributors_over_time']
 
-  .col-md-6
-    .card
-      .card-block
-        %h5.card-title Contribution per contributor
-        = gh_line_chart [current_organisation, :metric, id:'contribution_per_contributor_over_time']
-  .col-md-6
-    .card
-      .card-block
-        %h5.card-title Comments per contributor
-        = gh_line_chart [current_organisation, :metric, id:'comments_per_contributor_over_time']
-
-  .col-md-4
-    .card
-      .card-block
-        %h5.card-title Pull requests issued
-        = gh_column_chart [current_organisation, :metric, id:'hour_of_pull_request_created']
-  .col-md-4
-    .card
-      .card-block
-        %h5.card-title Comment written
-        = gh_column_chart [current_organisation, :metric, id:'hour_of_comment_created']
-  .col-md-4
-    .card
-      .card-block
-        %h5.card-title Pull request merged
-        = gh_column_chart [current_organisation, :metric, id:'hour_of_comment_created']
-
+= render 'metrics/charts', organisation: current_organisation
 

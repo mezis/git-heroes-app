@@ -23,11 +23,13 @@ class LeaderboardService
   private
 
   def pull_request_scope
-    PullRequest.
+    scope = PullRequest.
       includes(:created_by, repository: :owner).
       where(
         repository_id: repository_ids,
         created_at: @start_date..@end_date)
+    scope = scope.where(created_by_id: @team.users.pluck(:id)) if @team
+    scope
   end
 
   def repository_ids

@@ -7,41 +7,6 @@
   Members:
   = render 'users/list', collection: @team.users
 
-.row
-  .col-md-6
-    .card
-      .card-block
-        %h5 Total contribution points
-        = gh_line_chart [current_organisation, :metric, id:'contributions_over_time', team_id: @team.id]
-  .col-md-6
-    .card
-      .card-block
-        %h5 Unique contributors
-        = gh_line_chart [current_organisation, :metric, id:'contributors_over_time', team_id: @team.id]
+= render 'pull_requests/top', hottest: @hottest_pull_requests, fastest: @fastest_pull_requests, slowest: @slowest_pull_requests
 
-  .col-md-6
-    .card
-      .card-block
-        %h5 Contribution per contributor
-        = gh_line_chart [current_organisation, :metric, id:'contribution_per_contributor_over_time', team_id: @team.id]
-  .col-md-6
-    .card
-      .card-block
-        %h5 Comments per contributor
-        = gh_line_chart [current_organisation, :metric, id:'comments_per_contributor_over_time', team_id: @team.id]
-
-  .col-md-4
-    .card
-      .card-block
-        %h5 Pull requests issued
-        = gh_column_chart [current_organisation, :metric, id:'hour_of_pull_request_created', team_id: @team.id]
-  .col-md-4
-    .card
-      .card-block
-        %h5 Comment written
-        = gh_column_chart [current_organisation, :metric, id:'hour_of_comment_created', team_id: @team.id]
-  .col-md-4
-    .card
-      .card-block
-        %h5 Pull request merged
-        = gh_column_chart [current_organisation, :metric, id:'hour_of_comment_created', team_id: @team.id]
+= render 'metrics/charts', organisation: current_organisation, team: @team
