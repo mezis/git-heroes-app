@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160504161154) do
+ActiveRecord::Schema.define(version: 20160506063640) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -81,6 +81,7 @@ ActiveRecord::Schema.define(version: 20160504161154) do
     t.datetime "updated_at",                    null: false
     t.integer  "comments_count",    default: 0, null: false
     t.integer  "merge_time"
+    t.string   "title"
   end
 
   add_index "pull_requests", ["created_at"], name: "index_pull_requests_on_created_at", using: :btree
@@ -99,6 +100,7 @@ ActiveRecord::Schema.define(version: 20160504161154) do
     t.datetime "updated_at",                  null: false
     t.boolean  "enabled",     default: false, null: false
     t.integer  "users_count", default: 0,     null: false
+    t.string   "description"
   end
 
   add_index "repositories", ["github_id"], name: "index_repositories_on_github_id", unique: true, using: :btree
@@ -122,6 +124,8 @@ ActiveRecord::Schema.define(version: 20160504161154) do
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
     t.boolean  "enabled",         default: true, null: false
+    t.string   "slug"
+    t.string   "description"
   end
 
   add_index "teams", ["github_id"], name: "index_teams_on_github_id", using: :btree

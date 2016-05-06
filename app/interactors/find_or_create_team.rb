@@ -20,7 +20,9 @@ class FindOrCreateTeam
 
   def assign_attributes(record, data)
     record.assign_attributes(
-      name: data.name
+      name:        data.name,
+      slug:        data.slug,
+      description: data.description,
     )
     record.organisation = organisation
   end

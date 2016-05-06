@@ -23,6 +23,7 @@ class FindOrCreatePullRequest
   def assign_attributes(record, data)
     record.assign_attributes(
       github_number:      data.number,
+      title:              data.title,
       merged_at:          data.merged_at,
       status:             data.state.to_sym,
       created_at:         data.created_at,
