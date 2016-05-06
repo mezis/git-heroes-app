@@ -8,6 +8,10 @@ class Organisation < ActiveRecord::Base
   has_many :scores, class_name: 'OrganisationUserScore', dependent: :destroy
   has_many :pull_requests, through: :repositories
 
+  def to_param
+    name
+  end
+
   def login
     name
   end

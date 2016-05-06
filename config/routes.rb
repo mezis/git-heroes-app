@@ -15,14 +15,19 @@ Rails.application.routes.draw do
 
   resource :homepage, only: %i[show]
 
-  resources :organisations, only: %i[index show update] do
-    resources :users,              only: %i[index show]
-    resources :repositories,       only: %i[index update]
-    resource  :repositories,       only: %i[update]
-    resources :teams,              only: %i[index show update] 
-    resource  :teams,              only: %i[update]
-    resources :metrics,            only: %i[show]
-  end
+  match '/:id'                                  => 'organisations#show',    via: %i[get],       as: 'organisation'
+  match '/:id'                                  => 'organisations#update',  via: %i[patch put]
+  match '/:organisation_id/_teams'              => 'teams#index',           via: %i[get],       as: 'organisation_teams'
+  match '/:organisation_id/_teams'              => 'teams#update',          via: %i[patch put]
+  match '/:organisation_id/_teams/:id'          => 'teams#show',            via: %i[get],       as: 'organisation_team'
+  match '/:organisation_id/_teams/:id'          => 'teams#update',          via: %i[patch put]
+  match '/:organisation_id/_repos'              => 'repositories#index',    via: %i[get],       as: 'organisation_repositories'
+  match '/:organisation_id/_repos'              => 'repositories#update',   via: %i[patch put]
+  match '/:organisation_id/_members'            => 'users#index',           via: %i[get],       as: 'organisation_users'
+  match '/:organisation_id/@:id'                => 'users#show',            via: %i[get],       as: 'organisation_user'
+  match '/:organisation_id/:id'                 => 'repositories#show',     via: %i[get],       as: 'organisation_repository'
+  match '/:organisation_id/:id'                 => 'repositories#update',   via: %i[patch put]
+  match '/:organisation_id/_metrics/:id'        => 'metrics#show',          via: %i[get],       as: 'organisation_metric'
 
   mount Resque::Server.new, at: '/resque'
   # get 'sessions/create'

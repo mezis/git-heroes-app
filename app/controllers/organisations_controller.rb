@@ -32,6 +32,6 @@ class OrganisationsController < ApplicationController
   end
 
   def load_organisation
-    current_organisation! Organisation.find(params.require(:id))
+    current_organisation! Organisation.find_by_name(params.require(:id))
   end
 end

@@ -9,13 +9,13 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = current_organisation.users.find params.require(:id)
-    @teams = current_organisation.teams.joins(:team_users).where(team_users: { user_id: params[:id] })
+    @user = current_organisation.users.find_by_login params.require(:id)
+    @teams = current_organisation.teams.joins(:team_users).where(team_users: { user_id: @user.id })
   end
 
   private
 
   def load_organisation
-    current_organisation! Organisation.find(params.require(:organisation_id))
+    current_organisation! Organisation.find_by_name(params.require(:organisation_id))
   end
 end

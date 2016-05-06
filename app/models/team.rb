@@ -6,4 +6,8 @@ class Team < ActiveRecord::Base
   validates_presence_of :organisation
 
   scope :enabled, -> { where(enabled:true) }
+
+  def to_param
+    slug
+  end
 end

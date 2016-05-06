@@ -9,14 +9,14 @@ class TeamsController < ApplicationController
   end
 
   def show
-    @team = current_organisation.teams.find params.require(:id)
+    @team = current_organisation.teams.find_by_slug params.require(:id)
   end
 
   def update
     # TODO: authorization
     update_to = _parse_boolean params.require(:enabled)
     if id = params[:id]
-      team = current_organisation.teams.find(id)
+      team = current_organisation.teams.find_by_slug(id)
       team.update_attributes!(enabled: update_to)
       to_render = [team]
     else
@@ -33,7 +33,7 @@ class TeamsController < ApplicationController
   end
 
   def load_organisation
-    current_organisation! Organisation.find params.require(:organisation_id)
+    current_organisation! Organisation.find_by_name params.require(:organisation_id)
   end
 
   def organisation_teams

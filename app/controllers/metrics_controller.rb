@@ -18,10 +18,10 @@ class MetricsController < ApplicationController
   end
 
   def current_team
-    @current_team ||= params[:team_id] ? current_organisation.teams.find(params[:team_id]) : nil
+    @current_team ||= params[:team_id] ? current_organisation.teams.find_by_name(params[:team_id]) : nil
   end
 
   def load_organisation
-    current_organisation! Organisation.find params.require(:organisation_id)
+    current_organisation! Organisation.find_by_name params.require(:organisation_id)
   end
 end

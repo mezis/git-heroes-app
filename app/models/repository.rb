@@ -8,6 +8,10 @@ class Repository < ActiveRecord::Base
 
   scope :enabled, -> { where(enabled:true) }
 
+  def to_param
+    name
+  end
+
   def full_name
     "#{owner.login}/#{name}"
   end

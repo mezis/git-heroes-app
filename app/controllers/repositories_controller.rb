@@ -12,7 +12,7 @@ class RepositoriesController < ApplicationController
     # TODO: authorization
     update_to = _parse_boolean params.require(:enabled)
     if id = params[:id]
-      repository = all_repositories.find(id)
+      repository = all_repositories.find_by_name(id)
       repository.update_attributes!(enabled: update_to)
       render decorate [repository]
     else
@@ -37,6 +37,6 @@ class RepositoriesController < ApplicationController
   end
 
   def load_organisation
-    current_organisation! Organisation.includes(:repositories).find(params.require(:organisation_id))
+    current_organisation! Organisation.includes(:repositories).find_by_name(params.require(:organisation_id))
   end
 end

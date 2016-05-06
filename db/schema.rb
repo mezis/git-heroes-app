@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160506063640) do
+ActiveRecord::Schema.define(version: 20160506163150) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,6 +104,7 @@ ActiveRecord::Schema.define(version: 20160506063640) do
   end
 
   add_index "repositories", ["github_id"], name: "index_repositories_on_github_id", unique: true, using: :btree
+  add_index "repositories", ["name", "owner_id", "owner_type"], name: "index_repositories_on_name_and_owner_id_and_owner_type", using: :btree
   add_index "repositories", ["owner_id"], name: "index_repositories_on_owner_id", using: :btree
   add_index "repositories", ["owner_type", "owner_id"], name: "index_repositories_on_owner_type_and_owner_id", using: :btree
 
@@ -129,6 +130,7 @@ ActiveRecord::Schema.define(version: 20160506063640) do
   end
 
   add_index "teams", ["github_id"], name: "index_teams_on_github_id", using: :btree
+  add_index "teams", ["name", "organisation_id"], name: "index_teams_on_name_and_organisation_id", using: :btree
   add_index "teams", ["organisation_id"], name: "index_teams_on_organisation_id", using: :btree
 
   create_table "user_repositories", force: :cascade do |t|
@@ -159,6 +161,7 @@ ActiveRecord::Schema.define(version: 20160506063640) do
   end
 
   add_index "users", ["github_id"], name: "index_users_on_github_id", using: :btree
+  add_index "users", ["login"], name: "index_users_on_login", using: :btree
 
   add_foreign_key "comments", "pull_requests"
   add_foreign_key "comments", "users"
