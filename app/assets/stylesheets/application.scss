@@ -61,22 +61,22 @@ $headings-font-weight:  300;
 
 // components
 
-.user--avatar {
-  display: inline-block;
-  width:   1rem;
-  height:  1rem;
+.avatar {
+  display:        inline-block;
+  width:          1rem;
+  height:         1rem;
+  vertical-align: text-bottom;
+  margin-right:   .2rem;
+}
+
+.user--avatar,
+.organisation-avatar {
+  @extend .avatar;
 }
 
 .user--login {
   display: inline-block;
 }
-
-.organisation-avatar {
-  display: inline-block;
-  width:   1rem;
-  height:  1rem;
-}
-
 
 
 // collections
@@ -125,6 +125,13 @@ $headings-font-weight:  300;
 }
 
 // component variants
+
+.organisation--short {
+  .organisation-toggles,
+  .organisation--info {
+    display: none;
+  }
+}
 
 .user-avatar-only {
   .user--login {

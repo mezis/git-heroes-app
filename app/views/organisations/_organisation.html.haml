@@ -1,6 +1,6 @@
 = cache organisation do
-  %div[organisation]
-    = button_toggles organisation
+  %span[organisation]
+    %span.organisation-toggles= button_toggles organisation
     = image_tag organisation.avatar_url, class: 'img-rounded organisation-avatar'
     %span.organisation--name
       = link_to organisation.name, organisation

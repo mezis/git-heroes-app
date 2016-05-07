@@ -50,12 +50,18 @@
 
           -# organisation switcher
           %li.nav-item.pull-xs-right
-            .dropdown
+            .dropdown.organisation--short
               %a.nav-link.dropdown-toggle#orgDropdown{ 'data-toggle': 'dropdown', class: ('disabled' unless current_user) }
-                = current_organisation&.login || 'Organisation'
+                - if current_organisation
+                  = image_tag current_organisation.avatar_url, class: 'img-rounded organisation-avatar'
+                  = current_organisation.login
+                - else
+                  Organisations
               .dropdown-menu.dropdown-menu-right{ 'aria-labelledby': 'orgDropdown' }
                 - current_user&.organisations&.each do |org|
-                  = link_to org.name, org, class: "dropdown-item #{'disabled' if org == current_organisation}"
+                  = link_to org, class: "dropdown-item #{'disabled' if org == current_organisation}" do
+                    = image_tag org.avatar_url, class: 'img-rounded organisation-avatar'
+                    = org.login
                 .dropdown-divider
                 = link_to 'Configure', [Organisation], class: "dropdown-item #{'disabled' if current_organisation.nil?}"
 
