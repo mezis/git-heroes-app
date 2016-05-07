@@ -58,3 +58,8 @@ development:
 test:
   <<: *default
   database: gh_test
+
+production:
+  <<: *default
+  database: gh_dev
+
