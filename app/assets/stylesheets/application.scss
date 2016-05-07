@@ -69,12 +69,12 @@ $headings-font-weight:  300;
   margin-right:   .2rem;
 }
 
-.user--avatar,
+.user-avatar,
 .organisation-avatar {
   @extend .avatar;
 }
 
-.user--login {
+.user-login {
   display: inline-block;
 }
 
@@ -86,12 +86,12 @@ $headings-font-weight:  300;
     @extend .m-b-1;
     text-align:   center;
   }
-  .user--avatar {
+  .user-avatar {
     width:   5rem;
     height:  5rem;
   }
-  .user--login,
-  .user--name {
+  .user-login,
+  .user-name {
     display: block;
   }
 }
@@ -102,10 +102,7 @@ $headings-font-weight:  300;
   .user {
     display: inline-block;
   }
-  .user--avatar {
-    margin-right: .2rem;
-  }
-  .user--name {
+  .user-name {
     display: inline-block;
     margin-left: .2rem;
   }
@@ -113,7 +110,7 @@ $headings-font-weight:  300;
 
 .pull-requests {
   .user {
-    @extend .user-avatar-only;
+    @extend .user--avatar-only;
     display: inline-block;
   }
   ul, & {
@@ -126,24 +123,17 @@ $headings-font-weight:  300;
 
 // component variants
 
-.organisation--short {
-  .organisation-toggles,
-  .organisation--info {
+.user--avatar-only {
+  .user-login {
     display: none;
   }
-}
-
-.user-avatar-only {
-  .user--login {
-    display: none;
-  }
-  .user--name {
+  .user-name {
     display: none;
   }
 }
 
 .user--no-name {
-  .user--name {
+  .user-name {
     display: none;
   }
 }
