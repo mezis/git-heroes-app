@@ -3,8 +3,6 @@ require 'resque-retry'
 require 'resque-retry/server'
 require 'resque/failure/redis'
 
-Rails.logger.info "setting up resque"
-
 Resque.redis = Rails.application.redis
 Resque.redis.namespace = 'githeroes_dev:resque'
 
