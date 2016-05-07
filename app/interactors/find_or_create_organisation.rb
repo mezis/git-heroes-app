@@ -22,6 +22,7 @@ class FindOrCreateOrganisation
   def assign_attributes(org, data)
     org.assign_attributes(
       name:       data.login,
+      avatar_url: data.avatar_url,
     )
   end
 end

@@ -1,3 +1,4 @@
-%ul.users.users-list
-  - collection.sort_by { |u| u.login.downcase }.each do |u|
-    %li>= render u
+= cache collection do
+  %ul.users.users-list
+    - collection.sort_by { |u| u.login.downcase }.each do |user|
+      %li>= render user

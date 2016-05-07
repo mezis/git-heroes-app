@@ -5,4 +5,8 @@ class RepositoryDecorator < SimpleDelegator
     @contributors = contributors
     super object
   end
+
+  def to_ary
+    __getobj__.send(:to_ary)
+  end
 end

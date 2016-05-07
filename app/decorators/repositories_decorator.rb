@@ -11,9 +11,9 @@ class RepositoriesDecorator < Delegator
     }
   end
 
-  # def __setobj__(object)
-  #   @wrapped - object
-  # end
+  def to_ary
+    __getobj__.send(:to_ary)
+  end
 
   private
 

@@ -1,12 +1,13 @@
 - _with_link = defined?(with_link) ? with_link : true
-%div[user]<>
-  - if _with_link
-    = link_to_user user do
-      = image_tag user.avatar_url, class: 'img-rounded user--avatar'
-      .user--login<> @#{user.login}
-  - else
-    %span
-      = image_tag user.avatar_url, class: 'img-rounded user--avatar'
-      .user--login<> @#{user.login}
-  - if user.name
-    .user--name<> (#{user.name})
+= cache user, link:_with_link do
+  %div[user]<>
+    - if _with_link
+      = link_to_user user do
+        = image_tag user.avatar_url, class: 'img-rounded user--avatar'
+        .user--login<> @#{user.login}
+    - else
+      %span
+        = image_tag user.avatar_url, class: 'img-rounded user--avatar'
+        .user--login<> @#{user.login}
+    - if user.name
+      .user--name<> (#{user.name})

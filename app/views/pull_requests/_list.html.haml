@@ -1,3 +1,4 @@
-%ul.pull-requests
-  - collection.each do |item|
-    %li= render item
+= cache collection do
+  %ul.pull-requests
+    - collection.each do |item|
+      %li= render item

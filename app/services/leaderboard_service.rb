@@ -9,18 +9,26 @@ class LeaderboardService
   end
 
   def hottest_pull_requests
-    pull_request_scope.order(comments_count: :DESC).limit(5)
+    cached(__method__) { pull_request_scope.order(comments_count: :DESC).limit(5) }
   end
 
   def slowest_pull_requests
-    pull_request_scope.with_status(:open, :merged).order(merge_time: :DESC).limit(5)
+    cached(__method__) { pull_request_scope.with_status(:open, :merged).order(merge_time: :DESC).limit(5) }
   end
 
   def fastest_pull_requests
-    pull_request_scope.merged.order(merge_time: :ASC).limit(5)
+    cached(__method__) { pull_request_scope.merged.order(merge_time: :ASC).limit(5) }
   end
 
   private
+
+  def cached(label)
+    ids = Rails.cache.fetch("#{self.class.name.underscore}/#{label}/org:#{@organisation.id}/team:#{@team&.id}", expires_in: 1.day) do
+      yield.map(&:id)
+    end
+    records = PullRequest.find(*ids).index_by(&:id)
+    ids.map { |id| records[id] }
+  end
 
   def pull_request_scope
     scope = PullRequest.
