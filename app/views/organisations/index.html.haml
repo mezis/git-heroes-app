@@ -1,3 +1,6 @@
-%ul
+.title
+  %h3 Organisations
+
+%ul.organisations
   - @organisations.each do |org|
-    = render org
+    %li=render org
