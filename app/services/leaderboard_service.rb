@@ -26,13 +26,16 @@ class LeaderboardService
     ids = Rails.cache.fetch("#{self.class.name.underscore}/#{label}/org:#{@organisation.id}/team:#{@team&.id}", expires_in: 1.day) do
       yield.map(&:id)
     end
-    records = PullRequest.find(*ids).index_by(&:id)
+    records = pull_request_includes.find(*ids).index_by(&:id)
     ids.map { |id| records[id] }
+  end
+
+  def pull_request_includes
+    PullRequest.includes(:created_by, repository: :owner)
   end
 
   def pull_request_scope
     scope = PullRequest.
-      includes(:created_by, repository: :owner).
       where(
         repository_id: repository_ids,
         created_at: @start_date..@end_date)
