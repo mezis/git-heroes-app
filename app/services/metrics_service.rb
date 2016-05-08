@@ -2,9 +2,10 @@ class MetricsService
 
   attr_reader :organisation, :team
 
-  def initialize(organisation:, team:)
+  def initialize(organisation:, team:nil, user:nil)
     @organisation = organisation
     @team = team
+    @user = user
   end
 
   def contributions_over_time
@@ -82,21 +83,21 @@ class MetricsService
 
   def _organisation_user_score_scope
     scope = OrganisationUserScore.where(organisation_id: organisation.id)
-    scope = scope.where(user_id: team_user_ids) if team_user_ids
+    scope = scope.where(user_id: user_ids) if user_ids
     scope
   end
 
   def _comment_scope
     scope = Comment.joins(:pull_request).
       where(pull_requests: { repository_id: repository_ids })
-    scope = scope.where(user_id: team_user_ids) if team_user_ids
+    scope = scope.where(user_id: user_ids) if user_ids
     scope
   end
 
 
   def _pull_request_scope
     scope = PullRequest.where(repository_id: repository_ids)
-    scope = scope.where(created_by_id: team_user_ids) if team_user_ids
+    scope = scope.where(created_by_id: user_ids) if user_ids
     scope
   end
 
@@ -104,8 +105,14 @@ class MetricsService
     organisation.repositories.enabled.pluck(:id)
   end
 
-  def team_user_ids
-    return unless @team
-    @team_user_ids ||= @team.users.pluck(:id)
+  def user_ids
+    @user_ids ||=
+      if @team
+        @team.users.pluck(:id)
+      elsif @user
+        [@user.id]
+      else
+        User.joins(:teams).where(teams: { id: organisation.teams.enabled.pluck(:id) }).pluck(:id)
+      end
   end
 end

@@ -14,11 +14,20 @@ class MetricsController < ApplicationController
   private
 
   def metrics_service
-    @metrics_service ||= MetricsService.new(organisation: current_organisation, team: current_team)
+    @metrics_service ||=
+      if params_user
+        UserMetricsService.new(organisation: current_organisation, user: params_user)
+      else
+        MetricsService.new(organisation: current_organisation, team: params_team)
+      end
   end
 
-  def current_team
-    @current_team ||= params[:team_id] ? current_organisation.teams.find_by_name(params[:team_id]) : nil
+  def params_team
+    @params_team ||= params[:team_id] ? current_organisation.teams.find_by_name(params[:team_id]) : nil
+  end
+
+  def params_user
+    @params_user ||= params[:user_id] ? current_organisation.users.find(params[:user_id]) : nil
   end
 
   def load_organisation
