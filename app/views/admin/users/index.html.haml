@@ -1,0 +1,20 @@
+.title.title--admin
+  .pagination-bar.pull-xs-right= paginate @users
+  %h3 Users
+
+.row
+  .col-md-12
+    %table.table.table-hover.table-sm
+      %thead.thead-default
+        %th Login
+        %th Action
+        %th Organisations
+      %tbody
+        - @users.each do |user|
+          %tr
+            %td= user.login
+            %td= link_to 'Act as', session_path(act_as: user.id), method: :patch, class: 'btn btn-sm btn-secondary'
+            %td= user.organisations.map(&:name).to_sentence
+
+  .col-md-12
+    .pagination-bar.pull-xs-right= paginate @users

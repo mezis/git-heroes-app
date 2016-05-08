@@ -1,6 +1,11 @@
 require 'resque/server'
 
 Rails.application.routes.draw do
+  namespace :admin do
+    resources :users,         only: %i[index]
+    resources :organisations, only: %i[index]
+  end
+
   root to: 'homepage#show'
 
   resource :session, only: %i[show destroy update], path: 'auth/github' do

@@ -1,0 +1,10 @@
+.title.title--admin
+  .pagination-bar.pull-xs-right= paginate @organisations
+  %h3 Organisations
+
+.row
+  .col-md-12
+    = render partial: 'organisations/organisation', collection: @organisations
+
+  .col-md-12
+    .pagination-bar.pull-xs-right= paginate @organisations

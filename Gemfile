@@ -66,6 +66,10 @@ gem 'omniauth-github'
 # Authorization
 gem 'pundit'
 
+# Pagination
+gem 'kaminari'
+
+
 #
 # Service layer
 #

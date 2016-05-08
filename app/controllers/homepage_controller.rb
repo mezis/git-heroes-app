@@ -5,6 +5,7 @@ class HomepageController < ApplicationController
   def show
     if current_user
       @jobs = JobStats.where(actor: current_user)
+      @organisations = current_user.organisations
     end
   end
 end

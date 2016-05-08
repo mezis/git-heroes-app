@@ -1,0 +1,10 @@
+.row.m-t-2
+  .col-m-12
+    .alert.alert-danger
+      %strong Not authorized.
+      You aren't allowed to perform this action.
+      %br/
+      - if request.referrer
+        = link_to '← Go back', request.referrer
+      - else
+        = link_to '← Return to homepage', root_path

@@ -1,12 +1,18 @@
 = cache organisation do
-  %span[organisation]
+  %span[organisation]{ class: ('organisation--disabled' unless organisation.enabled?) }
     %span.organisation-toggles= button_toggles organisation
-    = image_tag organisation.avatar_url, class: 'img-rounded organisation-avatar'
-    %span.organisation--name
-      = link_to organisation.name, organisation
+    %span.organisation--name<
+      - org = capture do
+        = image_tag organisation.avatar_url, class: 'img-rounded organisation-avatar'
+        = organisation.name
+      - if organisation.enabled?
+        = link_to(organisation) { org }
+      - else
+        %span= org
+      -# = link_to organisation.enabled?, nil, organisation do
     %span.organisation--info
-      = link_to "#{organisation.users_count} members", [organisation, User]
+      = link_to_if organisation.enabled?, "#{organisation.users_count} members", [organisation, User]
       ,
-      = link_to "#{organisation.teams.count} teams", [organisation, Team]
+      = link_to_if organisation.enabled?, "#{organisation.teams.count} teams", [organisation, Team]
       ,
-      = link_to "#{organisation.owned_repositories_count} repositories", [organisation, Repository]
+      = link_to_if organisation.enabled?, "#{organisation.owned_repositories_count} repositories", [organisation, Repository]

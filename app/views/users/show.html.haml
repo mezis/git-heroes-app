@@ -1,15 +1,15 @@
 .title
+  - if policy(:session).update?
+    = link_to 'Act as user', session_path(act_as: @user.id), method: :patch, class: 'btn btn-secondary pull-xs-right'
+
   %h3
     @#{@user.login}
   = github_link(@user)
 
-  - if policy(:session).update?
-    = link_to 'Act as user', session_path(act_as: @user.id), method: :patch, class: 'btn btn-secondary'
-
-%section
-  %h5 Teams
+%section.m-b-2
+  %span Teams:
   - if @teams.any?
-    %ul.list-inline<>
+    %ul.list-inline<
       - @teams.each do |team|
         %li<>
           - if team.enabled?
@@ -17,7 +17,7 @@
           - else
             = team.name
   - else
-    %p Not member of any team.
+    Not member of any team.
 
 .row
   .col-md-12

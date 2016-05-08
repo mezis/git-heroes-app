@@ -4,17 +4,17 @@ class OrganisationPolicy < ApplicationPolicy
       if user.admin?
         scope.all
       else
-        scope.merge(user.organisations)
+        scope.all.merge(user.organisations)
       end
     end
   end
 
   def index?
-    true
+    super
   end
 
   def show?
-    super || is_member?
+    super || (is_member? && record.enabled?)
   end
 
   def update?
@@ -24,10 +24,10 @@ class OrganisationPolicy < ApplicationPolicy
   private
 
   def is_member?
-    !!user.role_at?(record)
+    record.kind_of?(Organisation) && !!user.role_at?(record)
   end
 
   def is_admin?
-    user.role_at?(record) == 'admin'
+    record.kind_of?(Organisation) && user.role_at?(record) == 'admin'
   end
 end

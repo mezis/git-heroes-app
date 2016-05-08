@@ -78,6 +78,17 @@ $headings-font-weight:  300;
   display: inline-block;
 }
 
+.pagination-bar > .pagination {
+  @extend .btn-group;
+  @extend .text-xs-center;
+  @extend .m-t-0;
+  @extend .m-b-0;
+  > span {
+    @extend .btn;
+    @extend .btn-secondary;
+  }
+}
+
 
 // collections
 
@@ -143,4 +154,32 @@ $headings-font-weight:  300;
 }
 .pull-request--no-comments .pull-request-comments {
   display: none;
+}
+
+.organisations-cards {
+  .organisation {
+    @extend .card;
+    @extend .card-block;
+    // @extend .text-xs-center;
+  }
+
+  .organisation--name {
+    @extend .card-title;
+    @extend .h3;
+    display: block;
+  }
+
+  .organisation-avatar {
+    width:  1.75rem;
+    height: 1.75rem;
+  }
+
+  .organisation-toggles {
+    // display: none;
+    @extend .pull-xs-right;
+  }
+
+  .organisation--disabled {
+    @extend .text-muted;
+  }
 }

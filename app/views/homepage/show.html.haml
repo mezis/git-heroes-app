@@ -1,1 +1,13 @@
-%h1 Welcome!
+.title
+  %h3 Welcome!
+
+%p Git Heroes is a leaderboard for Github organisations.
+
+- unless current_user
+  %p
+    Simply 
+    = link_to 'Sign in with Github', session_path
+    to find out who your heroes are!
+
+- if current_user
+  = render 'organisations', organisations: @organisations

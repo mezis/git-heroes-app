@@ -1,0 +1,17 @@
+- if @organisations.any?
+  .row.organisations.organisations-cards
+    - @organisations.each do |org|
+      .col-md-6= render org
+  - if @organisations.none?(&:enabled)
+    .alert.alert-warning<
+      %strong Stay tuned!
+      None of the organisations you are a member of have been selected for our
+      alpha programme (yet).  Feel free to ask for an invite at
+      = mail_to 'hello@githeroes.io', 'hello@githeroes.io', subject: 'Please invite me to Git Heroes', body: "Hi!\n\nI'm @#{current_user.login} on Github, and I'd like to be invited!\n\nRegards,\n--me"
+      \.
+- else 
+  .alert.alert-warning
+    %strong Coming soon.
+    You're not a member of any Github organisation, or we haven't
+    finished syncing your data yet.
+    Watch this space!
