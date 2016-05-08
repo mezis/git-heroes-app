@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160507164529) do
+ActiveRecord::Schema.define(version: 20160508131138) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,8 +48,9 @@ ActiveRecord::Schema.define(version: 20160507164529) do
   create_table "organisation_users", force: :cascade do |t|
     t.integer  "organisation_id"
     t.integer  "user_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "role",            default: 1, null: false
   end
 
   add_index "organisation_users", ["organisation_id"], name: "index_organisation_users_on_organisation_id", using: :btree
@@ -112,8 +113,9 @@ ActiveRecord::Schema.define(version: 20160507164529) do
   create_table "team_users", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "team_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.integer  "role",       default: 1, null: false
   end
 
   add_index "team_users", ["team_id"], name: "index_team_users_on_team_id", using: :btree
