@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_filter :load_organisation
 
   def index
+    authorize current_organisation
     @users = policy_scope current_organisation.users
     
     all_user_ids = current_organisation.pull_requests.pluck(:created_by_id).uniq
@@ -10,6 +11,7 @@ class UsersController < ApplicationController
 
   def show
     @user = current_organisation.users.find_by_login params.require(:id)
+    authorize @user
     @teams = current_organisation.teams.joins(:team_users).where(team_users: { user_id: @user.id })
   end
 
@@ -17,6 +19,5 @@ class UsersController < ApplicationController
 
   def load_organisation
     current_organisation! Organisation.find_by_name(params.require(:organisation_id))
-    authorize current_organisation
   end
 end

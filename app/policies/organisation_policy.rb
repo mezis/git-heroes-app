@@ -1,7 +1,7 @@
 class OrganisationPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      if user.plays?(:admin)
+      if user.admin?
         scope.all
       else
         scope.merge(user.organisations)
@@ -10,10 +10,24 @@ class OrganisationPolicy < ApplicationPolicy
   end
 
   def index?
-    show?
+    true
   end
 
   def show?
-    user.organisations.include?(record)
+    super || is_member?
+  end
+
+  def update?
+    super || is_admin?
+  end
+
+  private
+
+  def is_member?
+    !!user.role_at?(record)
+  end
+
+  def is_admin?
+    user.role_at?(record) == 'admin'
   end
 end

@@ -7,6 +7,7 @@
 .m-b-1
   - if policy(current_organisation).update?
     = link_to 'All Off', [current_organisation, Team, enabled:false], remote: true, method: :patch, 'data-disable-with': '...', class: %w[btn btn-sm btn-secondary]
+    = link_to 'All On',  [current_organisation, Team, enabled:true],  remote: true, method: :patch, 'data-disable-with': '...', class: %w[btn btn-sm btn-secondary]
 
 - @teams.sort_by { |t| t.name.downcase }.each do |team|
   = render team

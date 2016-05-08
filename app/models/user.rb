@@ -18,7 +18,20 @@ class User < ActiveRecord::Base
   end
 
   # roles, to be extracted
-  def plays?(role, resource=nil)
+
+  def role_at?(record)
+    case record
+    when Organisation
+      organisation_users.to_a.find { |ou| ou.organisation_id == record.id }&.role
+    when Team
+      team_users.to_a.find { |tu| tu.team_id == record.id }&.role
+    else
+      raise NotImplementedError
+    end
+  end
+
+  # system admins
+  def admin?
     false
   end
 end

@@ -4,12 +4,14 @@ class TeamsController < ApplicationController
   before_filter :load_organisation
 
   def index
+    authorize current_organisation
     @teams = policy_scope organisation_teams
     @dupe_users = compute_dupe_users
   end
 
   def show
     @team = current_organisation.teams.find_by_slug params.require(:id)
+    authorize @team
 
     leaderboard_service = LeaderboardService.new(organisation: current_organisation, team: @team)
     @hottest_pull_requests = leaderboard_service.hottest_pull_requests
@@ -22,10 +24,12 @@ class TeamsController < ApplicationController
     update_to = _parse_boolean params.require(:enabled)
     if id = params[:id]
       team = current_organisation.teams.find_by_slug(id)
+      authorize team
       team.update_attributes!(enabled: update_to)
       to_render = [team]
     else
       organisation_teams.each { |t| t.update_attributes!(enabled: update_to) }
+      authorize current_organisation
       to_render = organisation_teams
     end
     render partial: 'shared/loner', collection: [{ partial: 'dupe_users', locals: { dupe_users: compute_dupe_users } }, *organisation_teams]
@@ -39,7 +43,6 @@ class TeamsController < ApplicationController
 
   def load_organisation
     current_organisation! Organisation.find_by_name params.require(:organisation_id)
-    authorize current_organisation
   end
 
   def organisation_teams
