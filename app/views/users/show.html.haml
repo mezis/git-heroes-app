@@ -3,6 +3,9 @@
     @#{@user.login}
   = github_link(@user)
 
+  - if policy(:session).update?
+    = link_to 'Act as user', session_path(act_as: @user.id), method: :patch, class: 'btn btn-secondary'
+
 %section
   %h5 Teams
   - if @teams.any?

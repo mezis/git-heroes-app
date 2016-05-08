@@ -1,11 +1,7 @@
 class RepositoryPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      if user.admin?
-        scope.all
-      else
-        scope.merge(user.member_repositories)
-      end
+      scope.all
     end
   end
 

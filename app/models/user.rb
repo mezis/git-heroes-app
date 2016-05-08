@@ -29,9 +29,4 @@ class User < ActiveRecord::Base
       raise NotImplementedError
     end
   end
-
-  # system admins
-  def admin?
-    false
-  end
 end

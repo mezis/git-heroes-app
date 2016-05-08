@@ -30,6 +30,16 @@ class SessionsController < ApplicationController
     end
   end
 
+  def update
+    if params[:act_as]
+      authorize :session
+      session[:act_as] = params[:act_as]
+    else
+      session.delete(:act_as)
+    end
+    redirect_to :back
+  end
+
   def destroy
     logout!
     flash[:notice] = 'Sorry to see you go'
