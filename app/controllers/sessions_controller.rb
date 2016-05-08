@@ -1,4 +1,7 @@
 class SessionsController < ApplicationController
+  before_filter :skip_authorization
+  before_filter :skip_policy_scope
+    
   def callback
     auth_hash = request.env['omniauth.auth']
     result = FindOrCreateUser.call(

@@ -4,8 +4,10 @@
   Enable repositories you wish to consider in the leaderboard.
   
 .m-b-1
-  = link_to 'All Off', [current_organisation, Repository, enabled:false], remote: true, method: :patch, 'data-disable-with': '...', class: 'btn btn-sm btn-secondary' 
-  = link_to 'All On',  [current_organisation, Repository, enabled:true],  remote: true, method: :patch, 'data-disable-with': '...', class: 'btn btn-sm btn-secondary' 
+  - if policy(current_organisation).update?
+    = link_to 'All Off', [current_organisation, Repository, enabled:false], remote: true, method: :patch, 'data-disable-with': '...', class: %w[btn btn-sm btn-secondary]
+    = link_to 'All On',  [current_organisation, Repository, enabled:true],  remote: true, method: :patch, 'data-disable-with': '...', class:  %w[btn btn-sm btn-secondary]
+
 
 - @repositories.each do |repo|
   = render repo

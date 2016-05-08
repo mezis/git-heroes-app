@@ -2,9 +2,9 @@ class UsersController < ApplicationController
   before_filter :load_organisation
 
   def index
-    @users = current_organisation.users
+    @users = policy_scope current_organisation.users
     
-    all_user_ids = Organisation.first.pull_requests.pluck(:created_by_id).uniq
+    all_user_ids = current_organisation.pull_requests.pluck(:created_by_id).uniq
     @former_users = User.where(id: all_user_ids) - @users
   end
 
@@ -17,5 +17,6 @@ class UsersController < ApplicationController
 
   def load_organisation
     current_organisation! Organisation.find_by_name(params.require(:organisation_id))
+    authorize current_organisation
   end
 end

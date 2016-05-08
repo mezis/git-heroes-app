@@ -4,7 +4,7 @@ class OrganisationsController < ApplicationController
   before_filter :load_organisation, only: %i[show update]
 
   def index
-    @organisations = current_user.organisations
+    @organisations = policy_scope(Organisation)
   end
 
   def show
@@ -33,5 +33,6 @@ class OrganisationsController < ApplicationController
 
   def load_organisation
     current_organisation! Organisation.find_by_name(params.require(:id))
+    authorize current_organisation
   end
 end

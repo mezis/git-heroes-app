@@ -23,5 +23,6 @@ class MetricsController < ApplicationController
 
   def load_organisation
     current_organisation! Organisation.find_by_name params.require(:organisation_id)
+    authorize current_organisation
   end
 end

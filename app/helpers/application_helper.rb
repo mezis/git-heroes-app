@@ -12,7 +12,7 @@ module ApplicationHelper
       [*records, enabled: !record.enabled?], 
       remote: true, 
       method: :patch,
-      class: "btn btn-primary btn-small #{colour} #{record.class.name.underscore}--update-link",
+      class: "btn btn-primary btn-small #{colour} #{'disabled' unless policy(record).update?} #{record.class.name.underscore}--update-link",
       'data-disable-with': '...'
   end
 
@@ -36,6 +36,15 @@ module ApplicationHelper
       end
       buffer.reverse.join.html_safe
     end
+  end
+
+  # a link_to that join+compacts the class option (if any)
+  def link_to(*args, &block)
+    options = args.extract_options!
+    if classes = options[:class] && classes.kind_of?(Array)
+      options[:class] = classes.compact.join(' ')
+    end
+    super(*args, options, &block)
   end
 
   def link_to_user(user, &block)

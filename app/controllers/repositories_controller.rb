@@ -33,10 +33,11 @@ class RepositoriesController < ApplicationController
   end
 
   def all_repositories
-    current_organisation.repositories.includes(:owner)
+    policy_scope current_organisation.repositories.includes(:owner)
   end
 
   def load_organisation
     current_organisation! Organisation.find_by_name(params.require(:organisation_id))
+    authorize current_organisation
   end
 end

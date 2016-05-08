@@ -16,4 +16,9 @@ class User < ActiveRecord::Base
   def to_param
     login
   end
+
+  # roles, to be extracted
+  def plays?(role, resource=nil)
+    false
+  end
 end
