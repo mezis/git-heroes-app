@@ -53,7 +53,7 @@ gem 'groupdate'
 # Spot missing indices, bad queries
 gem 'lol_dba', group: :development
 gem 'bullet', group: :development
-gem 'active_record_query_trace', group: :development
+gem 'active_record_query_trace', require: false
 
 
 
