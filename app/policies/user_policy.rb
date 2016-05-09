@@ -10,4 +10,8 @@ class UserPolicy < ApplicationPolicy
     # Probably means showing org users, not users.
     true
   end
+
+  def update?
+    super || (user == record)
+  end
 end

@@ -55,6 +55,7 @@ gem 'lol_dba', group: :development
 gem 'bullet', group: :development
 gem 'active_record_query_trace', require: false
 
+gem 'email_validator'
 
 
 #
@@ -134,8 +135,8 @@ group :development, :test do
 
   # REPLs
   gem 'pry-rails'
-  gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'better_errors'
 
   # Unit/integration testing
   gem 'rspec-rails'

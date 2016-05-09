@@ -79,10 +79,7 @@
         You are logged in as @#{@acting_user.login} but acting as @#{current_user.login}.
         = link_to 'Stop acting', session_path, method: :patch
 
-    - flash.each do |key, value|
-      .alert.alert-danger(role=alert)
-        .container
-          #{key}: #{value}
+    = render 'flashes'
 
     .container
       .row

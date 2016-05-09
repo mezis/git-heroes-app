@@ -79,5 +79,14 @@ module ApplicationHelper
     target ||= "_#{object.class.name.underscore}_#{object.id}"
     link_to message, url, target: target
   end
+
+  def flash_colour(key)
+    case key.to_s
+    when 'success' then 'success'
+    when 'alert' then 'danger'
+    when 'notice' then 'info'
+    else 'warning'
+    end
+  end
 end
 

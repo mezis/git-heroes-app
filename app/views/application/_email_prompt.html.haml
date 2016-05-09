@@ -1,0 +1,17 @@
+#email-prompt>
+  - unless current_user.email.present?
+    .alert.alert-warning
+      .container
+        .row
+          .col-md-12
+            %p
+              %strong Hi there!
+              We don't know your email yet.
+            %p
+              Maybe you didn't let Github know, but would you mind sharing it with
+              us? We promise you strictly no spam, and we'll be able to send you
+              your organisation's leaderboard regularly!
+            = form_for current_user, remote: true, method: :patch, html: { class: 'form-inline' } do |f|
+              .form-group
+                = f.text_field :email, placeholder: 'john.doe@example.com', class: 'form-control', width: 120
+                = f.submit 'Save', class: 'btn btn-primary'

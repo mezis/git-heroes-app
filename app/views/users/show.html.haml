@@ -6,39 +6,41 @@
     @#{@user.login}
   = github_link(@user)
 
-%section.m-b-2
-  %span Teams:
-  - if @teams.any?
-    %ul.list-inline<
-      - @teams.each do |team|
-        %li<>
-          - if team.enabled?
-            = link_to team.name, [current_organisation, team]
-          - else
-            = team.name
-  - else
-    Not member of any team.
+- if @teams.present?
+  %section.m-b-2
+    %span Teams:
+    - if @teams.any?
+      %ul.list-inline<
+        - @teams.each do |team|
+          %li<>
+            - if team.enabled?
+              = link_to team.name, [current_organisation, team]
+            - else
+              = team.name
+    - else
+      Not member of any team.
 
-.row
-  .col-md-12
-    .card
-      .card-block
-        %h5 Total contribution points
-        = gh_line_chart [current_organisation, :metric, id:'contributions_over_time', user_id: @user.id]
+- if current_organisation
+  .row
+    .col-md-12
+      .card
+        .card-block
+          %h5 Total contribution points
+          = gh_line_chart [current_organisation, :metric, id:'contributions_over_time', user_id: @user.id]
 
-  .col-md-4
-    .card
-      .card-block
-        %h5 Pull requests issued
-        = gh_column_chart [current_organisation, :metric, id:'hour_of_pull_request_created', user_id: @user.id], library: { series: { 1 => { targetAxisIndex: 1 } } }
-  .col-md-4
-    .card
-      .card-block
-        %h5 Comment written
-        = gh_column_chart [current_organisation, :metric, id:'hour_of_comment_created', user_id: @user.id], library: { series: { 1 => { targetAxisIndex: 1 } } }
-  .col-md-4
-    .card
-      .card-block
-        %h5 Pull request merged
-        = gh_column_chart [current_organisation, :metric, id:'hour_of_comment_created', user_id: @user.id], library: { series: { 1 => { targetAxisIndex: 1 } } }
+    .col-md-4
+      .card
+        .card-block
+          %h5 Pull requests issued
+          = gh_column_chart [current_organisation, :metric, id:'hour_of_pull_request_created', user_id: @user.id], library: { series: { 1 => { targetAxisIndex: 1 } } }
+    .col-md-4
+      .card
+        .card-block
+          %h5 Comment written
+          = gh_column_chart [current_organisation, :metric, id:'hour_of_comment_created', user_id: @user.id], library: { series: { 1 => { targetAxisIndex: 1 } } }
+    .col-md-4
+      .card
+        .card-block
+          %h5 Pull request merged
+          = gh_column_chart [current_organisation, :metric, id:'hour_of_comment_created', user_id: @user.id], library: { series: { 1 => { targetAxisIndex: 1 } } }
 

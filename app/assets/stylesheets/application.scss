@@ -89,6 +89,10 @@ $headings-font-weight:  300;
   }
 }
 
+#flashes .alert {
+  @extend .m-b-0;
+}
+
 
 // collections
 
