@@ -14,7 +14,12 @@ Rails.application.routes.draw do
     get 'failure'
   end
 
-  mount Resque::Server.new, at: '/resque'
+  mount Rack::Builder.new {
+    use Rack::Auth::Basic do |*credentials|
+      credentials.last == ENV['RESQUE_WEB_PASSWORD']
+    end
+    run Resque::Server.new
+  }, at: '/resque'
 
   match '/_orgs'                                => 'organisations#index',   via: %i[get],       as: 'organisations'
   match '/:id'                                  => 'organisations#show',    via: %i[get],       as: 'organisation'
