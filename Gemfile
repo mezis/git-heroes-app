@@ -115,6 +115,9 @@ gem 'foreman'
 # Use Puma as the app server
 gem 'puma'
 
+# Peformance / error monitoring
+gem 'appsignal', require: false
+
 
 #
 # Development/test support
