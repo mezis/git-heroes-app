@@ -17,6 +17,12 @@ class User < ActiveRecord::Base
     login
   end
 
+  AVATAR_URL = Addressable::Template.new('https://avatars.githubusercontent.com/u/{id}{?v,s}')
+
+  def avatar_url(size: 100, v: 3)
+    AVATAR_URL.expand(id: id, s: size, v: v)
+  end
+
   # roles, to be extracted
 
   def role_at?(record)

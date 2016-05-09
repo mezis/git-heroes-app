@@ -7,12 +7,18 @@
     %table.table.table-hover.table-sm
       %thead.thead-default
         %th Login
+        %th Name
+        %th Flags
         %th Action
         %th Organisations
       %tbody
         - @users.each do |user|
           %tr
-            %td= user.login
+            %td.user--no-name= render 'users/user', user: user, with_link: false
+            %td= user.name
+            %td
+              - if user.token
+                %span.label.label-default active
             %td= link_to 'Act as', session_path(act_as: user.id), method: :patch, class: 'btn btn-sm btn-secondary'
             %td= user.organisations.map(&:name).to_sentence
 
