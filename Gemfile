@@ -117,7 +117,7 @@ gem 'foreman'
 gem 'puma'
 
 # Peformance / error monitoring
-gem 'appsignal', require: false
+gem 'appsignal'
 
 # Force SSL usage
 gem 'rack-ssl'
