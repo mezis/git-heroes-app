@@ -44,13 +44,13 @@ module GitHeroes
     # Be sure to have the adapter's gem in your Gemfile
     # and follow the adapter's specific installation
     # and deployment instructions.
-    config.active_job.queue_adapter = :resque
+    config.active_job.queue_adapter = :sidekiq
 
     # Do log asset requests in production
     config.quiet_assets = false
 
     def redis
-      @redis ||= begin
+      @_redis ||= begin
         uri = URI.parse(ENV.fetch('REDIS_URL', 'redis://localhost'))
         _, db, namespace = uri.path&.split('/')
         db ||= 1
@@ -61,7 +61,7 @@ module GitHeroes
     end
 
     def locks
-      @_locks ||= Redlock::Client.new([redis])
+      @_redlock ||= Redlock::Client.new([redis])
     end
   end
 end

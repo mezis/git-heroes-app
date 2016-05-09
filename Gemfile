@@ -91,11 +91,11 @@ gem 'octokit'
 # Background jobs
 #
 
+gem 'redis-namespace'
 gem 'globalid'
-gem 'resque'
-gem 'resque-scheduler'
-gem 'resque-retry'
 gem 'redlock'
+gem 'sidekiq'
+gem 'sinatra', require:false # for sidekiq's web UI
 
 #
 # Caching

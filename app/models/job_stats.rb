@@ -3,7 +3,7 @@ class JobStats
   Invalid = Class.new(StandardError)
   
   attr_accessor :attempts, :status
-  attr_reader   :id, :actor_id, :args_hash, :job_class
+  attr_reader   :id, :actor_id, :args_hash, :job_class, :enqueued_at
 
   validates_presence_of :id, :args_hash
   validates_numericality_of :attempts
@@ -17,6 +17,7 @@ class JobStats
     @actor_id =   options.fetch(:actor_id, nil)
     @attempts =   Integer(options.fetch(:attempts, 0))
     @persisted =  options.fetch(:persisted, false)
+    @enqueued_at = Integer(options.fetch(:enqueued_at, Time.current.to_i))
   end
 
   def attributes

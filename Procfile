@@ -1,3 +1,2 @@
 web: puma
-worker: QUEUES=* rake environment resque:work
-scheduler: VERBOSE=1 rake environment resque:scheduler
+worker: bundle exec sidekiq -c $SIDEKIQ_CONCURRENCY

@@ -1,4 +1,4 @@
-require 'resque/server'
+require 'sidekiq/web'
 
 Rails.application.routes.draw do
   namespace :admin do
@@ -16,10 +16,10 @@ Rails.application.routes.draw do
 
   mount Rack::Builder.new {
     use Rack::Auth::Basic do |*credentials|
-      credentials.last == ENV['RESQUE_WEB_PASSWORD']
+      credentials.last == ENV['JOBS_HTTP_PASSWORD']
     end
-    run Resque::Server.new
-  }, at: '/resque'
+    run Sidekiq::Web
+  }, at: '/admin/jobs', as: 'admin_jobs'
 
   match '/_orgs'                                => 'organisations#index',   via: %i[get],       as: 'organisations'
   match '/:id'                                  => 'organisations#show',    via: %i[get],       as: 'organisation'
