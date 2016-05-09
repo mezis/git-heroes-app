@@ -6,8 +6,17 @@
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = javascript_include_tag 'https://www.google.com/jsapi', 'chartkick'
+    = javascript_include_tag '//d3js.org/d3.v2.min.js'
     = csrf_meta_tags
   %body
+    -# admin navbar
+    - if current_user.admin?
+      %nav.navbar.navbar-full.navbar-dark.bg-danger.navbar--admin
+        .container
+          %ul.nav.navbar-nav
+            %li.nav-item= link_to 'Users', admin_users_path, class: 'nav-link'
+            %li.nav-item= link_to 'Organisations', admin_organisations_path, class: 'nav-link'
+
     %nav.navbar.navbar-full.navbar-dark.bg-inverse
       .container
         %ul.nav.navbar-nav
@@ -63,13 +72,6 @@
                     = org.login
                 .dropdown-divider
                 = link_to 'Configure', [Organisation], class: "dropdown-item #{'disabled' unless policy(Organisation).update?}"
-
-    - if current_user.admin?
-      %nav.navbar.navbar-full.navbar-dark.bg-danger
-        .container
-          %ul.nav.navbar-nav
-            %li.nav-item= link_to 'Users', admin_users_path, class: 'nav-link'
-            %li.nav-item= link_to 'Organisations', admin_organisations_path, class: 'nav-link'
 
     - if @acting_user
       .alert.alert-warning(role=alert)

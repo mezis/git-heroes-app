@@ -183,3 +183,7 @@ $headings-font-weight:  300;
     @extend .text-muted;
   }
 }
+
+.navbar--admin {
+  padding: 0;
+}

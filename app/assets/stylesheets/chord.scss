@@ -1,0 +1,11 @@
+.chord-graph {
+  font-size: small;
+  .chord {
+    fill-opacity: .67;
+    stroke: #000;
+    stroke-width: .5px;
+  }
+  circle {
+    fill: transparent;
+  }
+}

@@ -10,3 +10,11 @@
 = render 'pull_requests/top', hottest: @hottest_pull_requests, fastest: @fastest_pull_requests, slowest: @slowest_pull_requests
 
 = render 'metrics/charts', organisation: current_organisation, team: @team
+
+
+.card.text-xs-center
+  .card-block
+    %h5.card-title Comment interactions
+    %p.text-muted
+      This shows who comments on whose pull requests.
+    .chord-graph#chord-graph
