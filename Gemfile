@@ -118,6 +118,9 @@ gem 'puma'
 # Peformance / error monitoring
 gem 'appsignal', require: false
 
+# Force SSL usage
+gem 'rack-ssl'
+
 
 #
 # Development/test support
