@@ -184,6 +184,26 @@ $headings-font-weight:  300;
   }
 }
 
+.organisations--table {
+  .organisation {
+    @extend .row;
+    @extend .m-b-1;
+    display:  block;
+  }
+  .organisation-toggles {
+    @extend .col-md-2;
+    display: block;
+  }
+  .organisation--name {
+    @extend .col-md-3;
+    display: block;
+  }
+  .organisation--info {
+    @extend .col-md-7;
+    display: block;
+  }
+}
+
 .navbar--admin {
   padding: 0;
 }

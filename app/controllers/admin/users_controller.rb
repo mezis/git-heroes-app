@@ -4,6 +4,6 @@ class Admin::UsersController < ApplicationController
   before_filter :skip_policy_scope
 
   def index
-    @users = User.order('LOWER(login)').page(params[:page]).per(100)
+    @users = User.includes(:organisations).order('LOWER(login)').page(params[:page]).per(50)
   end
 end

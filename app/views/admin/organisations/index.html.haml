@@ -4,7 +4,8 @@
 
 .row
   .col-md-12
-    = render partial: 'organisations/organisation', collection: @organisations
+    .organisations--table
+      = render partial: 'organisations/organisation', collection: @organisations
 
   .col-md-12
     .pagination-bar.pull-xs-right= paginate @organisations
