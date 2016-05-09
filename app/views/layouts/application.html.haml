@@ -10,7 +10,7 @@
     = csrf_meta_tags
   %body
     -# admin navbar
-    - if current_user.admin?
+    - if current_user&.admin?
       %nav.navbar.navbar-full.navbar-dark.bg-danger.navbar--admin
         .container
           %ul.nav.navbar-nav
