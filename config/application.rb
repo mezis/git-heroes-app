@@ -51,7 +51,7 @@ module GitHeroes
 
     def redis
       @redis ||= begin
-        uri = URI.parse(ENV.fetch('REDIS_URL'))
+        uri = URI.parse(ENV.fetch('REDIS_URL', 'redis://localhost'))
         _, db, namespace = uri.path&.split('/')
         db ||= 1
         namespace ||= 'githeroes'
