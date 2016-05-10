@@ -24,8 +24,15 @@ ActiveSupport::Logger.class_eval do
   end
 end
 
+# Set up load path
+File.expand_path('../../lib', __FILE__).tap { |d| $:.unshift(d) unless $:.include?(d) }
+require 'git_heroes/redis_connection'
+
 module GitHeroes
   class Application < Rails::Application
+    include RedisConnection
+    extend RedisConnection
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -49,19 +56,11 @@ module GitHeroes
     # Do log asset requests in production
     config.quiet_assets = false
 
-    def redis
-      @_redis ||= begin
-        uri = URI.parse(ENV.fetch('REDIS_URL', 'redis://localhost'))
-        _, db, namespace = uri.path&.split('/')
-        db ||= 1
-        namespace ||= 'githeroes'
-        uri.path = "/#{db}"
-        Redis::Namespace.new(namespace, deprecations: true, redis: Redis.new(url: uri.to_s))
-      end
-    end
+    # Set up caching
+    config.cache_store = :redis_store, {
+      pool:       redis_cache_pool,
+      expires_in: 1.day
+    }
 
-    def locks
-      @_redlock ||= Redlock::Client.new([redis])
-    end
   end
 end
