@@ -13,7 +13,14 @@ class LeaderboardService
   end
 
   def slowest_pull_requests
-    cached(__method__) { pull_request_scope.with_status(:open, :merged).order(merge_time: :DESC).limit(5) }
+    cached(__method__) do
+      pull_request_scope.with_status(:open, :merged).
+        order(%{
+          COALESCE(merge_time, 
+            EXTRACT(EPOCH FROM NOW()) - EXTRACT(EPOCH FROM created_at)
+          ) DESC}).
+        limit(5) 
+    end
   end
 
   def fastest_pull_requests
