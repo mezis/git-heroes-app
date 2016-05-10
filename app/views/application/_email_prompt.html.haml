@@ -1,5 +1,5 @@
 #email-prompt>
-  - unless current_user.email.present?
+  - unless current_user.nil? || current_user.email.present?
     .alert.alert-warning
       .container
         .row
