@@ -23,7 +23,7 @@ class MetricsController < ApplicationController
   end
 
   def params_team
-    @params_team ||= params[:team_id] ? current_organisation.teams.find_by_name(params[:team_id]) : nil
+    @params_team ||= params[:team_id] ? current_organisation.teams.find(params[:team_id]) : nil
   end
 
   def params_user
