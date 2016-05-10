@@ -82,23 +82,20 @@ class MetricsService
   end
 
   def _organisation_user_score_scope
-    scope = OrganisationUserScore.where(organisation_id: organisation.id)
-    scope = scope.where(user_id: user_ids) if user_ids
-    scope
+    OrganisationUserScore.where(organisation_id: organisation.id).where(user_id: user_ids)
   end
 
   def _comment_scope
-    scope = Comment.joins(:pull_request).
-      where(pull_requests: { repository_id: repository_ids })
-    scope = scope.where(user_id: user_ids) if user_ids
-    scope
+    Comment.joins(:pull_request).
+      where(pull_requests: { repository_id: repository_ids }).
+      where(user_id: user_ids)
   end
 
 
   def _pull_request_scope
-    scope = PullRequest.where(repository_id: repository_ids)
-    scope = scope.where(created_by_id: user_ids) if user_ids
-    scope
+    PullRequest.
+      where(repository_id: repository_ids).
+      where(created_by_id: user_ids)
   end
 
   def repository_ids
