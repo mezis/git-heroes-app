@@ -16,33 +16,26 @@ module GitHeroes
       include ::Singleton
 
       def redis
-        @_redis ||= redis_connection 'data', ENV.fetch('REDIS_URL')
+        @_redis ||=
+          Redis::Namespace.new('data', redis: Redis.new(url: ENV.fetch('REDIS_URL')))
       end
 
       def redis_sidekiq_pool
         @_redis_sidekiq_pool ||= ConnectionPool.new(size: ENV.fetch('REDIS_POOL_SIZE'), timeout: 1) do
-          redis_connection 'sidekiq', ENV.fetch('REDIS_URL')
+          Redis::Namespace.new('sidekiq', redis: Redis.new(url: ENV.fetch('REDIS_URL')))
         end
       end
 
       def redis_cache_pool
         @_redis_cache_pool ||= ConnectionPool.new(size: ENV.fetch('REDIS_POOL_SIZE'), timeout: 1) do
-          redis_connection 'cache', ENV.fetch('REDIS_CACHE_URL')
+          # redis-store-activerecord expects a Redis::Store which has a slightly
+          # nonstandard API
+          Redis::Store::Factory.create(namespace: 'cache', url: ENV.fetch('REDIS_CACHE_URL'))
         end
       end
 
       def locks
         @_redlock ||= Redlock::Client.new([redis])
-      end
-
-      private
-
-      def redis_connection(namespace, url)
-        namespace = "#{ENV.fetch 'REDIS_NAMESPACE'}:#{namespace}"
-        Redis::Namespace.new(
-          namespace,
-          redis: Redis::Store::Factory.create(url: url)
-        )
       end
     end
   end
