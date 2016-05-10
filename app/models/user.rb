@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   has_many :scores, class_name: 'OrganisationUserScore', dependent: :destroy
 
   validates_presence_of :github_id, :login
-  validates :email, email: true
+  validates :email, email: true, if: ->(r) { r.email.present? }
 
   def to_param
     login
