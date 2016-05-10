@@ -26,6 +26,7 @@ class LeaderboardService
     ids = Rails.cache.fetch("#{self.class.name.underscore}/#{label}/org:#{@organisation.id}/team:#{@team&.id}", expires_in: 1.day) do
       yield.map(&:id)
     end
+    return [] unless ids.any?
     records = pull_request_includes.find(*ids).index_by(&:id)
     ids.map { |id| records[id] }
   end
