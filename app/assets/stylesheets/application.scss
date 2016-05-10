@@ -159,6 +159,12 @@ $headings-font-weight:  300;
 .pull-request--no-comments .pull-request-comments {
   display: none;
 }
+.pull-request--closed,
+.pull-request--merged {
+  a {
+    color: $gray;
+  }
+}
 
 .organisations-cards {
   .organisation {
