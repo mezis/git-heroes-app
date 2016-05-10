@@ -22,7 +22,7 @@ Rails.application.routes.draw do
     run Sidekiq::Web
   }, at: '/admin/jobs', as: 'admin_jobs'
 
-  match '/_users/:id'                           => 'users#update',          via: %i[patch put]
+  match '/_users/:id'                           => 'users#update',          via: %i[patch put], as: 'user'
   match '/_orgs'                                => 'organisations#index',   via: %i[get],       as: 'organisations'
   match '/:id'                                  => 'organisations#show',    via: %i[get],       as: 'organisation'
   match '/:id'                                  => 'organisations#update',  via: %i[patch put]
