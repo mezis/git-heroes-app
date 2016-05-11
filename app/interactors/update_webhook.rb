@@ -15,13 +15,14 @@ class UpdateWebhook
     
     # update if broken
     if hook.present? && hook.to_hash.deep_merge(desired_data) != hook.to_hash
-      binding.pry
       client.edit_org_hook(organisation.name, hook.id, {}, desired_data)
+      context.updated = true
     end
 
     # add if missing
     if hook.nil?
       client.create_org_hook(organisation.name, {}, desired_data)
+      context.created = true
     end
 
     # update org timestamp
