@@ -143,5 +143,8 @@ group :development, :test do
 
   # Test factories
   gem 'factory_girl_rails'
+
+  # Debug logging for HTTP requests
+  gem 'httplog', require: false
 end
 

@@ -16,8 +16,10 @@ class SessionsController < ApplicationController
     end
     authenticate! result.record
 
-    UpdateUserOrganisationsJob.perform_later actor_id: current_user.id
-    UpdateUserRepositoriesJob.perform_later  actor_id: current_user.id
+    if result.created?
+      UpdateUserOrganisationsJob.perform_later actor_id: current_user.id
+      UpdateUserRepositoriesJob.perform_later  actor_id: current_user.id
+    end
 
     flash[:notice] = result.created ? 'Account created' : 'Welcome back'
 
