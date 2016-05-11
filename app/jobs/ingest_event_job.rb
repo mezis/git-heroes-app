@@ -77,4 +77,8 @@ class IngestEventJob < BaseJob
     org = FindOrCreateOrganisation.call(data: @data.organization).record
   end
 
+  def _process_ping
+    # ignore those events
+  end
+
 end
