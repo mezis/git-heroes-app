@@ -59,6 +59,15 @@ $headings-font-weight:  300;
   }
 }
 
+.list--no-bullets {
+  ul, & {
+    padding-left: 0;
+  }
+  li {
+    list-style-type: none;
+  }
+}
+
 // components
 
 .avatar {
@@ -124,15 +133,21 @@ $headings-font-weight:  300;
 }
 
 .pull-requests {
+  @extend .list--no-bullets;
   .user {
     @extend .user--avatar-only;
     display: inline-block;
   }
-  ul, & {
-    padding-left: 0;
+}
+
+.comments {
+  @extend .list--no-bullets;
+  .user {
+    @extend .user--avatar-only;
+    display: inline-block;
   }
-  li {
-    list-style-type: none;
+  .comment-author {
+    display: none;
   }
 }
 

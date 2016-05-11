@@ -20,6 +20,18 @@
     - else
       Not member of any team.
 
+.row
+  .col-md-6
+    .card
+      .card-block
+        %h5 Recent pull requests
+        = render 'pull_requests/list', collection: @recent_pull_requests
+  .col-md-6
+    .card
+      .card-block
+        %h5 Recent comments on
+        = render 'comments/list', collection: @recent_comments
+
 - if current_organisation
   .row
     .col-md-12

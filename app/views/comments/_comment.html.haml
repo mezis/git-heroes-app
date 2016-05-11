@@ -1,0 +1,6 @@
+- pull_request = comment.pull_request
+%div[comment]
+  %span.comment-author= render comment.user
+  %span.comment-pull-request-author= render pull_request.created_by
+  %span.comment-pull-request-link= github_link pull_request, message: "#{pull_request.repository.name}/##{pull_request.github_number}"
+  %span.comment--time-ago= time_ago_in_words(comment.created_at)
