@@ -31,6 +31,7 @@ class BaseJob < ActiveJob::Base
   rescue_from(StandardError) do |e|
     logger.warn "Failure in #{self.class}: #{e.class} (#{e.message}}"
     logger.debug e.backtrace.take(5).map(&:indent).join("\n")
+    Appsignal.add_exception(e)
     if job_stats.attempts > max_attempts
       logger.info "(final failure)"
     else
