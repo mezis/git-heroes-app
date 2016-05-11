@@ -30,7 +30,7 @@
                 %a.nav-link.dropdown-toggle#teamDropdown{ 'data-toggle': 'dropdown', class: ('disabled' unless current_user) }
                   Team
                 .dropdown-menu{ 'aria-labelledby': 'teamDropdown' }
-                  - org.teams.enabled.each do |team|
+                  - org.teams.enabled.sort_by(&:name).each do |team|
                     = link_to team.name, [org, team], class: 'dropdown-item'
                   .dropdown-divider
                   = link_to 'Configure', [org, Team], class: 'dropdown-item'
