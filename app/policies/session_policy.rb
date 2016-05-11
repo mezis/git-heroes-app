@@ -1,5 +1,5 @@
 class SessionPolicy < ApplicationPolicy
   def update?
-    user.admin?
+    user&.admin?
   end
 end
