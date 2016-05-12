@@ -4,8 +4,6 @@ Rails.application.config.middleware.use OmniAuth::Builder do
       user:email
       repo
       read:org
-      read:repo_hook
-      write:repo_hook
       admin:org_hook
   ].join(',')
 end
