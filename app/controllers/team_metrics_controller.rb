@@ -33,6 +33,7 @@ class TeamMetricsController < ApplicationController
   # ]
   def members_matrix
     matrix = ([[0] * users.length] * users.length).deep_dup
+    # FIXME: also filter by repository (PRs could be outside the org)
     counts = Comment.
       joins(:pull_request).
       where(created_at: 4.weeks.ago .. Time.current).

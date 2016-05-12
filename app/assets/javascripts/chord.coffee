@@ -1,6 +1,15 @@
 # original chord graph code from
 # http://bl.ocks.org/AndrewRP/raw/7468330/
 doMagic = ->
+  el = $('#chord-graph')
+
+  # delete old contents if any
+  el.empty()
+  
+  # get config
+  citiesUrl = el.data('series-url')
+  matrixUrl = el.data('matrix-url')
+
   width = 720
   height = 720
   outerRadius = Math.min(width, height) / 2 - 10
@@ -9,10 +18,15 @@ doMagic = ->
   arc = d3.svg.arc().innerRadius(innerRadius).outerRadius(outerRadius)
   layout = d3.layout.chord().padding(.04).sortSubgroups(d3.descending).sortChords(d3.ascending)
   path = d3.svg.chord().radius(innerRadius)
-  svg = d3.select('#chord-graph').append('svg').attr('width', width).attr('height', height).append('g').attr('id', 'circle').attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
+  svg = d3.select('#chord-graph').
+    append('svg').
+      attr('viewBox', "0 0 #{width} #{height}").
+    append('g').
+      attr('id', 'circle').
+      attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
   svg.append('circle').attr 'r', outerRadius
-  d3.csv 'chord.csv', (cities) ->
-    d3.json 'chord.json', (matrix) ->
+  d3.csv citiesUrl, (cities) ->
+    d3.json matrixUrl, (matrix) ->
       # Compute the chord layout.
 
       mouseover = (d, i) ->

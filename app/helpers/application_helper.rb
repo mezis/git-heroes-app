@@ -88,5 +88,12 @@ module ApplicationHelper
     else 'warning'
     end
   end
+
+  def chord_graph_data_attrs(team)
+    {
+      'data-series-url': organisation_team_metrics_path(current_organisation, team, format:'csv'),
+      'data-matrix-url': organisation_team_metrics_path(current_organisation, team, format:'json')
+    } 
+  end
 end
 
