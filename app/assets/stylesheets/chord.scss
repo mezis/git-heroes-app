@@ -1,16 +1,16 @@
 .chord-graph {
-  max-width: 720px;
+  font-size:        small;
+  max-width:        720px;
+  margin:           auto;
 
   .chord {
-    fill-opacity: .67;
-    stroke: #000;
-    stroke-width: .5px;
-    transition: opacity 150ms linear;
+    fill-opacity:   .5;
+    transition:     opacity 150ms linear;
   }
   .chord--faded {
-    opacity: 0.15;
+    opacity:        0.15;
   }
   circle {
-    fill: transparent;
+    fill:           transparent;
   }
 }

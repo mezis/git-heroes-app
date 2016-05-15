@@ -57,7 +57,7 @@ doMagic = ->
 
       # Remove the labels that don't fit. :(
       groupText.filter((d, i) ->
-        groupPath[0][i].getTotalLength() / 2 - 16 < @getComputedTextLength()
+        groupPath[0][i].getTotalLength() / 2 - 30 < @getComputedTextLength()
       ).remove()
 
       # Add the chords.
