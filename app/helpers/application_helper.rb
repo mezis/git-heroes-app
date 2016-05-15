@@ -89,11 +89,19 @@ module ApplicationHelper
     end
   end
 
-  def chord_graph_data_attrs(team)
-    {
-      'data-series-url': organisation_team_metrics_path(current_organisation, team, format:'csv'),
-      'data-matrix-url': organisation_team_metrics_path(current_organisation, team, format:'json')
-    } 
+  def chord_graph_data_attrs(resource)
+    case resource
+    when Team
+      {
+        'data-series-url': organisation_team_metrics_path(resource.organisation, resource, format:'csv'),
+        'data-matrix-url': organisation_team_metrics_path(resource.organisation, resource, format:'json')
+      } 
+    when Organisation
+      {
+        'data-series-url': organisation_chord_path(resource, format:'csv'),
+        'data-matrix-url': organisation_chord_path(resource, format:'json')
+      } 
+    end
   end
 end
 
