@@ -2,7 +2,6 @@
 # http://bl.ocks.org/AndrewRP/raw/7468330/
 doMagic = ->
   el = $('#chord-graph')
-  elInfo = $('#chord-info')
 
   # delete old contents if any
   el.empty()
@@ -32,12 +31,12 @@ doMagic = ->
 
       # Add a mouseover title.
       group.on 'mouseover', (d,i) ->
-        elInfo.text "#{series[i].name}: #{d.value} comment(s)"
+        $('#chord-info').text "#{series[i].name}: #{d.value} comment(s)"
         chord.classed 'chord--faded', (p) ->
           p.source.index != i and p.target.index != i
         return
       group.on 'mouseout', ->
-        elInfo.text ''
+        $('#chord-info').text ''
         chord.classed 'chord--faded', false
         return
 
@@ -67,7 +66,7 @@ doMagic = ->
 
       # Add an elaborate mouseover title for each chord.
       chord.on 'mouseover', (d) ->
-        elInfo.text(
+        $('#chord-info').text(
           sprintf "%(name1)s %(value12)d ⟷  %(name2)s %(value21)s",
             name1: series[d.source.index].name
             name2: series[d.target.index].name,
@@ -75,13 +74,18 @@ doMagic = ->
             value21: d.target.value
         )
         chord.classed 'chord--faded', (p) ->
-          p.source.index != d.source.index &&
-          p.target.index != d.source.index
+          p.source.index != d.source.index ||
+          p.target.index != d.target.index
         return
       chord.on 'mouseout', ->
-        elInfo.text ''
+        $('#chord-info').text ''
         chord.classed 'chord--faded', false
         return
+
+      svg.append('text').
+        attr('x', 0).attr('y', 0).
+        attr('id', 'chord-info').
+        attr('text-anchor', 'middle')
       return
     return
 
