@@ -40,10 +40,10 @@ class TeamMetricsController < ApplicationController
   def members_matrix
     matrix = ([[0] * users.length] * users.length).deep_dup
     each_user_pair do |id1,id2,count|
+      next if id1 == id2
       idx1 = user_index(id1)
       idx2 = user_index(id2)
       next unless idx1 && idx2
-      next if idx1 == idx2
       matrix[idx1][idx2] = count
     end
     matrix
@@ -52,10 +52,10 @@ class TeamMetricsController < ApplicationController
   def teams_matrix
     matrix = ([[0] * teams.length] * teams.length).deep_dup
     each_user_pair do |id1,id2,count|
+      next if id1 == id2
       idx1 = team_index(id1)
       idx2 = team_index(id2)
       next unless idx1 && idx2
-      # next if idx1 == idx2
       matrix[idx1][idx2] += count
     end
     matrix
