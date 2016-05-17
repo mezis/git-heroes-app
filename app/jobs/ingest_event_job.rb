@@ -42,7 +42,7 @@ class IngestEventJob < BaseJob
 
     case @data.action
     when 'added'
-      return if team.users.exists?(user_id: member.id)
+      return if team.users.exists?(id: member.id)
       team.users << member
     when 'removed'
       team.users.delete(member)
