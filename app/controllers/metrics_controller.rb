@@ -4,6 +4,9 @@ class MetricsController < ApplicationController
   before_filter :load_organisation
 
   def show
+    authorize current_organisation
+    authorize(params_user || params_team || current_organisation)
+
     metric_name = params.require(:id)
     unless metrics_service.respond_to?(metric_name)
       raise ActiveRecord::RecordNotFound
@@ -16,7 +19,8 @@ class MetricsController < ApplicationController
   def metrics_service
     @metrics_service ||=
       if params_user
-        UserMetricsService.new(organisation: current_organisation, user: params_user)
+        can_compare = policy(current_user).compare?
+        UserMetricsService.new(organisation: current_organisation, user: params_user, compare: can_compare)
       else
         MetricsService.new(organisation: current_organisation, team: params_team)
       end
@@ -32,6 +36,5 @@ class MetricsController < ApplicationController
 
   def load_organisation
     current_organisation! Organisation.find_by_name params.require(:organisation_id)
-    authorize current_organisation
   end
 end

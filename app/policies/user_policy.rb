@@ -6,12 +6,16 @@ class UserPolicy < ApplicationPolicy
   end
 
   def show?
-    # FIXME: only org members should be able to do this.
-    # Probably means showing org users, not users.
-    user && (user.organisations & record.organisations).any?
+    super || (user && (user.organisations & record.organisations).any?)
   end
 
   def update?
     super || (user == record)
+  end
+
+  def compare?
+    user.admin? ||
+      record.teams.any? { |t| user.role_at?(t) == 'maintainer' } ||
+      record.organisations.any? { |o| user.role_at?(o) == 'admin' }
   end
 end
