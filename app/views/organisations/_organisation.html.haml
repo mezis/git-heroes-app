@@ -1,4 +1,4 @@
-= cache organisation do
+= cache [organisation, policy(organisation).update?] do
   %span[organisation]{ class: ('organisation--disabled' unless organisation.enabled?) }
     %span.organisation-toggles= button_toggles organisation
     %span.organisation--name<
@@ -9,7 +9,6 @@
         = link_to(organisation) { org }
       - else
         %span= org
-      -# = link_to organisation.enabled?, nil, organisation do
     %span.organisation--info
       = link_to_if organisation.enabled?, "#{organisation.users_count} members", [organisation, User]
       ,
