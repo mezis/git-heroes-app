@@ -11,16 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160510203239) do
+ActiveRecord::Schema.define(version: 20160517190006) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "comments", force: :cascade do |t|
-    t.integer  "github_id"
-    t.integer  "pull_request_id"
+    t.integer  "github_id",         null: false
+    t.integer  "pull_request_id",   null: false
     t.integer  "user_id"
-    t.datetime "github_updated_at"
+    t.datetime "github_updated_at", null: false
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
   end
@@ -31,11 +31,11 @@ ActiveRecord::Schema.define(version: 20160510203239) do
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
   create_table "organisation_user_scores", force: :cascade do |t|
-    t.date     "date"
-    t.integer  "user_id"
-    t.integer  "organisation_id"
-    t.integer  "points"
-    t.integer  "pull_request_count"
+    t.date     "date",                    null: false
+    t.integer  "user_id",                 null: false
+    t.integer  "organisation_id",         null: false
+    t.integer  "points",                  null: false
+    t.integer  "pull_request_count",      null: false
     t.integer  "pull_request_merge_time"
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
@@ -46,13 +46,14 @@ ActiveRecord::Schema.define(version: 20160510203239) do
   add_index "organisation_user_scores", ["user_id"], name: "index_organisation_user_scores_on_user_id", using: :btree
 
   create_table "organisation_users", force: :cascade do |t|
-    t.integer  "organisation_id"
-    t.integer  "user_id"
+    t.integer  "organisation_id",             null: false
+    t.integer  "user_id",                     null: false
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
     t.integer  "role",            default: 1, null: false
   end
 
+  add_index "organisation_users", ["organisation_id", "user_id"], name: "index_organisation_users_on_organisation_id_and_user_id", unique: true, using: :btree
   add_index "organisation_users", ["organisation_id"], name: "index_organisation_users_on_organisation_id", using: :btree
   add_index "organisation_users", ["user_id"], name: "index_organisation_users_on_user_id", using: :btree
 
@@ -112,24 +113,25 @@ ActiveRecord::Schema.define(version: 20160510203239) do
   add_index "repositories", ["owner_type", "owner_id"], name: "index_repositories_on_owner_type_and_owner_id", using: :btree
 
   create_table "team_users", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "team_id"
+    t.integer  "user_id",                null: false
+    t.integer  "team_id",                null: false
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
     t.integer  "role",       default: 1, null: false
   end
 
   add_index "team_users", ["team_id"], name: "index_team_users_on_team_id", using: :btree
+  add_index "team_users", ["user_id", "team_id"], name: "index_team_users_on_user_id_and_team_id", unique: true, using: :btree
   add_index "team_users", ["user_id"], name: "index_team_users_on_user_id", using: :btree
 
   create_table "teams", force: :cascade do |t|
     t.integer  "github_id",                      null: false
     t.string   "name",                           null: false
-    t.integer  "organisation_id"
+    t.integer  "organisation_id",                null: false
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
     t.boolean  "enabled",         default: true, null: false
-    t.string   "slug"
+    t.string   "slug",                           null: false
     t.string   "description"
   end
 
@@ -138,13 +140,14 @@ ActiveRecord::Schema.define(version: 20160510203239) do
   add_index "teams", ["organisation_id"], name: "index_teams_on_organisation_id", using: :btree
 
   create_table "user_repositories", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "repository_id"
+    t.integer  "user_id",       null: false
+    t.integer  "repository_id", null: false
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
   end
 
   add_index "user_repositories", ["repository_id"], name: "index_user_repositories_on_repository_id", using: :btree
+  add_index "user_repositories", ["user_id", "repository_id"], name: "index_user_repositories_on_user_id_and_repository_id", unique: true, using: :btree
   add_index "user_repositories", ["user_id"], name: "index_user_repositories_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
