@@ -42,9 +42,10 @@ class IngestEventJob < BaseJob
 
     case @data.action
     when 'added'
+      return if team.users.exists?(user_id: member.id)
       team.users << member
     when 'removed'
-      team.users.delete(user)
+      team.users.delete(member)
     else raise NotImplementedError
     end
   end
