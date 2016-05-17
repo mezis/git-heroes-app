@@ -5,6 +5,12 @@ class UserPolicy < ApplicationPolicy
     end
   end
 
+  def index?
+    # can calways list users, but scope limited to member organisations
+    # in controllers
+    true
+  end
+
   def show?
     super || (user && (user.organisations & record.organisations).any?)
   end

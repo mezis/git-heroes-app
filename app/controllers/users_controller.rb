@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_filter :load_organisation, only: %i[index show]
 
   def index
-    authorize current_organisation
+    authorize User
     @users = policy_scope current_organisation.users
     
     all_user_ids = current_organisation.pull_requests.pluck(:created_by_id).uniq
