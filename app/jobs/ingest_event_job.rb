@@ -1,8 +1,8 @@
 class IngestEventJob < BaseJob
   def perform(options = {})
-    @data = Hashie::Mash.new options.delete(:data)
+    @data = Hashie::Mash.new options.fetch(:data)
 
-    event = options.delete(:event)
+    event = options.fetch(:event)
     Rails.logger.info "received event '#{event}'"
     send :"_process_#{event}"
   end

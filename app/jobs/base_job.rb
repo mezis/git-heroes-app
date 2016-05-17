@@ -6,7 +6,7 @@ class BaseJob < ActiveJob::Base
   around_enqueue do |job, block|
     job_stats.lock do |j|
       if j.duplicate?
-        logger.info "not enqueuing duplicate #{self.class}"
+        logger.info "Not enqueuing duplicate #{self.class}"
       else
         block.call
         j.status = 'queued'
