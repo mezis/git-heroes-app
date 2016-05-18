@@ -37,9 +37,9 @@ class SessionsController < ApplicationController
       authorize :session
       session[:act_as] = params[:act_as]
     else
-      session.delete(:act_as)
+      session[:act_as] = 'none'
     end
-    redirect_to :back
+    redirect_to :back, status: 303
   end
 
   def destroy

@@ -23,7 +23,7 @@ module AuthenticationConcern
     return unless token = session[:token]
 
     @current_user = User.includes(:organisations).find_by(token: token)
-    if @current_user&.admin? && id = session[:act_as]
+    if @current_user&.admin? && (id = session[:act_as]) && (id =~ /^\d+$/)
       @acting_user = @current_user
       @current_user = User.find(id)
     end
