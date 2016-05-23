@@ -148,5 +148,8 @@ group :development, :test do
 
   # Debug logging for HTTP requests
   gem 'httplog', require: false
+
+  # Generate fake data
+  gem 'faker', require: false
 end
 
