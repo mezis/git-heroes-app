@@ -82,13 +82,20 @@ class MetricsService
   end
 
   def _organisation_user_score_scope
-    OrganisationUserScore.where(organisation_id: organisation.id).where(user_id: user_ids)
+    OrganisationUserScore.where(
+      organisation_id: organisation.id,
+      user_id:         user_ids,
+      date:            1.year.ago..Time.current,
+    )
   end
 
   def _comment_scope
     Comment.joins(:pull_request).
-      where(pull_requests: { repository_id: repository_ids }).
-      where(user_id: user_ids)
+      where(
+        pull_requests: { repository_id: repository_ids },
+        user_id:       user_ids,
+        created_at:    1.year.ago..Time.current,
+    )
   end
 
 
