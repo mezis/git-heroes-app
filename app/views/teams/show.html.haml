@@ -11,11 +11,13 @@
 
 = render 'metrics/charts', organisation: current_organisation, team: @team
 
+.row
+  .col-xs-12
+    .card.text-xs-center
+      .card-block
+        %h5.card-title Comment interactions
+        %p.text-muted.small
+          This shows who comments on whose pull requests. Arcs are proportional to number of comments.
+          Comments on one's own pull requests are not included.
+        .chord-graph#chord-graph{ chord_graph_data_attrs(@team) }
 
-.card.text-xs-center
-  .card-block
-    %h5.card-title Comment interactions
-    %p.text-muted.small
-      This shows who comments on whose pull requests. Arcs are proportional to number of comments.
-      Comments on one's own pull requests are not included.
-    .chord-graph#chord-graph{ chord_graph_data_attrs(@team) }

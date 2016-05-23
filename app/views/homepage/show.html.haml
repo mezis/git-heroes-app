@@ -1,13 +1,118 @@
-.title
-  %h3 Welcome!
-
-%p Git Heroes is a leaderboard for Github organisations.
-
-- unless current_user
-  %p
-    Simply 
-    = link_to 'Sign in with Github', session_path
-    to find out who your heroes are!
 
 - if current_user
   = render 'organisations', organisations: @organisations
+
+  %hr/
+
+.container.homepage-hero
+  .row
+    .col-xs-12.col-md-6.col-lg-4.homepage-hero-logo= image_tag 'logo-large'
+    .col-xs-12.col-md-6.col-lg-8.homepage-hero-content
+      %h1 A leaderboard for Github organisations.
+
+    .col-xs-12.col-md-6.col-lg-4.homepage-hero-item
+      .mega-octicon--block.octicon-comment>
+      Encourage code reviews within teams
+    .col-xs-12.col-md-6.col-lg-4.homepage-hero-item
+      .mega-octicon--block.octicon-comment-discussion>
+      Promote code reviews across organisation teams
+    .col-xs-12.col-md-6.col-lg-4.homepage-hero-item
+      .mega-octicon--block.octicon-git-pull-request>
+      Highlight reviewing bottlenecks
+    .col-xs-12.col-md-6.col-lg-4.homepage-hero-item
+      .mega-octicon--block.octicon-organization>
+      Know your best contributors
+    .col-xs-12.col-md-6.col-lg-4.homepage-hero-item
+      .mega-octicon--block.octicon-graph>
+      Visualize your team's progress
+    .col-xs-12.col-md-6.col-lg-4.homepage-hero-item
+      .mega-octicon--block.octicon-radio-tower>
+      Get regular updates on your Github rhythm
+
+    - unless current_user
+      .col-xs-12.p-t-2.p-b-2
+        %p.text-xs-center
+          = link_to session_path, class: 'btn btn-primary' do
+            %span.octicon.octicon-mark-github
+            Sign in with Github
+          %br/
+          %small to find out who your heroes are!
+
+.row.m-t-2
+  .col-xs-12.col-md-6.col-lg-4
+    .card
+      %h5.card-header
+        .mega-octicon--block.octicon-comment
+        Encourage code reviews within teams
+      .card-block
+        %p
+          Team chord graphs shows who comments on who's pull requests regularly,
+          so you can pinpoint isolated contributors, for instance.
+        %img.img-fluid{ 'src': image_path('hero/chord-users.png') }
+
+
+  .col-xs-12.col-md-6.col-lg-4
+    .card
+      %h5.card-header
+        .mega-octicon--block.octicon-comment-discussion
+        Promote code reviews across organisation teams
+      .card-block
+        %p
+          Organisations chord graphs shows which teams interact and how much they
+          interact with other teams.
+        %img.img-fluid{ 'src': image_path('hero/chord-teams.png') }
+
+
+  .col-xs-12.col-md-6.col-lg-4
+    .card
+      %h5.card-header
+        .mega-octicon--block.octicon-git-pull-request
+        Highlight reviewing bottlenecks
+      .card-block
+        %p
+          Each organisation, team, and user page has a short list of pull
+          requests with potential issues: open for too long, merged too quickly,
+          or with a lot of comments.
+
+        %img.img-fluid{ 'src': image_path('hero/slow-prs.png') }
+          
+          
+  .col-xs-12.col-md-6.col-lg-4
+    .card
+      %h5.card-header
+        .mega-octicon--block.octicon-organization
+        Know your best contributors
+      .card-block
+        %p
+          Contributors are awarded points for each action on Github: issuing pull requests,
+          commenting, and merging.
+          We give more points to actions on others' pull requests, more so if they're members of a different team.
+          %br/
+          The organisation dashboard includes a daily updated leaderboard of the highest scoring users.
+        %img.img-fluid{ 'src': image_path('hero/leaderboard') }
+          
+
+  .col-xs-12.col-md-6.col-lg-4
+    .card
+      %h5.card-header
+        .mega-octicon--block.octicon-graph
+        Visualize your team's progress
+      .card-block
+        %p
+          Any team has changing dynamics: great morale and new starters can push
+          contribution up; postcrunch-mode blues can deteriorate it.
+          %br/
+          We provide daily updated graphs of normalised (and absolute) contribution volumes.
+        %img.img-fluid{ 'src': image_path('hero/contributions') }
+
+  .col-xs-12.col-md-6.col-lg-4
+    .card
+      %h5.card-header
+        .mega-octicon--block.octicon-radio-tower
+        Get regular updates on your Github rhythm
+      .card-block
+        %p
+          Git Heroes updates in real time using Github webhook notifications.
+          %br/
+          But we'll also send every active organisation member daily updates to
+          encourage reviews, and a weekly leaderboard email.

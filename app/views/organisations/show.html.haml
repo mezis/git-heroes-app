@@ -3,7 +3,7 @@
 = render 'pull_requests/top', hottest: @hottest_pull_requests, fastest: @fastest_pull_requests, slowest: @slowest_pull_requests
 
 .row
-  .col-md-12
+  .col-xs-12
     .card
       .card-block
         %h5.card-title 
@@ -16,9 +16,11 @@
 
 = render 'metrics/charts', organisation: current_organisation
 
-.card.text-xs-center
-  .card-block
-    %h5.card-title Comment interactions
-    %p.small.text-muted
-      Arcs are proportional to number of comments. Comments within the team are included.
-    .chord-graph#chord-graph{ chord_graph_data_attrs(current_organisation) }
+.row
+  .col-xs-12
+    .card.text-xs-center
+      .card-block
+        %h5.card-title Comment interactions
+        %p.small.text-muted
+          Arcs are proportional to number of comments. Comments within the team are included.
+        .chord-graph#chord-graph{ chord_graph_data_attrs(current_organisation) }

@@ -1,5 +1,7 @@
 - if @organisations.any?
   .row.organisations.organisations-cards
+    %p.col-md-12
+      You are a member of the following organisations:
     - @organisations.each do |org|
       .col-md-6= render org
   - if @organisations.none?(&:enabled)

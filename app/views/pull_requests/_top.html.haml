@@ -1,20 +1,20 @@
 -# locals: hottest, fastest, slowest
 .row
-  .col-xl-4
+  .col-xs-12.col-lg-4
     .card
       .card-block.pull-request--no-time
         %h5.card-title Hottest pull requests
         = render 'pull_requests/list', collection: hottest
       .card-footer.text-muted.small
         Go help the discussion, or read through to learn new tricks.
-  .col-xl-4
+  .col-xs-12.col-lg-4
     .card
       .card-block.pull-request--no-comments
         %h5.card-title Fastest pull requests
         = render 'pull_requests/list', collection: fastest
       .card-footer.text-muted.small
         Hold your horses! If it's merged too quickly, it's not reviewed or tested.
-  .col-xl-4
+  .col-xs-12.col-lg-4
     .card
       .card-block.pull-request--no-comments
         %h5.card-title Slowest pull requests

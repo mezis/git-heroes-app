@@ -18,11 +18,12 @@
 $enable-rounded:        false;
 $enable-gradients:      true;
 $enable-transitions:    false;
-// $enable-flex:           true;
+$enable-flex:           true;
 
 $headings-font-weight:  300;
 
 @import "bootstrap";
+@import "octicons";
 
 // overrides
 
@@ -31,6 +32,11 @@ $headings-font-weight:  300;
   > ul:last-child {
     @extend .m-b-0;
   }
+}
+
+// no margin atop dropdown menu, so it doesn't interfere with hovering
+.dropdown-menu {
+  margin-top: 0;
 }
 
 // cross component utilities
@@ -232,3 +238,67 @@ $headings-font-weight:  300;
 .navbar--admin {
   padding: 0;
 }
+
+.navbar--heroes {
+  position:      relative; // so we can place the logo
+  border-bottom: 1px solid black;
+
+  .navbar-logo {
+    padding-right: 2.8rem;
+    img {
+      position:   absolute;
+      height:     2.8rem;
+      bottom:     0;
+    }
+  }
+}
+
+.homepage-hero {
+  @extend .p-t-2;
+  @extend .p-x-2;
+  background-color:   $card-cap-bg;
+  border:             1px solid $card-border-color;
+  position:           relative;
+  align-items:        stretch;
+}
+.homepage-hero-logo {
+  @extend .p-b-1;
+  @extend .text-xs-center;
+  $offset:         $spacer + 1rem;
+  position:       relative;
+  top:            -$offset;
+  margin-bottom:  -$offset;
+
+  > img {
+    @extend .p-x-2;
+    width: 100%;
+    max-width: 400px;
+  }
+}
+.homepage-hero-content {
+  @extend .m-b-2;
+  @extend .text-xs-center;
+  @extend .text-sm-left;
+  @include media-breakpoint-up(md) {
+    order: -1;
+  }
+}
+.homepage-hero-item {
+  @extend .text-xs-center;
+  @extend .m-y-1;
+}
+
+.mega-octicon--block {
+  @extend         .mega-octicon;
+  display:        block;
+}
+
+// .icon-lead {
+//   $indent: 1.5rem;
+//   text-indent:    -$indent;
+//   padding-left:   $indent;
+//   .octicon {
+//     font-size:    large;
+//     padding-left: $indent;
+//   }
+// }

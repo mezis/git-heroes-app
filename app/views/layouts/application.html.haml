@@ -9,6 +9,7 @@
     = javascript_include_tag '//cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js'
     = javascript_include_tag '//cdnjs.cloudflare.com/ajax/libs/sprintf/1.0.3/sprintf.min.js'
     = csrf_meta_tags
+    = yield :head
   %body
     -# admin navbar
     - if current_user&.admin?
@@ -19,11 +20,12 @@
             %li.nav-item= link_to 'Organisations', admin_organisations_path, class: 'nav-link'
             %li.nav-item= link_to 'Jobs', admin_jobs_path, class: 'nav-link', target: '_githeroes_jobs'
 
-    %nav.navbar.navbar-full.navbar-dark.bg-inverse
+    %nav.navbar.navbar-full.navbar-light.navbar--heroes
       .container
         %ul.nav.navbar-nav
           %li.nav-item
-            = link_to 'Git Heroes', root_path, class: 'nav-link'
+            = link_to root_path, class: 'nav-link navbar-logo' do
+              = image_tag 'logo-small'
 
           %li.nav-item
             - if org = current_organisation
@@ -41,7 +43,7 @@
                   Team
 
           - [['Repositories', Repository], ['Members', User]].each do |title, target|
-            %li.nav-item
+            %li.nav-item.hidden-sm-down
               - if current_organisation
                 = link_to title, [current_organisation, target], class: 'nav-link'
               - else
@@ -83,7 +85,7 @@
 
     = render 'flashes'
 
-    .container
+    .container.m-t-2
       .row
         .col-sm-12
           = yield
