@@ -5,6 +5,11 @@ class RepositoryPolicy < ApplicationPolicy
     end
   end
 
+  def index?
+    # within scope!
+    true
+  end
+
   def show?
     super || is_member?
   end
