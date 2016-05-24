@@ -9,7 +9,6 @@
         %h5.card-title 
           Leaderboard
           %span.small (past 4 weeks)
-        -# = gh_bar_chart [current_organisation, :metric, id:'contribution_per_contributor'], height: '100px'
         .graph-leaderboard{ 'data-url': url_for([current_organisation, :metric, id:'contribution_per_contributor', format:'json']) }
       .card-footer.text-muted.small
         = render 'shared/help_scoring'

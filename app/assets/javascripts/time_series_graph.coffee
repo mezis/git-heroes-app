@@ -24,6 +24,10 @@ class TimeSeriesGraph
       ["%Y", (d) -> true]
     ]
 
+  formatDate: (d) ->
+    @_formatDate ||= d3.time.format("%A, %e %b %Y")
+    @_formatDate(d)
+
   render: ->
     return unless @data?
     $(@el).empty()
@@ -47,11 +51,13 @@ class TimeSeriesGraph
       .scale(y)
       .orient('right')
       .ticks(d3.min([10, height/30]))
-    line = d3.svg.line().interpolate('basis').x((d) ->
-      x d.date
-    ).y((d) ->
-      y d.y
-    )
+    line = d3.svg.line()
+      .interpolate('cardinal')
+      .x((d) ->
+        x d.date
+      ).y((d) ->
+        y d.y
+      )
 
     svg = d3.select(@el)
       .append('svg')
@@ -94,20 +100,10 @@ class TimeSeriesGraph
       .attr('class', 'graph-line')
       .attr('d', (d) ->
         line d.values
-      ).style 'stroke', (d) ->
+      ).style('stroke', (d) ->
         color d.name
+      )
     
-    # Series label
-    # graph.append('text')
-    #   .attr('class', 'graph-series-label')
-    #   .datum((d) ->
-    #     name:  d.name
-    #     value: d.values[d.values.length - 1]
-    #   ).attr('transform', (d) ->
-    #     'translate(' + x(d.value.date) + ',' + y(d.value.y) + ')'
-    #   ).attr('x', 3).attr('dy', '.35em').text (d) ->
-    #     d.name
-
     # Axes
     svg.append('g')
       .attr('class', 'graph-axis graph-axis--x')
@@ -116,6 +112,39 @@ class TimeSeriesGraph
     svg.append('g')
       .attr('class', 'graph-axis graph-axis--y')
       .call(yAxis)
+
+    flatData = d3.merge @data.map (d) ->
+      color.domain().map (name) ->
+        name: name
+        date: d.date
+        y:    d[name]
+
+    # Circles
+    circles = svg.append('g')
+      .selectAll('.circle')
+      .data(flatData)
+      .enter()
+      .append('g')
+      .attr('class', 'circle')
+    circles.append('svg:circle')
+      .attr('class', 'graph-point')
+      .attr('r', 10)
+      .attr('cx', (d) ->
+        x d.date
+      )
+      .attr('cy', (d) ->
+        y d.y
+      )
+      .attr('title', (d) =>
+        """
+          <small>#{this.formatDate(d.date)}</small>
+          <br/>
+          <strong>#{d3.round d.y, 1}</strong> #{d.name}
+        """
+      )
+      .attr('data-toggle', 'tooltip')
+
+    Heroes.dispatch "tooltip:update", target: @el
     return
 
 $(document).on "page:change", ->

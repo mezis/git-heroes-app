@@ -22,6 +22,10 @@ $enable-flex:           true;
 
 $headings-font-weight:  300;
 
+$tooltip-arrow-color:   rgba(#373a3c, 0.9); // $gray-dark
+$tooltip-bg:            rgba(#373a3c, 0.9);
+
+
 @import "bootstrap";
 @import "octicons";
 
@@ -37,6 +41,14 @@ $headings-font-weight:  300;
 // no margin atop dropdown menu, so it doesn't interfere with hovering
 .dropdown-menu {
   margin-top: 0;
+}
+
+// nicer tooltips
+.tooltip {
+  font-size:        small;
+  strong {
+    color:          $brand-info;
+  }
 }
 
 // cross component utilities
@@ -342,4 +354,9 @@ $headings-font-weight:  300;
 }
 .graph-series-label {
   text-anchor:        end;
+}
+.graph-point {
+  fill:               transparent;
+  // stroke:             red;
+  // stroke-width:       1px;
 }

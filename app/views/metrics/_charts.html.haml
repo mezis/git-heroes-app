@@ -4,7 +4,6 @@
   .card
     .card-block
       %h5 Total contribution points
-      -# = gh_line_chart [organisation, :metric, id:'contributions_over_time', team_id: team_id]
       .graph-timeseries{ 'data-url': url_for([organisation, :metric, id:'contributions_over_time', team_id: team_id, format: 'json']) }
     .card-footer.small.text-muted
       = render 'shared/help_scoring'
@@ -13,7 +12,6 @@
   .card
     .card-block
       %h5 Unique contributors
-      -# = gh_line_chart [organisation, :metric, id:'contributors_over_time', team_id: team_id]
       .graph-timeseries{ 'data-url': url_for([organisation, :metric, id:'contributors_over_time', team_id: team_id, format: 'json']) }
     .card-footer.small.text-muted
       How many unique people have been active on Github on a given week.
@@ -22,7 +20,6 @@
   .card
     .card-block
       %h5 Contribution per contributor
-      -# = gh_line_chart [organisation, :metric, id:'contribution_per_contributor_over_time', team_id: team_id]
       .graph-timeseries{ 'data-url': url_for([organisation, :metric, id:'contribution_per_contributor_over_time', team_id: team_id, format: 'json']) }
     .card-footer.small.text-muted
       Averaged contribution per contributor. Grows if your team is working better together.
@@ -30,7 +27,6 @@
   .card
     .card-block
       %h5 Comments per contributor
-      -# = gh_line_chart [organisation, :metric, id:'comments_per_contributor_over_time', team_id: team_id]
       .graph-timeseries{ 'data-url': url_for([organisation, :metric, id:'comments_per_contributor_over_time', team_id: team_id, format: 'json']) }
     .card-footer.small.text-muted
       Raw average of comments per person,

@@ -1,5 +1,9 @@
 $(document).on "page:change", ->
-  $('[data-toggle="tooltip"]').tooltip
+  Heroes.dispatch "tooltip:update"
+
+$(document).on "tooltip:update", (e) ->
+  $(e.target).find('[data-toggle="tooltip"]').tooltip
+    html:   true
     delay:
-      show: 250
+      show: 0
       hide: 100
