@@ -10,13 +10,14 @@ class MetricsService
 
   def contributions_over_time
     scope_for(OrganisationUserScore).
-      group(:date).sum(:points)
+      group(:date).sum(:points).to_a
   end
 
   def contributors_over_time
     scope_for(OrganisationUserScore).
       group(:date).
-      distinct.count(:user_id)
+      order(:date).
+      distinct.count(:user_id).to_a
   end
 
   def contribution_per_contributor_over_time

@@ -1,57 +1,60 @@
 -# locals: organisation, team (optional)
 - team_id = defined?(team) ? team.id : nil
-.row
-  .col-xs-12.col-md-6
-    .card
-      .card-block
-        %h5 Total contribution points
-        = gh_line_chart [organisation, :metric, id:'contributions_over_time', team_id: team_id]
-      .card-footer.small.text-muted
-        = render 'shared/help_scoring'
-        The points cumulated each week. Higher is better!
-  .col-xs-12.col-md-6
-    .card
-      .card-block
-        %h5 Unique contributors
-        = gh_line_chart [organisation, :metric, id:'contributors_over_time', team_id: team_id]
-      .card-footer.small.text-muted
-        How many unique people have been active on Github on a given week.
+.col-xs-12.col-md-6
+  .card
+    .card-block
+      %h5 Total contribution points
+      -# = gh_line_chart [organisation, :metric, id:'contributions_over_time', team_id: team_id]
+      .graph-timeseries{ 'data-url': url_for([organisation, :metric, id:'contributions_over_time', team_id: team_id, format: 'json']) }
+    .card-footer.small.text-muted
+      = render 'shared/help_scoring'
+      The points cumulated each week. Higher is better!
+.col-xs-12.col-md-6
+  .card
+    .card-block
+      %h5 Unique contributors
+      -# = gh_line_chart [organisation, :metric, id:'contributors_over_time', team_id: team_id]
+      .graph-timeseries{ 'data-url': url_for([organisation, :metric, id:'contributors_over_time', team_id: team_id, format: 'json']) }
+    .card-footer.small.text-muted
+      How many unique people have been active on Github on a given week.
 
-  .col-xs-12.col-md-6
-    .card
-      .card-block
-        %h5 Contribution per contributor
-        = gh_line_chart [organisation, :metric, id:'contribution_per_contributor_over_time', team_id: team_id]
-      .card-footer.small.text-muted
-        Averaged contribution per contributor. Grows if your team is working better together.
-  .col-xs-12.col-md-6
-    .card
-      .card-block
-        %h5 Comments per contributor
-        = gh_line_chart [organisation, :metric, id:'comments_per_contributor_over_time', team_id: team_id]
-      .card-footer.small.text-muted
-        Raw average of comments per person,
-        %i sans
-        scoring.
+.col-xs-12.col-md-6
+  .card
+    .card-block
+      %h5 Contribution per contributor
+      -# = gh_line_chart [organisation, :metric, id:'contribution_per_contributor_over_time', team_id: team_id]
+      .graph-timeseries{ 'data-url': url_for([organisation, :metric, id:'contribution_per_contributor_over_time', team_id: team_id, format: 'json']) }
+    .card-footer.small.text-muted
+      Averaged contribution per contributor. Grows if your team is working better together.
+.col-xs-12.col-md-6
+  .card
+    .card-block
+      %h5 Comments per contributor
+      -# = gh_line_chart [organisation, :metric, id:'comments_per_contributor_over_time', team_id: team_id]
+      .graph-timeseries{ 'data-url': url_for([organisation, :metric, id:'comments_per_contributor_over_time', team_id: team_id, format: 'json']) }
+    .card-footer.small.text-muted
+      Raw average of comments per person,
+      %i sans
+      scoring.
 
-  .col-xs-12.col-md-4
-    .card
-      .card-block
-        %h5 Pull requests issued
-        = gh_column_chart [organisation, :metric, id:'hour_of_pull_request_created', team_id: team_id]
-      .card-footer.small.text-muted
-        By time of day (UTC)
-  .col-xs-12.col-md-4
-    .card
-      .card-block
-        %h5 Comment written
-        = gh_column_chart [organisation, :metric, id:'hour_of_comment_created', team_id: team_id]
-      .card-footer.small.text-muted
-        By time of day (UTC)
-  .col-xs-12.col-md-4
-    .card
-      .card-block
-        %h5 Pull request merged
-        = gh_column_chart [organisation, :metric, id:'hour_of_comment_created', team_id: team_id]
-      .card-footer.small.text-muted
-        By time of day (UTC)
+.col-xs-12.col-md-4
+  .card
+    .card-block
+      %h5 Pull requests issued
+      = gh_column_chart [organisation, :metric, id:'hour_of_pull_request_created', team_id: team_id]
+    .card-footer.small.text-muted
+      By time of day (UTC)
+.col-xs-12.col-md-4
+  .card
+    .card-block
+      %h5 Comment written
+      = gh_column_chart [organisation, :metric, id:'hour_of_comment_created', team_id: team_id]
+    .card-footer.small.text-muted
+      By time of day (UTC)
+.col-xs-12.col-md-4
+  .card
+    .card-block
+      %h5 Pull request merged
+      = gh_column_chart [organisation, :metric, id:'hour_of_comment_created', team_id: team_id]
+    .card-footer.small.text-muted
+      By time of day (UTC)

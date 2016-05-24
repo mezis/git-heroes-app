@@ -10,8 +10,8 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require_tree .
  *= require_self
+ *= require_tree .
  */
 
 
@@ -241,7 +241,7 @@ $headings-font-weight:  300;
 
 .navbar--heroes {
   position:      relative; // so we can place the logo
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid $gray-dark;
 
   .navbar-logo {
     padding-right: 2.8rem;
@@ -302,3 +302,44 @@ $headings-font-weight:  300;
 //     padding-left: $indent;
 //   }
 // }
+
+.graph-bar {
+  fill:       $brand-info;
+}
+.graph-label {
+  text-anchor:        end;
+  dominant-baseline:  central;
+  fill:               $gray-dark;
+  font-size:          small;
+}
+.graph-value {
+  text-anchor:        end;
+  dominant-baseline:  central;
+  font-size:          small;
+  fill:               white;
+}
+.graph-line {
+  fill:               none;
+  stroke:             $brand-info;
+  stroke-width:       2px;
+}
+.graph-axis {
+  font-size:          small;
+  line, path {
+    fill:             none;
+    stroke:           $gray;
+    stroke-width:     1px;
+  }
+  .tick:first-child {
+    display:          none;
+  }
+  text {
+    paint-order:      stroke;
+    stroke:           white;
+    stroke-width:     2px;
+    fill:             $gray;
+  }
+}
+.graph-series-label {
+  text-anchor:        end;
+}
