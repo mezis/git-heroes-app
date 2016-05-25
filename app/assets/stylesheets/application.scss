@@ -38,6 +38,11 @@ $tooltip-bg:            rgba(#373a3c, 0.9);
   }
 }
 
+// card margin should be the same as the gutter size
+.card {
+  @extend .m-b-2;
+}
+
 // no margin atop dropdown menu, so it doesn't interfere with hovering
 .dropdown-menu {
   margin-top: 0;
