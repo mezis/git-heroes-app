@@ -21,36 +21,36 @@
       Not member of any team.
 
 .row
-  .col-md-6
+  .col-xs-12.col-md-6
     .card
       .card-block
-        %h5 Recent pull requests
+        %h5 🕐 Recent pull requests
         = render 'pull_requests/list', collection: @recent_pull_requests
-  .col-md-6
+  .col-xs-12.col-md-6
     .card
       .card-block
-        %h5 Recent comments on
+        %h5 💬 Recent comments on
         = render 'comments/list', collection: @recent_comments
 
 - if current_organisation
   .row
-    .col-md-12
+    .col-xs-12
       .card
         .card-block
           %h5 Total contribution points
           .graph-timeseries{ 'data-url': url_for([current_organisation, :metric, id:'contributions_over_time', user_id: @user.id, format: 'csv']) }
 
-    .col-md-4
+    .col-xs-12.col-md-4
       .card
         .card-block
           %h5 Pull requests issued
           = gh_column_chart [current_organisation, :metric, id:'hour_of_pull_request_created', user_id: @user.id], library: { series: { 1 => { targetAxisIndex: 1 } } }
-    .col-md-4
+    .col-xs-12.col-md-4
       .card
         .card-block
           %h5 Comment written
           = gh_column_chart [current_organisation, :metric, id:'hour_of_comment_created', user_id: @user.id], library: { series: { 1 => { targetAxisIndex: 1 } } }
-    .col-md-4
+    .col-xs-12.col-md-4
       .card
         .card-block
           %h5 Pull request merged
