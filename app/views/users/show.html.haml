@@ -25,12 +25,22 @@
     .card
       .card-block
         %h5 🕐 Recent pull requests
-        = render 'pull_requests/list', collection: @recent_pull_requests
+        - if @recent_pull_requests.any?
+          = render 'pull_requests/list', collection: @recent_pull_requests
+        - else
+          %small.text-muted
+            No recently issued pull requests were found. Maybe this person is
+            a new starter, or not a contributor?
   .col-xs-12.col-md-6
     .card
       .card-block
-        %h5 💬 Recent comments on
-        = render 'comments/list', collection: @recent_comments
+        %h5 💬 Recent comments
+        - if @recent_comments.any?
+          = render 'comments/list', collection: @recent_comments
+        - else
+          %small.text-muted
+            No recently commented pull requests were found.
+            Time to go take a look on Github!
 
 - if current_organisation
   .row
