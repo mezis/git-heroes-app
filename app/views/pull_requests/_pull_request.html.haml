@@ -1,7 +1,18 @@
 = cache pull_request do
   %div[pull_request]{ class: "pull-request--#{pull_request.status}" }
     %span.pull-request-author= render pull_request.created_by
-    %span.pull-request-link{ 'data-toggle': 'tooltip', title: pull_request.title }<
+    - tooltip = capture do
+      %span.label{ class: "label-#{pull_request_label_color(pull_request)}" }= pull_request.status
+      = pull_request.title
+      %br/
+      %small
+        issued by
+        %strong= "@#{pull_request.created_by.login}"
+      %br/
+      %small
+        %strong= pull_request.comments_count
+        comments
+    %span.pull-request-link{ 'data-toggle': 'tooltip', title: tooltip }<
       = github_link pull_request, message: "#{pull_request.repository.name}/##{pull_request.github_number}"
     %span.pull-request-time= distance_of_time_in_words pull_request.created_at, (pull_request.merged_at || Time.current)
     %span.pull-request-comments= pluralize pull_request.comments_count, 'comment'

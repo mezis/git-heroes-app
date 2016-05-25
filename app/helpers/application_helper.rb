@@ -103,5 +103,14 @@ module ApplicationHelper
       } 
     end
   end
+
+  def pull_request_label_color(pr)
+    case pr.status.to_s
+    when 'open' then 'success'
+    when 'closed' then 'merged'
+    when 'merged' then 'default'
+    else raise 'unknown PR status'
+    end
+  end
 end
 
