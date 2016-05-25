@@ -7,9 +7,13 @@ class LeaderboardGraph
       this.render()
   
   fetch: ->
-    d3.json $(@el).data('url'), (error, data) =>
+    d3.csv $(@el).data('url'), this.parser, (error, data) =>
       @data = data
       this.render()
+
+  parser: (d) ->
+    debugger
+    null
 
   maxTextWidth: (labels) ->
     tmp = d3.select(@el).append('svg').attr('width', 100).attr('height', 100)

@@ -11,7 +11,11 @@ class MetricsController < ApplicationController
     unless metrics_service.respond_to?(metric_name)
       raise ActiveRecord::RecordNotFound
     end
-    render json: metrics_service.public_send(metric_name)
+    data = metrics_service.public_send(metric_name)
+    respond_to do |format|
+      format.csv  { render csv: data }
+      format.json { render json: data }
+    end
   end
 
   private

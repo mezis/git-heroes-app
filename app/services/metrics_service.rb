@@ -10,23 +10,23 @@ class MetricsService
 
   def contributions_over_time
     scope_for(OrganisationUserScore).
-      group(:date).sum(:points).to_a
+      group(:date).sum(:points).
+      reverse_merge(date: :points)
   end
 
   def contributors_over_time
     scope_for(OrganisationUserScore).
       group(:date).
       order(:date).
-      distinct.count(:user_id).to_a
+      distinct.count(:user_id).
+      reverse_merge(date: :count)
   end
 
   def contribution_per_contributor_over_time
-    contributors_by_date = Hash[contributors_over_time]
-    contributions_over_time.map do |date,points|
-      contributors = contributors_by_date[date]
-      contribution = (contributors && contributors > 0) ? (1.0 * points / contributors) : nil
-      [date, contribution]
-    end
+    contributors_over_time.tap(&:shift).
+    merge(contributions_over_time.tap(&:shift)) { |date,count,points|
+      (count && count > 0) ? (1.0 * points / count) : nil
+    }.reverse_merge(date: :points)
   end
 
   # TODO: only limit the list if not admin
@@ -37,25 +37,25 @@ class MetricsService
       sum(:points).
       sort_by(&:last).reverse.take(5)
     users = User.where(id: data.map(&:first)).to_a.index_by(&:id)
-    data.map do |user_id, points|
-      [users[user_id].login, points]
-    end
+    data.each_with_object({}) { |(user_id, points), h|
+      h[users[user_id].login] = points
+    }.reverse_merge(user: :points)
   end
 
   def comments_over_time
     scope_for(Comment).
       group_by_week('comments.created_at', week_start: :mon).
       count.
-      map { |time,count| [time.to_date, count] }
+      each_with_object({}) { |(time,count),h|
+        h[time.to_date] = count
+      }.reverse_merge(date: 'comments')
   end
 
   def comments_per_contributor_over_time
-    contributors_by_date = Hash[contributors_over_time]
-    comments_over_time.map do |date,comments|
-      contributors = contributors_by_date[date]
-      res = (contributors && contributors > 0) ? (1.0 * comments / contributors) : 0
-      [date, res]
-    end
+    comments_over_time.tap(&:shift).
+    merge(contributors_over_time.tap(&:shift)) { |date,comments,count|
+      (count && count > 0) ? (1.0 * comments / count) : nil
+    }.reverse_merge(date: 'comments per contributor')
   end
 
   def hour_of_pull_request_created

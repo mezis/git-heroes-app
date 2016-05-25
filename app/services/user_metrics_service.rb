@@ -10,14 +10,14 @@ class UserMetricsService
   end
 
   def contributions_over_time
-    [compare? && {
-      name: 'organisation',
-      data: @org_metrics.contribution_per_contributor_over_time,
-    },
-    {
-      name: 'user',
-      data:  @user_metrics.public_send(__method__)
-    }].compact
+    data = @user_metrics.public_send(__method__)
+    if compare?
+      merge_time_series(
+        data.tap(&:shift),
+        @org_metrics.contribution_per_contributor_over_time.tap(&:shift)
+      ).
+      reverse_merge(date: ['user points', 'organisation average'])
+    end
   end
 
   def hour_of_pull_request_created
@@ -54,5 +54,13 @@ class UserMetricsService
 
   def compare?
     @compare || nil
+  end
+
+  # time series, without headers
+  def merge_time_series(data1, data2)
+    dates = (data1.keys & data2.keys).sort
+    dates.each_with_object({}) do |d,h|
+      h[d] = [data1[d], data2[d]]
+    end
   end
 end

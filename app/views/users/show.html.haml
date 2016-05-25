@@ -38,7 +38,7 @@
       .card
         .card-block
           %h5 Total contribution points
-          = gh_line_chart [current_organisation, :metric, id:'contributions_over_time', user_id: @user.id]
+          .graph-timeseries{ 'data-url': url_for([current_organisation, :metric, id:'contributions_over_time', user_id: @user.id, format: 'csv']) }
 
     .col-md-4
       .card

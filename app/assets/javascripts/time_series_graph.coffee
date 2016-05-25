@@ -7,14 +7,17 @@ class TimeSeriesGraph
       this.render()
   
   fetch: ->
-    d3.json $(@el).data('url'), (error, data) =>
-      @data =  this.parser(data)
+    d3.csv $(@el).data('url'), this.parser.bind(this), (error, data) =>
+      @data = data
       this.render()
 
-  parser: (data) ->
-    data.map (d) =>
-      date:   @parseDate(d[0])
-      points: +d[1]
+  parser: (d) ->
+    p = {}
+    for own k, v of d
+      p[k] = switch k
+        when 'date' then @parseDate(v)
+        else +v
+    p
 
   timeFormat: ->
     d3.time.format.multi [
