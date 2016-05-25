@@ -12,8 +12,8 @@ class LeaderboardGraph
       this.render()
 
   parser: (d) ->
-    debugger
-    null
+    d.points = +d.points
+    d
 
   maxTextWidth: (labels) ->
     tmp = d3.select(@el).append('svg').attr('width', 100).attr('height', 100)
@@ -29,10 +29,10 @@ class LeaderboardGraph
     return unless @data?
     $(@el).empty()
 
-    labels = @data.map (x) ->
-      x[0]
-    values = @data.map (x) ->
-      x[1]
+    labels = @data.map (d) ->
+      d.user
+    values = @data.map (d) ->
+      d.points
 
     containerWidth = $(@el).width()
     barHeight = 20

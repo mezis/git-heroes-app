@@ -9,7 +9,7 @@
         %h5.card-title 
           Leaderboard
           %span.small (past 4 weeks)
-        .graph-leaderboard{ 'data-url': url_for([current_organisation, :metric, id:'contribution_per_contributor', format:'json']) }
+        .graph-leaderboard{ 'data-url': url_for([current_organisation, :metric, id:'contribution_per_contributor', format:'csv']) }
       .card-footer.text-muted.small
         = render 'shared/help_scoring'
         These people contributed the most activity on Github. Let's hear it for these folks!
