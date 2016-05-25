@@ -1,11 +1,11 @@
 - if dupe_users&.any?
   .alert.alert-warning#dupe-users
-      %p
-        Some users are members of multiple enabled teams; this will damage scoring.
-        I recommend enabling a set of teams containing no shared users.
-        %br/
-        Affected users:
-        = dupe_users.map do |u|
-          - "@#{u.login}"
-        - end.to_sentence
-      %p= github_link github_team_url, message: 'Edit teams on Github →', target: "_#{current_organisation.login}_teams"
+    %p
+      Some users are members of multiple enabled teams; this will damage scoring.
+      I recommend enabling a set of teams containing no shared users.
+      %br/
+      Affected users:
+      = dupe_users.map do |u|
+        - "@#{u.login}"
+      - end.to_sentence
+    %p= github_link github_team_url, message: 'Edit teams on Github →', target: "_#{current_organisation.login}_teams"
