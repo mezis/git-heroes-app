@@ -10,7 +10,9 @@ class MetricsService
 
   def contributions_over_time
     scope_for(OrganisationUserScore).
-      group(:date).sum(:points).
+      group(:date).
+      order(:date).
+      sum(:points).
       reverse_merge(date: :points)
   end
 
