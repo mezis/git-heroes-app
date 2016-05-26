@@ -1,0 +1,82 @@
+.container.m-t-2
+  .row
+    .col-xs-12
+      %h3 Hi @#{@user.login}!
+
+      %p=random_greeting
+
+      - unless @stats.activity?
+        %p
+          We haven't seen you on Github since #{human_date @stats.range.first}.
+          Maybe you took a day off, maybe there was a bank holiday we didn't know
+          about.
+          %br/
+          So... no stats for you today, sorry!
+      - else
+        %p
+          Since #{human_date @stats.range.first} you've
+
+          - phrases = []
+          - phrases << capture do
+            issued 
+            %strong= @stats.prs_issued
+            = 'pull request'.pluralize @stats.prs_issued
+          
+          - phrases << capture do
+            merged
+            %strong= @stats.prs_merged
+            = 'pull request'.pluralize @stats.prs_merged
+
+          - phrases << capture do
+            written
+            %strong= @stats.comments_written
+            = 'comment'.pluralize @stats.comments_written
+
+          - phrases << capture do
+            received
+            %strong= @stats.comments_received
+            = 'comment'.pluralize @stats.comments_received
+
+          = phrases.map(&:strip).to_sentence.html_safe + '.'
+
+        -# FIXME: cannot do this until we store daily scores
+        -# %p
+        -#   This means you've accrued
+        -#   %strong 6
+        -#   points for the day!
+
+        %p
+          -# dynamic: lower, middle, top third - once we have daily score though
+          Not bad at all — keep it coming!
+
+      %hr/
+
+      - if (prs = @pull_requests.lacking_comments).any?
+        %p
+          You might want to take a look at these pull requests in dire need of comments:
+          = render 'pull_requests/list_simple', collection: prs.shuffle.take(3)
+
+      - if (prs = @pull_requests.too_old_other).any?
+        %p
+          These pull requests have been out for a while... maybe you could chime in?
+          = render 'pull_requests/list_simple', collection: prs.shuffle.take(3)
+
+      - if (prs = @pull_requests.too_old_self).any?
+        %p
+          These pull requests of yours have aged a bit, but it's not necessarily like for wine, you know:
+          = render 'pull_requests/list_simple', collection: prs.shuffle.take(3)
+
+      - if (prs = @pull_requests.merged_too_quickly).any?
+        %p
+          Feeling trigger-happy, are you? These pull requests were merged so quickly...
+          = render 'pull_requests/list_simple', collection: prs.shuffle.take(3)
+
+
+      %hr/
+
+      %p
+        = link_to @organisation do
+          Git Heroes 🏆 #{@organisation.name}
+        %br/
+        %small.text-muted
+          Want to give feedback, report a bug? Simply reply to this email.

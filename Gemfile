@@ -45,6 +45,10 @@ gem 'octicons'
 # Graphs!
 gem 'chartkick'
 
+# Email CSS inliner
+gem 'roadie-rails'
+
+
 #
 # Models
 #
@@ -89,6 +93,9 @@ gem 'net-http-persistent'
 
 # Github API client
 gem 'octokit'
+
+# Business time
+gem 'working_hours'
 
 #
 # Background jobs
