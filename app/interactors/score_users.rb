@@ -27,15 +27,18 @@ class ScoreUsers
     end
 
     # comments
-    Comment.includes(:user, pull_request: [:created_by, :repository]).where(
+    Comment.includes(user: :teams, pull_request: [:created_by, :repository]).where(
       pull_requests: { repository_id: repository_ids },
       created_at: start_at..end_at
     ).find_each do |c|
       scores[c.user].points +=
-        (c.user == c.pull_request.created_by) ?
-        POINT_RULES.self_comment :
-        POINT_RULES.other_comment
-      # TODO: comments on other teams
+        if c.user == c.pull_request.created_by
+          POINT_RULES.self_comment
+        elsif different_teams?(c.user, c.pull_request.created_by)
+          POINT_RULES.cross_team_comment
+        else
+          POINT_RULES.other_comment
+        end
     end
 
     merge_times.each_pair do |user, times|
@@ -60,6 +63,10 @@ class ScoreUsers
     other_comment:      2,
     cross_team_comment: 3,
   )
+
+  def different_teams(u1, u2)
+    (u1.teams.select(&:enabled?) & u2.teams.select(&:enabled?)).empty?
+  end
 
   def repository_ids
     @repository_ids ||= organisation.repositories.enabled.pluck(:id)
