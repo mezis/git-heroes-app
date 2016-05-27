@@ -12,4 +12,13 @@ class ApplicationController < ActionController::Base
   rescue_from(Pundit::NotAuthorizedError) do
     render '403', status: 403
   end
+
+  def decorate(resource)
+    case resource
+    when Array
+      resource.map { |r| decorate r }
+    else
+      "#{resource.class.name}Decorator".constantize.new(resource)
+    end
+  end
 end
