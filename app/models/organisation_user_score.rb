@@ -1,4 +1,4 @@
-class OrganisationUserScore < ActiveRecord::Base
+class OrganisationUserScore < ApplicationModel
   belongs_to :organisation
   belongs_to :user
 

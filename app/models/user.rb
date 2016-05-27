@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationModel
   has_many :organisation_users, dependent: :destroy
   has_many :organisations, through: :organisation_users
   has_many :user_repositories, dependent: :destroy

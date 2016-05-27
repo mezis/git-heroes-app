@@ -1,4 +1,4 @@
-class Organisation < ActiveRecord::Base
+class Organisation < ApplicationModel
   validates_presence_of :name, :github_id
 
   has_many :organisation_users, dependent: :destroy

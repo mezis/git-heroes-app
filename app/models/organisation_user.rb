@@ -1,4 +1,4 @@
-class OrganisationUser < ActiveRecord::Base
+class OrganisationUser < ApplicationModel
   belongs_to :organisation, counter_cache: :users_count
   belongs_to :user
 

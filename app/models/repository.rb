@@ -1,4 +1,4 @@
-class Repository < ActiveRecord::Base
+class Repository < ApplicationModel
   belongs_to :owner, polymorphic: true, counter_cache: :owned_repositories_count
   has_many :user_repositories, dependent: :destroy
   has_many :users, through: :user_repositories, inverse_of: :member_repositories

@@ -1,4 +1,4 @@
-class PullRequest < ActiveRecord::Base
+class PullRequest < ApplicationModel
   belongs_to :repository, inverse_of: :pull_requests
   belongs_to :created_by, class_name: 'User', inverse_of: :created_pull_requests
   belongs_to :merged_by, class_name: 'User', inverse_of: :merged_pull_requests

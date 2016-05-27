@@ -1,4 +1,4 @@
-class TeamUser < ActiveRecord::Base
+class TeamUser < ApplicationModel
   belongs_to :user
   belongs_to :team
 
