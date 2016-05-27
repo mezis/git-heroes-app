@@ -27,7 +27,7 @@ class ScoreUsers
     end
 
     # comments
-    Comment.includes(user: :teams, pull_request: [:created_by, :repository]).where(
+    Comment.includes(user: :teams, pull_request: [:repository, created_by: :teams]).where(
       pull_requests: { repository_id: repository_ids },
       created_at: start_at..end_at
     ).find_each do |c|
@@ -64,7 +64,7 @@ class ScoreUsers
     cross_team_comment: 3,
   )
 
-  def different_teams(u1, u2)
+  def different_teams?(u1, u2)
     (u1.teams.select(&:enabled?) & u2.teams.select(&:enabled?)).empty?
   end
 
