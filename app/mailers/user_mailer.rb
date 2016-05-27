@@ -23,10 +23,8 @@ class UserMailer < ApplicationMailer
       to:       recipient(@user)
     end
 
-  def weekly
-    @greeting = "Hi"
-
-    mail to: "to@example.org"
+  def weekly(organisation:, user:)
+    nil
   end
 
   private

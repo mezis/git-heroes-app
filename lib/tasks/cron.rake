@@ -4,6 +4,7 @@ namespace :cron do
 
   task :every_hour => :environment do
     Organisation.find_each { |org| ScoreUsersJob.perform_later organisation_id: org.id }
+    EmailUserJob.perform_later
   end
 
   task :every_day => :environment do
