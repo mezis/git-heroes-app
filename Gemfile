@@ -48,6 +48,9 @@ gem 'chartkick'
 # Email CSS inliner
 gem 'roadie-rails'
 
+# Nice loading progessbar
+gem 'nprogress-rails'
+
 
 #
 # Models

@@ -156,6 +156,7 @@ GEM
     net-http-persistent (2.9.4)
     nokogiri (1.6.7.2)
       mini_portile2 (~> 2.0.0.rc2)
+    nprogress-rails (0.1.6.7)
     oauth2 (1.1.0)
       faraday (>= 0.8, < 0.10)
       jwt (~> 1.0, < 1.5.2)
@@ -345,6 +346,7 @@ DEPENDENCIES
   kaminari
   lol_dba
   net-http-persistent
+  nprogress-rails
   octicons
   octokit
   omniauth-github
