@@ -5,6 +5,10 @@ class TeamPolicy < ApplicationPolicy
     end
   end
 
+  def index?
+    true
+  end
+
   def show?
     super || is_member? || OrganisationPolicy.new(user, record.organisation).show?
   end

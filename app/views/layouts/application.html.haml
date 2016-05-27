@@ -44,9 +44,7 @@
 
           - [['Repositories', Repository], ['Members', User]].each do |title, target|
             %li.nav-item.hidden-sm-down
-              - if current_organisation
-                = link_to title, [current_organisation, target], class: 'nav-link'
-              - else
+              = link_to_if current_organisation, title, [current_organisation, target], class: 'nav-link' do |x|
                 = link_to title, '#', class: 'nav-link disabled'
 
           -# user menu
@@ -76,7 +74,8 @@
                     = image_tag org.avatar_url, class: 'img-rounded organisation-avatar'
                     = org.login
                 .dropdown-divider
-                = link_to 'Configure', [Organisation], class: "dropdown-item #{'disabled' unless policy(Organisation).update?}"
+                = link_to_if policy(Organisation).update?, 'Configure', [Organisation], class: 'dropdown-item' do |x|
+                  = link_to x, '#', class: 'dropdown-item disabled'
 
     - if @acting_user
       .alert.alert-warning(role=alert)

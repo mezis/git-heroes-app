@@ -4,6 +4,7 @@ class RepositoriesController < ApplicationController
   before_filter :load_organisation
 
   def index
+    authorize Repository
     @repositories = decorate all_repositories.sort_by { |r| r.name.downcase }
   end
   
@@ -13,11 +14,15 @@ class RepositoriesController < ApplicationController
     update_to = _parse_boolean params.require(:enabled)
     if id = params[:id]
       repository = all_repositories.find_by_name(id)
+      authorize repository
       repository.update_attributes!(enabled: update_to)
       render decorate [repository]
     else
       repositories = all_repositories
-      repositories.each { |t| t.update_attributes!(enabled: update_to) }
+      repositories.each do |t| 
+        authorize t
+        t.update_attributes!(enabled: update_to)
+      end
       render decorate repositories
     end
   end
@@ -38,6 +43,5 @@ class RepositoriesController < ApplicationController
 
   def load_organisation
     current_organisation! Organisation.find_by_name(params.require(:organisation_id))
-    authorize current_organisation
   end
 end

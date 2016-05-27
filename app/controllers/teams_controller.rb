@@ -4,7 +4,7 @@ class TeamsController < ApplicationController
   before_filter :load_organisation
 
   def index
-    authorize current_organisation
+    authorize Team
     @teams = policy_scope organisation_teams
     @dupe_users = compute_dupe_users
   end
