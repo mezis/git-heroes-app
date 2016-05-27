@@ -1,0 +1,47 @@
+.organisations-cards {
+  .organisation {
+    @extend .card;
+    @extend .card-block;
+    // @extend .text-xs-center;
+  }
+
+  .organisation--name {
+    @extend .card-title;
+    @extend .h3;
+    display: block;
+  }
+
+  .organisation-avatar {
+    width:  1.75rem;
+    height: 1.75rem;
+  }
+
+  .organisation-toggles {
+    // display: none;
+    @extend .pull-xs-right;
+  }
+
+  .organisation--disabled {
+    @extend .text-muted;
+  }
+}
+
+.organisations--table {
+  .organisation {
+    @extend .row;
+    @extend .m-b-1;
+    display:  block;
+  }
+  .organisation-toggles {
+    @extend .col-md-2;
+    display: block;
+  }
+  .organisation--name {
+    @extend .col-md-3;
+    display: block;
+  }
+  .organisation--info {
+    @extend .col-md-7;
+    display: block;
+  }
+}

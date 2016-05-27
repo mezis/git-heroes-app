@@ -1,0 +1,34 @@
+// cross component utilities
+
+.title {
+  @extend .m-t-2;
+  @extend .m-b-1;
+}
+
+.list-inline {
+  display: inline;
+  li {
+    display: inline-block;
+    &::after {
+      content: ', ';
+    }
+    &:last-child::after {
+      content: '.';
+    }
+    &:last-child::before {
+      content: 'and ';
+    }
+    &:first-child::before {
+      content: '';
+    }
+  }
+}
+
+.list--no-bullets {
+  ul, & {
+    padding-left: 0;
+  }
+  li {
+    list-style-type: none;
+  }
+}

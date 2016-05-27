@@ -1,0 +1,24 @@
+// collections
+
+.pull-requests {
+  @extend .list--no-bullets;
+  .user {
+    @extend .user--avatar-only;
+    display: inline-block;
+  }
+}
+
+// variants
+
+.pull-request--no-time .pull-request-time {
+  display: none;
+}
+.pull-request--no-comments .pull-request-comments {
+  display: none;
+}
+.pull-request--closed,
+.pull-request--merged {
+  a {
+    color: $gray;
+  }
+}

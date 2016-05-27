@@ -1,0 +1,46 @@
+.graph-bar {
+  fill:       $brand-info;
+}
+.graph-label {
+  text-anchor:        end;
+  dominant-baseline:  central;
+  fill:               $gray-dark;
+  font-size:          small;
+}
+.graph-value {
+  text-anchor:        end;
+  dominant-baseline:  central;
+  font-size:          small;
+  fill:               white;
+}
+.graph-line {
+  fill:               none;
+  stroke:             $brand-info;
+  stroke-width:       2px;
+}
+.graph-axis {
+  font-size:          small;
+  line, path {
+    fill:             none;
+    stroke:           $gray;
+    stroke-width:     1px;
+  }
+  .tick:first-child {
+    display:          none;
+  }
+  text {
+    paint-order:      stroke;
+    stroke:           white;
+    stroke-width:     2px;
+    fill:             $gray;
+  }
+}
+.graph-series-label {
+  text-anchor:        end;
+}
+.graph-point {
+  fill:               transparent;
+  // stroke:             red;
+  // stroke-width:       1px;
+}
+

@@ -1,0 +1,26 @@
+// overrides
+
+// no extra space at the bottom of cards
+.card-block {
+  > ul:last-child {
+    @extend .m-b-0;
+  }
+}
+
+// card margin should be the same as the gutter size
+.card {
+  @extend .m-b-2;
+}
+
+// no margin atop dropdown menu, so it doesn't interfere with hovering
+.dropdown-menu {
+  margin-top: 0;
+}
+
+// nicer tooltips
+.tooltip {
+  font-size:        small;
+  strong {
+    color:          $brand-info;
+  }
+}

@@ -1,0 +1,17 @@
+.navbar--admin {
+  padding: 0;
+}
+
+.navbar--heroes {
+  position:      relative; // so we can place the logo
+  border-bottom: 1px solid $gray-dark;
+
+  .navbar-logo {
+    padding-right: 2.8rem;
+    img {
+      position:   absolute;
+      height:     2.8rem;
+      bottom:     0;
+    }
+  }
+}

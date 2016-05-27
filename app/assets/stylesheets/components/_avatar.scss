@@ -1,0 +1,17 @@
+// components
+
+.avatar {
+  display:        inline-block;
+  width:          1rem;
+  height:         1rem;
+  vertical-align: text-bottom;
+  margin-right:   .1rem;
+}
+
+// component variants
+
+.user-avatar,
+.organisation-avatar {
+  @extend .avatar;
+}
+

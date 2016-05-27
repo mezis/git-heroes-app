@@ -1,0 +1,34 @@
+.homepage-hero {
+  @extend .p-t-2;
+  @extend .p-x-2;
+  background-color:   $card-cap-bg;
+  border:             1px solid $card-border-color;
+  position:           relative;
+  align-items:        stretch;
+}
+.homepage-hero-logo {
+  @extend .p-b-1;
+  @extend .text-xs-center;
+  $offset:         $spacer + 1rem;
+  position:       relative;
+  top:            -$offset;
+  margin-bottom:  -$offset;
+
+  > img {
+    @extend .p-x-2;
+    width: 100%;
+    max-width: 400px;
+  }
+}
+.homepage-hero-content {
+  @extend .m-b-2;
+  @extend .text-xs-center;
+  @extend .text-sm-left;
+  @include media-breakpoint-up(md) {
+    order: -1;
+  }
+}
+.homepage-hero-item {
+  @extend .text-xs-center;
+  @extend .m-y-1;
+}

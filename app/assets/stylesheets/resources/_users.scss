@@ -1,0 +1,51 @@
+// components
+
+.user-login {
+  display: inline-block;
+}
+
+// collections
+
+.users-grid {
+  .user {
+    @extend .m-b-1;
+    text-align:   center;
+  }
+  .user-avatar {
+    width:   5rem;
+    height:  5rem;
+  }
+  .user-login,
+  .user-name {
+    display: block;
+  }
+}
+
+.users-list {
+  @extend .list-inline;
+
+  .user {
+    display: inline-block;
+  }
+  .user-name {
+    display: inline-block;
+    margin-left: .2rem;
+  }
+}
+
+// component variants
+
+.user--avatar-only {
+  .user-login {
+    display: none;
+  }
+  .user-name {
+    display: none;
+  }
+}
+
+.user--no-name {
+  .user-name {
+    display: none;
+  }
+}

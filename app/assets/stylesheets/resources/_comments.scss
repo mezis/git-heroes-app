@@ -1,0 +1,14 @@
+// collections
+
+.comments {
+  @extend .list--no-bullets;
+  .user {
+    @extend .user--avatar-only;
+    display: inline-block;
+  }
+  .comment-author {
+    display: none;
+  }
+}
+
+
