@@ -11,6 +11,9 @@ class User < ActiveRecord::Base
   has_many :teams, through: :team_users
   has_many :scores, class_name: 'OrganisationUserScore', dependent: :destroy
 
+  has_one :settings, class_name: 'UserSettings', inverse_of: :user, dependent: :destroy
+  accepts_nested_attributes_for :settings, update_only: true
+
   validates_presence_of :github_id, :login
   validates :email, email: true, if: ->(r) { r.email.present? }
 
@@ -22,6 +25,10 @@ class User < ActiveRecord::Base
 
   def avatar_url(size: 100, v: 3)
     AVATAR_URL.expand(id: github_id, s: size, v: v)
+  end
+
+  def settings
+    super || build_settings
   end
 
   # roles, to be extracted

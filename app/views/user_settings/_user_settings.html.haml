@@ -1,0 +1,47 @@
+%div[user_settings]
+  .row.m-t-1
+    .col-xs-12.col-sm-3.col-lg-2
+      = button_toggles user_settings, field: :daily_email_enabled
+    .col-xs-12.col-sm-9.col-lg-10
+      Daily email updates.
+      %span.text-muted
+        Every weekday morning, get the details of what happened yesterday and a
+        few pointers on pull requests in need of some love.
+  .row.m-t-1
+    .col-xs-12.col-sm-3.col-lg-2
+      = button_toggles user_settings, field: :weekly_email_enabled
+    .col-xs-12.col-sm-9.col-lg-10
+      Weekly email updates.
+      %span.text-muted
+        On Mondays, receive a different email revealing you organisation's top
+        contributors for the week before.
+  .row.m-t-1
+    .col-xs-12.col-sm-3.col-lg-2
+      = button_toggles user_settings, field: :newsletter_enabled
+    .col-xs-12.col-sm-9.col-lg-10
+      Occasional product updates.
+      %span.text-muted
+        We'll let you know when Git Heroes gets updated: changes, new features,
+        bug fixes.
+  .row.m-t-1
+    .col-xs-12.col-sm-3.col-lg-2
+      .btn-group.btn-group-sm
+        - snooze = user_settings.snooze_until
+        - if snooze && snooze > Time.current
+          = link_to 'Off', [user_settings, snooze_until: Time.current], remote: true, method: :patch, 'data-disable-with': '...', class: 'btn btn-secondary btn-sm'
+          = link_to 'On',  [user_settings, snooze_until: Time.current], remote: true, method: :patch, 'data-disable-with': '...', class: 'btn btn-success btn-sm'
+        - else
+          = link_to 'Off', [user_settings, snooze_until: 1.day.from_now], remote: true, method: :patch, 'data-disable-with': '...', class: 'btn btn-danger btn-sm'
+          = link_to 'On',  [user_settings, snooze_until: 1.day.from_now], remote: true, method: :patch, 'data-disable-with': '...', class: 'btn btn-secondary btn-sm'
+    .col-xs-12.col-sm-9.col-lg-10
+      Snooze.
+      %span.text-muted
+        - if snooze && snooze > Time.current
+          We won't email you at all until #{user_settings.snooze_until.to_date.to_s(:long)}.
+          = link_to '+1d',  [user_settings, snooze_until: (snooze + 1.day)], remote: true, method: :patch, 'data-disable-with': '...', class: 'btn btn-secondary btn-sm'
+          = link_to '+1w',  [user_settings, snooze_until: (snooze + 1.week)], remote: true, method: :patch, 'data-disable-with': '...', class: 'btn btn-secondary btn-sm'
+        - else
+          Enable if you want to turn off emails for a short while.
+      
+    
+

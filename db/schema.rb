@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160517190006) do
+ActiveRecord::Schema.define(version: 20160526203245) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "pg_stat_statements"
 
   create_table "comments", force: :cascade do |t|
     t.integer  "github_id",         null: false
@@ -150,6 +151,20 @@ ActiveRecord::Schema.define(version: 20160517190006) do
   add_index "user_repositories", ["user_id", "repository_id"], name: "index_user_repositories_on_user_id_and_repository_id", unique: true, using: :btree
   add_index "user_repositories", ["user_id"], name: "index_user_repositories_on_user_id", using: :btree
 
+  create_table "user_settings", force: :cascade do |t|
+    t.integer  "user_id",                             null: false
+    t.datetime "weekly_email_at"
+    t.datetime "daily_email_at"
+    t.datetime "snooze_until"
+    t.boolean  "weekly_email_enabled", default: true, null: false
+    t.boolean  "daily_email_enabled",  default: true, null: false
+    t.boolean  "newsletter_enabled",   default: true, null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+  end
+
+  add_index "user_settings", ["user_id"], name: "index_user_settings_on_user_id", unique: true, using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "token"
     t.integer  "github_id",                                null: false
@@ -185,4 +200,5 @@ ActiveRecord::Schema.define(version: 20160517190006) do
   add_foreign_key "teams", "organisations"
   add_foreign_key "user_repositories", "repositories"
   add_foreign_key "user_repositories", "users"
+  add_foreign_key "user_settings", "users"
 end

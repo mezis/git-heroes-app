@@ -1,26 +1,26 @@
 module ApplicationHelper
-  def button_toggle(*records, state)
+  def button_toggle(*records, state, field)
     record = records.last
     title = state ? 'On' : 'Off'
-    is_current_state = record.enabled? == state
+    is_current_state = record.public_send(field) == state
     colour = is_current_state ?
       state ?
       'btn-success' :
       'btn-danger' :
       'btn-secondary'
     link_to title, 
-      [*records, enabled: !record.enabled?], 
+      [*records, field => !record.public_send(field)], 
       remote: true, 
       method: :patch,
       class: "btn btn-primary btn-small #{colour} #{'disabled' unless policy(record).update?} #{record.class.name.underscore}--update-link",
       'data-disable-with': '...'
   end
 
-  def button_toggles(*records)
+  def button_toggles(*records, field: :enabled)
     content_tag(:div, nil, class: 'btn-group btn-group-sm') do
       [
-        button_toggle(*records, false),
-        button_toggle(*records, true)
+        button_toggle(*records, false, field),
+        button_toggle(*records, true, field)
       ].join.html_safe
     end
   end
@@ -107,7 +107,7 @@ module ApplicationHelper
   def pull_request_label_color(pr)
     case pr.status.to_s
     when 'open' then 'success'
-    when 'closed' then 'merged'
+    when 'closed' then 'default'
     when 'merged' then 'default'
     else raise 'unknown PR status'
     end

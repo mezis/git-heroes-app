@@ -58,6 +58,7 @@
                 %a.nav-link.dropdown-toggle#userDropdown{ 'data-toggle': 'dropdown' }
                   @#{current_user.login}
                 .dropdown-menu.dropdown-menu-right{ 'aria-labelledby': 'userDropdown' }
+                  = link_to 'Profile', current_user, class: 'dropdown-item'
                   = link_to 'Log out', session_path, method: :delete, class: 'dropdown-item'
 
           -# organisation switcher

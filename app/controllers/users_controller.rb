@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  require_authentication!
+
   before_filter :load_organisation, only: %i[index show]
 
   def index
@@ -14,31 +16,39 @@ class UsersController < ApplicationController
     load_organisation if params[:organisation_id]
     authorize @user
 
-    @teams = current_organisation.teams.joins(:team_users).where(team_users: { user_id: @user.id })
+    if policy(@user).update?
+      @user_settings = @user.settings
+      # unfortuntely routing goes to fuck if the record is unsaved
+      @user_settings.save! unless @user_settings.persisted?
+    end
 
-    repository_ids = current_organisation.repositories.pluck(:id)
+    if current_organisation
+      @teams = current_organisation.teams.joins(:team_users).where(team_users: { user_id: @user.id })
 
-    @recent_pull_requests = PullRequest.
-      includes(:created_by, :repository).
-      where(
-        created_by_id: @user.id,
-        repository_id: repository_ids,
-      ).order(github_updated_at: :DESC).limit(5)
-    
-    # pull 20 recent comments, hope 5 are on distinct PRs
-    @recent_comments = [].tap do |ary|
-      seen_pr_ids = []
-      Comment.
-      includes(:user, pull_request: [:created_by, :repository]).
-      where.not(pull_requests: { created_by_id: @user.id }).
-      where(
-        user_id: @user.id,
-        pull_requests: { repository_id: repository_ids },
-      ).order(created_at: :DESC).
-      limit(50).each do |comment|
-        next if seen_pr_ids.include? comment.pull_request_id
-        ary << comment
-        break if ary.length >= 5
+      repository_ids = current_organisation.repositories.pluck(:id)
+
+      @recent_pull_requests = PullRequest.
+        includes(:created_by, :repository).
+        where(
+          created_by_id: @user.id,
+          repository_id: repository_ids,
+        ).order(github_updated_at: :DESC).limit(5)
+      
+      # pull 20 recent comments, hope 5 are on distinct PRs
+      @recent_comments = [].tap do |ary|
+        seen_pr_ids = []
+        Comment.
+        includes(:user, pull_request: [:created_by, :repository]).
+        where.not(pull_requests: { created_by_id: @user.id }).
+        where(
+          user_id: @user.id,
+          pull_requests: { repository_id: repository_ids },
+        ).order(created_at: :DESC).
+        limit(50).each do |comment|
+          next if seen_pr_ids.include? comment.pull_request_id
+          ary << comment
+          break if ary.length >= 5
+        end
       end
     end
   end
@@ -71,6 +81,6 @@ class UsersController < ApplicationController
   end
 
   def load_organisation
-    current_organisation! Organisation.find_by_name(params[:organisation_id])
+    current_organisation! Organisation.find_by(name: params[:organisation_id])
   end
 end
