@@ -4,7 +4,7 @@
 
 .navbar--heroes {
   position:      relative; // so we can place the logo
-  border-bottom: 1px solid $gray-dark;
+  border-bottom: 1px solid $gray-light;
 
   .navbar-logo {
     padding-right: 2.8rem;
@@ -12,6 +12,14 @@
       position:   absolute;
       height:     2.8rem;
       bottom:     0;
+    }
+  }
+
+  .nav-link {
+    color:        $gray;
+
+    &.disabled {
+      color:      $gray-light;
     }
   }
 }
