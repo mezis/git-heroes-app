@@ -62,5 +62,8 @@ module GitHeroes
       expires_in: 1.day
     }
 
+    # Configure ActionMailer
+    config.action_mailer.default_url_options = { host: ENV.fetch('HOSTNAME') }
+
   end
 end
