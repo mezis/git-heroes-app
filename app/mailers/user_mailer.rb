@@ -18,9 +18,10 @@ class UserMailer < ApplicationMailer
     @stats = PersonalStatsService.new(organisation: @organisation, user: @user)
     @pull_requests = PullRequestFinder.new(organisation: @organisation, user: @user)
     
-    mail \
-      subject: "Your daily #{@organisation.name} update -🏆  Git Heroes",
-      to:       recipient(@user)
+    mail(
+      to: 'Julien Letessier <julien.letessier@me.com>',
+      subject: "🕘 Daily #{@organisation.name} update -🏆  Git Heroes",
+    )
     end
 
   def weekly(organisation:, user:)
