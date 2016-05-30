@@ -27,10 +27,30 @@ class UserMailer < ApplicationMailer
     end
 
   def weekly(organisation:, user:)
-    nil
+    @organisation = organisation
+    @user = decorate user
+    date = organisation.scores.maximum(:date)
+    @stats = PersonalStatsService.new(organisation: @organisation, user: @user)
+    @pull_requests = PullRequestFinder.new(organisation: @organisation, user: @user)
+
+    @rewards = RewardsDecorator.new(
+      rewards: organisation.rewards.
+        includes(:user).
+        where(date: date),
+      user: user
+    )
+
+    mail(
+      to: recipient(user),
+      subject: "🏅 Weekly #{@organisation.name} update -🏆  Git Heroes",
+    )
   end
 
   private
+
+  def roadie_options
+    super.merge keep_uninlinable_css: false
+  end
 
   def recipient(user)
     if user.name

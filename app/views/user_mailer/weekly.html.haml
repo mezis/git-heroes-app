@@ -1,4 +1,20 @@
-%h1= class_name + "#" + @action
+-# %style{type: 'text/css', 'data-roadie-ignore': true}
+-#   - asset = Rails.application.assets.find_asset('resources/_rewards')
+-#   = asset.body
+
+%h3 Hi @#{@user.login}!
 
 %p
-  = @greeting + ", find me in app/views/user_mailer/weekly.html.haml"
+  =random_greeting
+
+  It's time for the weekly hall of fame!
+
+.rewards
+  - @rewards.each do |r|
+    = render r
+
+%hr/
+
+%p And now for our usual programme...
+
+= render 'stats', stats: @stats, pull_requests: @pull_requests

@@ -1,0 +1,50 @@
+.rewards {
+  display:          flex;
+  flex-flow:        row wrap;
+  justify-content:  center;
+  margin-right:     -1rem;
+}
+.reward {
+  @extend .card;
+
+  flex:             0 1 320px;
+  margin-right:     1rem;
+  display:          flex;
+  flex-flow:        row wrap;
+
+  & > * {
+    flex:           1 100%;
+  }
+}
+.reward-header {
+  display:          flex;
+  @extend .card-block;
+}
+.reward-avatar {
+  margin:           auto;
+  position:         relative;
+  img {
+    width:          64px;
+    height:         64px;
+  }
+  span {
+    font-size:      64px;
+    line-height:    64px;
+    position:       absolute;
+    right:          -32px;
+    bottom:         0;
+  }
+}
+.reward-footer {
+  @extend .card-footer;
+}
+.reward-title {
+  @extend .text-xs-center;
+  font-weight:      bold;
+}
+.reward-details {
+  @extend .text-xs-center;
+  @extend .text-muted;
+  @extend .small;
+}
+
