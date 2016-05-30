@@ -23,9 +23,9 @@ Rails.application.routes.draw do
   }, at: '/admin/jobs', as: 'admin_jobs'
 
   match '/_events'                              => 'events#create',         via: %i[post],      as: 'events'
-  match '/_users/:id'                           => 'users#show',            via: %i[get],       as: 'user'
-  match '/_users/:id'                           => 'users#update',          via: %i[patch put]
-  match '/_users/:id/settings'                  => 'user_settings#update',  via: %i[patch put], as: 'user_setting'
+  match '/_users/@:id'                          => 'users#show',            via: %i[get],       as: 'user'
+  match '/_users/@:id'                          => 'users#update',          via: %i[patch put]
+  match '/_users/@:id/settings'                 => 'user_settings#update',  via: %i[patch put], as: 'user_setting'
   match '/_orgs'                                => 'organisations#index',   via: %i[get],       as: 'organisations'
   match '/:id'                                  => 'organisations#show',    via: %i[get],       as: 'organisation'
   match '/:id'                                  => 'organisations#update',  via: %i[patch put]

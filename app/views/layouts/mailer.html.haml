@@ -3,4 +3,21 @@
   %head
     = stylesheet_link_tag 'application', media: 'all'
   %body
-    = yield
+    .container.m-t-2
+      .row
+        .col-xs-12
+          = yield
+        .col-xs-12
+          %hr/
+          
+          %p
+            = link_to @organisation do
+              Git Heroes 🏆 #{@organisation.name}
+            %br/
+            %small.text-muted
+              Want to give feedback, report a bug? Simply reply to this email.
+              %br/
+              = link_to 'Unsubscribe', [@user, t: @user.auth_token]
+              from theses updates.
+
+

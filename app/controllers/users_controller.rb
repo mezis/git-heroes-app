@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  allow_token_authentication!
   require_authentication!
 
   before_filter :load_organisation, only: %i[index show]

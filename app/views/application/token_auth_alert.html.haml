@@ -1,0 +1,21 @@
+%p
+  %span.octicon.octicon-stop
+  We authenticated you as 
+  %strong @#{current_user.login}
+  from an email link.
+
+%p
+  Please make sure you log out once you're done, if this is a public computer.
+
+  %br/
+
+  The link
+  - if token.uses > 0 && !token.expired?
+    can be used #{token.uses} more #{'time'.pluralize token.uses}
+    but
+    will expire in #{distance_of_time_in_words Time.current, token.expires_at}.
+  - elsif token.expired?
+    has expired.
+  - else
+    cannot be used again.
+

@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   include AuthenticationConcern
+  include AuthenticationTokenConcern
   include CurrentOrganisationConcern
   include DecorationConcern
   include Pundit
