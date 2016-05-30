@@ -1,5 +1,5 @@
 class AuthenticationToken < RedisModel
-  MAX_USES = 100
+  MAX_USES = 5
   EXPIRY = 1.day
 
   attr_accessor :uses
@@ -21,13 +21,14 @@ class AuthenticationToken < RedisModel
 
   def expires_at
     return unless persisted?
-    @ttl ||= begin
+    @expires_at ||= begin
       ttl = _redis.ttl(_key_id(@token))
       ttl < 0 ? nil : (Time.current + ttl)
     end
   end
 
   def expired?
+    return true if expires_at.nil?
     expires_at <= Time.current
   end
 
@@ -66,6 +67,16 @@ class AuthenticationToken < RedisModel
       return if data.empty?
       attrs = data.symbolize_keys.reverse_merge(token: token, persisted: true)
       new(attrs)
+    end
+
+    def delete_all
+      cursor = 0
+      loop do
+        cursor, keys = _redis.scan(cursor, match: "#{_key_prefix}:*")
+        break if Integer(cursor) == 0
+        next if keys.empty?
+        _redis.del(*keys)
+      end
     end
   end
   extend ClassMethods

@@ -2,6 +2,6 @@
   - flash.each do |key, value|
     .alert{ role: 'alert', class: "alert-#{flash_colour key}"}
       .container
-        #{value}
+        = value.html_safe
 = render 'email_prompt'
 = render @collection if @collection
