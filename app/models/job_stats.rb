@@ -1,7 +1,4 @@
-class JobStats
-  include ActiveModel::Validations
-  Invalid = Class.new(StandardError)
-  
+class JobStats < RedisModel
   attr_accessor :attempts, :status
   attr_reader   :id, :actor_id, :args_hash, :job_class, :enqueued_at
 
@@ -9,14 +6,13 @@ class JobStats
   validates_numericality_of :attempts
 
   def initialize(options = {})
-    # Rails.logger.info options.inspect
+    super
     @id =         options.fetch(:id)
     @job_class =  options.fetch(:job_class)
     @args_hash =  options.fetch(:args_hash)
     @status =     options.fetch(:status, nil)
     @actor_id =   options.fetch(:actor_id, nil)
     @attempts =   Integer(options.fetch(:attempts, 0))
-    @persisted =  options.fetch(:persisted, false)
     @enqueued_at = Integer(options.fetch(:enqueued_at, Time.current.to_i))
   end
 
@@ -26,53 +22,39 @@ class JobStats
     ]
   end
 
-  def persisted?
-    !!@persisted
-  end
-
-  def lock
-    Rails.application.locks.lock!(_key_lock, 3_600) { yield self }
-  end
-
   def duplicate?
     [nil, @id].exclude? _redis.get(_key_uniq)
   end
 
   def save
-    return false unless valid?
-    _redis.multi do
-      _redis.sadd(_key_actor(@actor_id), @id)
-      _redis.hmset(_key_id(@id), *attributes.to_a.flatten)
-      _redis.set(_key_uniq, @id)
+    super do
+      _redis.multi do |m|
+        m.sadd(_key_actor(@actor_id), @id)
+        m.hmset(_key_id(@id), *attributes.to_a.flatten)
+        m.set(_key_uniq, @id)
+      end
     end
-    @persisted = true
-    self
-  end
-
-  def save!
-    raise Invalid unless save
-    self
   end
 
   def destroy
-    return self unless @persisted
-    _redis.multi do
-      _redis.srem(_key_actor(@actor_id), @id)
-      _redis.del(_key_id(@id))
-      _redis.del(_key_uniq)
+    super do
+      _redis.multi do |m|
+        m.srem(_key_actor(@actor_id), @id)
+        m.del(_key_id(@id))
+        m.del(_key_uniq)
+      end
     end
-    @persisted = false
     self
   end
 
   private
 
   def _key_uniq
-    "job:uniq:#{@job_class}:#{@args_hash}"
+    _key 'uniq', @job_class, @args_hash
   end
 
   def _key_lock
-    "job:lock:#{@job_class}:#{@args_hash}"
+    super { [@job_class, @args_hash] } 
   end
 
   module ClassMethods
@@ -103,16 +85,8 @@ class JobStats
   extend ClassMethods
 
   module SharedMethods
-    def _key_id(job_id)
-      "job:by_id:#{job_id}"
-    end
-
     def _key_actor(actor_id)
-      "job:#{actor_id ? actor_id : 0}"
-    end
-
-    def _redis
-      Rails.application.redis
+      _key 'by_actor', (actor_id ? actor_id : 0)
     end
   end
   extend SharedMethods
