@@ -112,5 +112,17 @@ module ApplicationHelper
     else raise 'unknown PR status'
     end
   end
+
+  def phrase(&block)
+    @phrases ||= []
+    @phrases << capture(&block).html_safe
+  end
+
+  def make_sentence
+    @phrases = []
+    yield
+    sentence = @phrases.map(&:strip).to_sentence
+    sentence.html_safe + '.'
+  end
 end
 
