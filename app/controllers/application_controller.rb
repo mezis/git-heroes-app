@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   include AuthenticationTokenConcern
   include CurrentOrganisationConcern
   include DecorationConcern
+  include PermanentCookieConcern
   include Pundit
   after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index

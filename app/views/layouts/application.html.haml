@@ -50,7 +50,7 @@
           -# user menu
           %li.nav-item.pull-xs-right
             - if !current_user
-              = link_to 'Log in', session_path, class: 'btn btn-secondary-outline'
+              = link_to 'Log in', intermission_session_path, class: 'btn btn-secondary-outline'
             - else
               .dropdown
                 %a.nav-link.dropdown-toggle#userDropdown{ 'data-toggle': 'dropdown' }

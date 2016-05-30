@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   root to: 'homepage#show'
 
   resource :session, only: %i[show destroy update], path: 'auth/github' do
+    get 'intermission', as: 'intermission'
     get 'callback'
     post 'callback'
     get 'failure'

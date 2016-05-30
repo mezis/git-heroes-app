@@ -1,0 +1,34 @@
+
+.alert.alert-warning
+  .media
+    .media-left
+      .media-object
+        %span.mega-octicon.octicon-info
+    .media-body
+      %p
+        You're about to sign in to Git Heroes for the first time (from this browser, anyways).
+      %p
+        We use Github's OAuth authentication mechanism both as a simple method to sign in,
+        and to obtain an API token we can use to collect your statistics and display them to you.
+      %p 
+        Unfortunately, Gituhb's permissions have very poor granularity: the only way for us to be able
+        to count your comments and pull requests on all repositories is to 
+        %i also
+        to have full write access to your repositories!
+        Of course, we'd never do that.
+      %p
+        This is a known problem and
+        = link_to 'https://github.com/dear-github/dear-github/issues/113', target: '_dear_github' do
+          Github is aware of it
+        \.
+      %p
+        %strong We take your privacy very seriously.
+        If access permissions are a problem for you, feel free to
+        = mail_to 'hello@githeroes.io' do
+          ask us
+        about how we protect your data. We're may give you read access to our codebase on request.
+
+  %p.text-xs-center
+    = link_to session_path(origin: request.referer), class: 'btn btn-primary', 'disable-with': '...' do
+      %span.octicon.octicon-mark-github
+      Sign in with Github

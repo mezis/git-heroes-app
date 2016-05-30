@@ -32,6 +32,15 @@ class SessionsController < ApplicationController
     end
   end
 
+  def intermission
+    if permanent_cookie.intermission_viewed.present?
+      redirect_to session_path(origin: request.referer)
+    else
+      permanent_cookie.intermission_viewed = true
+      set_permanent_cookie
+    end
+  end
+
   def update
     if params[:act_as]
       authorize :session
