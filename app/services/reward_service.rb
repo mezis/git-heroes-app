@@ -10,9 +10,7 @@ class RewardService
     rewards = []
     
     Reward.natures.keys.each do |nature|
-      # each of these returns zero or more users; we'll only reward
-      # users once at most (but we may reward multiple users
-      # in a given category)
+      # each of these returns zero or more users
       [send("_users_with_#{nature}")].flatten.map do |u|
         next if u.nil?
         next if seen_users.include?(u)
@@ -58,11 +56,12 @@ class RewardService
     scores.
       select { |s| 
         s.points > 0 &&
+        had_points_before.exclude?(s.user) &&
         had_points_before.include?(s.user)
       }.
       sort_by(&:points).
       reverse.
-      map(&:user)&.first
+      map(&:user)
   end
 
   def _users_with_most_comments
@@ -82,7 +81,6 @@ class RewardService
   end
 
   def _users_with_top_newly_active
-    # binding.pry if @date.to_s == '2016-05-02'
     scores.
       select { |s| 
         s.points > 0 &&
@@ -115,6 +113,19 @@ class RewardService
 
   def previous_rewards
     @organisation.rewards.includes(:user).where(date: @date - 7)
+  end
+
+  # users who had no points recently
+  def had_points_recently
+    @had_points_recently ||= Set.new(
+      User.includes(:scores).
+        where(
+          organisation_user_scores: {
+            organisation_id: @organisation.id,
+            date: (@date-14)..(@date-7),
+            points: 1..Float::INFINITY,
+          }
+        ).to_a)
   end
 
   # users who have contributed at any point until 2 weeks ago.
