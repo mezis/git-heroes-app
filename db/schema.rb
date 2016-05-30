@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160526203245) do
+ActiveRecord::Schema.define(version: 20160530160856) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,14 +32,20 @@ ActiveRecord::Schema.define(version: 20160526203245) do
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
   create_table "organisation_user_scores", force: :cascade do |t|
-    t.date     "date",                    null: false
-    t.integer  "user_id",                 null: false
-    t.integer  "organisation_id",         null: false
-    t.integer  "points",                  null: false
-    t.integer  "pull_request_count",      null: false
+    t.date     "date",                                  null: false
+    t.integer  "user_id",                               null: false
+    t.integer  "organisation_id",                       null: false
+    t.integer  "points",                    default: 0, null: false
+    t.integer  "pull_request_count",        default: 0, null: false
     t.integer  "pull_request_merge_time"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.integer  "pull_request_merge_stddev"
+    t.integer  "other_merges",              default: 0, null: false
+    t.integer  "comment_count",             default: 0, null: false
+    t.integer  "self_comment_count",        default: 0, null: false
+    t.integer  "other_comment_count",       default: 0, null: false
+    t.integer  "cross_team_comment_count",  default: 0, null: false
   end
 
   add_index "organisation_user_scores", ["date", "user_id", "organisation_id"], name: "organisation_user_scores_on_date_user_org", unique: true, using: :btree
@@ -112,6 +118,17 @@ ActiveRecord::Schema.define(version: 20160526203245) do
   add_index "repositories", ["name", "owner_id", "owner_type"], name: "index_repositories_on_name_and_owner_id_and_owner_type", using: :btree
   add_index "repositories", ["owner_id"], name: "index_repositories_on_owner_id", using: :btree
   add_index "repositories", ["owner_type", "owner_id"], name: "index_repositories_on_owner_type_and_owner_id", using: :btree
+
+  create_table "rewards", force: :cascade do |t|
+    t.integer  "organisation_id", null: false
+    t.integer  "user_id",         null: false
+    t.integer  "nature",          null: false
+    t.date     "date",            null: false
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "rewards", ["date", "organisation_id", "user_id"], name: "index_rewards_on_date_and_organisation_id_and_user_id", using: :btree
 
   create_table "team_users", force: :cascade do |t|
     t.integer  "user_id",                null: false
@@ -195,6 +212,8 @@ ActiveRecord::Schema.define(version: 20160526203245) do
   add_foreign_key "pull_requests", "repositories"
   add_foreign_key "pull_requests", "users", column: "created_by_id"
   add_foreign_key "pull_requests", "users", column: "merged_by_id"
+  add_foreign_key "rewards", "organisations"
+  add_foreign_key "rewards", "users"
   add_foreign_key "team_users", "teams"
   add_foreign_key "team_users", "users"
   add_foreign_key "teams", "organisations"

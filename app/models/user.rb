@@ -10,6 +10,7 @@ class User < ApplicationModel
   has_many :team_users, dependent: :destroy
   has_many :teams, through: :team_users
   has_many :scores, class_name: 'OrganisationUserScore', dependent: :destroy
+  has_many :rewards, dependent: :destroy
 
   has_one :settings, class_name: 'UserSettings', inverse_of: :user, dependent: :destroy
   accepts_nested_attributes_for :settings, update_only: true

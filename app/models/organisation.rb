@@ -7,6 +7,7 @@ class Organisation < ApplicationModel
   has_many :teams, dependent: :destroy, inverse_of: :organisation
   has_many :scores, class_name: 'OrganisationUserScore', dependent: :destroy
   has_many :pull_requests, through: :repositories
+  has_many :rewards, dependent: :destroy
 
   def to_param
     name
