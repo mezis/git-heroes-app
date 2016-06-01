@@ -1,3 +1,7 @@
+$brand-primary:         #f14e32; // orange
+$brand-secondary:       #4e443c; // brown
+
+// Bootstrap configuration
 
 $enable-rounded:        false;
 $enable-gradients:      true;
@@ -9,3 +13,15 @@ $headings-font-weight:  300;
 $tooltip-arrow-color:   rgba(#373a3c, 0.9); // $gray-dark
 $tooltip-bg:            rgba(#373a3c, 0.9);
 
+$body-bg:               #fafafa;
+
+$btn-secondary-color:   $brand-secondary;
+$btn-secondary-border:  $brand-secondary;
+
+$brand-info:            $brand-secondary;
+
+$state-info-text:       $brand-secondary;
+$state-info-bg:         lighten($brand-secondary, 50%);
+$state-info-border:     $state-info-bg;
+
+$input-border-focus:    $brand-primary;

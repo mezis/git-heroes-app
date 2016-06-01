@@ -7,17 +7,18 @@
       .row
         .col-xs-12
           = yield
-        .col-xs-12
           %hr/
-          
+        .col-xs-12.col-md-6
           %p
             = link_to @organisation do
-              Git Heroes 🏆 #{@organisation.name}
+              = image_tag 'logo-small.svg', height:24
+              Git Heroes
+        .col-xs-12.col-md-6
+          %p.small.text-muted
+            Want to give feedback, report a bug? Simply reply to this email.
             %br/
-            %small.text-muted
-              Want to give feedback, report a bug? Simply reply to this email.
-              %br/
-              = link_to 'Unsubscribe', [@user, t: @user.auth_token]
-              from theses updates.
+            Too much noise?
+            = link_to 'Unsubscribe', [@user, t: @user.auth_token]
+            from theses updates.
 
 

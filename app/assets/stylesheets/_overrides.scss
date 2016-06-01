@@ -21,6 +21,11 @@
 .tooltip {
   font-size:        small;
   strong {
-    color:          $brand-info;
+    color:          $brand-primary;
   }
+}
+
+// dropdown toggles
+a.dropdown-toggle {
+  cursor:           pointer;
 }

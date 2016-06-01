@@ -22,17 +22,8 @@
 }
 .reward-avatar {
   margin:           auto;
-  position:         relative;
   img {
-    width:          64px;
     height:         64px;
-  }
-  span {
-    font-size:      64px;
-    line-height:    64px;
-    position:       absolute;
-    right:          -32px;
-    bottom:         0;
   }
 }
 .reward-footer {

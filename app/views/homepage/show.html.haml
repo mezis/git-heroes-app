@@ -6,9 +6,9 @@
 
 .container.homepage-hero
   .row
-    .col-xs-12.col-md-6.col-lg-4.homepage-hero-logo= image_tag 'logo-large.png'
-    .col-xs-12.col-md-6.col-lg-8.homepage-hero-content
-      %h1 A leaderboard for Github organisations.
+    = image_tag 'logo-large.svg', class: 'homepage-hero-logo col-xs-12'
+    %h1.homepage-hero-tagline.col-xs-12.title
+      A leaderboard for your Github organisation
 
     .col-xs-12.col-md-6.col-lg-4.homepage-hero-item
       .mega-octicon--block.octicon-comment>

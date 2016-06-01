@@ -1,0 +1,22 @@
+.btn-toggles {
+}
+.btn-toggle {
+  @extend .btn;
+  @extend .btn-sm;
+  padding: .1rem .75rem;
+}
+.btn-toggle--active.btn-toggle--on {
+  @extend .btn-primary;
+}
+.btn-toggle--active.btn-toggle--off {
+  @extend .btn-info;
+}
+.btn-toggle--inactive {
+  color:    transparent;
+  background: lighten($brand-secondary, 50%);
+
+  &:hover {
+    color: inherit;
+    background: lighten($brand-secondary, 30%);
+  }
+}

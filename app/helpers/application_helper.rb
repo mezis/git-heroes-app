@@ -3,21 +3,25 @@ module ApplicationHelper
     record = records.last
     title = state ? 'On' : 'Off'
     is_current_state = record.public_send(field) == state
-    colour = is_current_state ?
-      state ?
-      'btn-success' :
-      'btn-danger' :
-      'btn-secondary'
+
+    classes = [
+      'btn-toggle',
+      is_current_state ? 'btn-toggle--active' : 'btn-toggle--inactive',
+      state ? 'btn-toggle--on' : 'btn-toggle--off',
+      policy(record).update? ? nil : 'disabled',
+      "#{record.class.name.underscore}--update-link",
+    ].compact.join(' ')
+
     link_to title, 
       [*records, field => !record.public_send(field)], 
       remote: true, 
       method: :patch,
-      class: "btn btn-primary btn-small #{colour} #{'disabled' unless policy(record).update?} #{record.class.name.underscore}--update-link",
-      'data-disable-with': '...'
+      class: classes,
+      'data-disable-with': nil
   end
 
   def button_toggles(*records, field: :enabled)
-    content_tag(:div, nil, class: 'btn-group btn-group-sm') do
+    content_tag(:div, nil, class: 'btn-toggles') do
       [
         button_toggle(*records, false, field),
         button_toggle(*records, true, field)

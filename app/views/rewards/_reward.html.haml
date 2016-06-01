@@ -1,8 +1,8 @@
 .reward
   .reward-header
-    .reward-avatar
-      %img{ src: reward.user.avatar_url(size: 64) }
-      %span🏅
+    .reward-avatar<>
+      %img{ src: reward.user.avatar_url(size: 64) }/
+      %img{ src: image_path("rewards/#{reward.nature}.svg") }/
   .reward-footer
     .reward-title= reward.nature_text
     .reward-details= reward.nature_info

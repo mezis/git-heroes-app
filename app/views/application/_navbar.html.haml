@@ -1,0 +1,57 @@
+%nav.navbar.navbar-full.navbar--heroes
+  .container
+    %ul.nav.navbar-nav
+      %li.nav-item
+        = link_to root_path, class: 'nav-link navbar-logo' do
+          = image_tag 'logo-small.svg'
+
+      %li.nav-item
+        - if org = current_organisation
+          .dropdown
+            %a.nav-link.dropdown-toggle#teamDropdown{ 'data-toggle': 'dropdown', class: ('disabled' unless current_user) }
+              Teams
+            .dropdown-menu{ 'aria-labelledby': 'teamDropdown' }
+              - org.teams.enabled.sort_by(&:name).each do |team|
+                = link_to team.name, [org, team], class: 'dropdown-item'
+              .dropdown-divider
+              = link_to 'Configure', [org, Team], class: 'dropdown-item'
+        - else
+          .dropdown
+            %a.nav-link.dropdown-toggle.disabled#teamDropdown{ 'data-toggle': 'dropdown' }
+              Team
+
+      - [['Repositories', Repository], ['Members', User]].each do |title, target|
+        %li.nav-item.hidden-sm-down
+          = link_to_if current_organisation, title, [current_organisation, target], class: 'nav-link' do |x|
+            = link_to title, '#', class: 'nav-link disabled'
+
+      -# user menu
+      %li.nav-item.pull-xs-right
+        - if !current_user
+          = link_to 'Log in', intermission_session_path, class: 'btn btn-secondary-outline'
+        - else
+          .dropdown
+            %a.nav-link.dropdown-toggle#userDropdown{ 'data-toggle': 'dropdown' }
+              @#{current_user.login}
+            .dropdown-menu.dropdown-menu-right{ 'aria-labelledby': 'userDropdown' }
+              = link_to 'Profile', current_user, class: 'dropdown-item'
+              = link_to 'Log out', session_path, method: :delete, class: 'dropdown-item'
+
+      -# organisation switcher
+      %li.nav-item.pull-xs-right
+        .dropdown.organisation--short
+          %a.nav-link.dropdown-toggle#orgDropdown{ 'data-toggle': 'dropdown', class: ('disabled' unless current_user) }
+            - if current_organisation
+              = image_tag current_organisation.avatar_url, class: 'img-rounded organisation-avatar'
+              = current_organisation.login
+            - else
+              Organisations
+          .dropdown-menu.dropdown-menu-right{ 'aria-labelledby': 'orgDropdown' }
+            - current_user&.organisations&.each do |org|
+              = link_to org, class: "dropdown-item #{'disabled' if (org == current_organisation || !org.enabled?)}" do
+                = image_tag org.avatar_url, class: 'img-rounded organisation-avatar'
+                = org.login
+            .dropdown-divider
+            = link_to_if policy(Organisation).update?, 'Configure', [Organisation], class: 'dropdown-item' do |x|
+              = link_to x, '#', class: 'dropdown-item disabled'
+

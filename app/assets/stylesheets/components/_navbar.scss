@@ -3,23 +3,20 @@
 }
 
 .navbar--heroes {
-  position:      relative; // so we can place the logo
-  border-bottom: 1px solid $gray-light;
+  border-bottom: 1px solid $brand-secondary;
+  background-color: white;
 
-  .navbar-logo {
-    padding-right: 2.8rem;
-    img {
-      position:   absolute;
-      height:     2.8rem;
-      bottom:     0;
-    }
+  .navbar-logo img {
+    position:       relative;
+    height:         1.4rem;
+    top:            0.2rem;
   }
 
   .nav-link {
-    color:        $gray;
+    color:        $brand-secondary;
 
     &.disabled {
-      color:      $gray-light;
+      color:      rgba($brand-secondary, 0.5);
     }
   }
 }
