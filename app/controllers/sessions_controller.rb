@@ -16,7 +16,7 @@ class SessionsController < ApplicationController
     end
     authenticate! result.record
 
-    if result.created?
+    if result.created
       UpdateUserOrganisationsJob.perform_later actor_id: current_user.id
       UpdateUserRepositoriesJob.perform_later  actor_id: current_user.id
     end
