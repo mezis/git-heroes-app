@@ -40,7 +40,7 @@ gem 'quiet_assets'
 gem 'bootstrap', '~> 4.0.0.alpha3'
 gem 'rails-assets-tether'
 gem 'font-awesome-rails'
-gem 'octicons'
+gem 'octicons-rails', git: 'https://github.com/mezis/octicons-rails', branch: 'upstream-pr'
 
 # Graphs!
 gem 'chartkick'
