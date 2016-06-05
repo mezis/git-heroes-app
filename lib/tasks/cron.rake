@@ -9,8 +9,7 @@ namespace :cron do
 
   task :every_day => :environment do
     ScoreBackfill.call # aggressive, but let's not just add the latest scores for now
-
-    Organisation.find_each { |org| UpdateWebhookJob.perform_later organisation: org }
+    UpdateWebhookJob.perform_later
   end
 end
 

@@ -1,6 +1,14 @@
 class UpdateWebhookJob < BaseJob
   def perform(options = {})
     org = options[:organisation]
+
+    if org.nil?
+      Organisation.find_each do |org|
+        UpdateWebhookJob.perform_later organisation: org
+      end
+      return
+    end
+
     result = UpdateWebhook.call(organisation: org)
     if result.created || result.updated
       actor = org.users.where.not(github_token: nil).sample
