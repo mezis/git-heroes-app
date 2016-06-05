@@ -5,6 +5,8 @@ class ScoreUsers
   delegate :organisation, :date, to: :context
 
   def call
+    raise 'week not complete' if end_at > Time.current
+
     # issued PRs
     PullRequest.includes(:created_by).where(
       repository_id: repository_ids,

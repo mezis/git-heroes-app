@@ -10,7 +10,7 @@ class ScoreBackfill
       next unless oldest_pull_request.present?
 
       date = oldest_pull_request.created_at.beginning_of_week.to_date
-      while date < Date.current
+      while date < Date.current.beginning_of_week
         ScoreUsersJob.perform_later organisation_id: org.id, date: date.to_s
         date += 1.week
       end
