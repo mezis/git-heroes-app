@@ -25,6 +25,9 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder'
 
+# Faster caching
+gem 'level2'
+
 
 #
 # Views
