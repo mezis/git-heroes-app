@@ -6,6 +6,7 @@ class UsersController < ApplicationController
 
   def index
     authorize User
+    authorize current_organisation, :show?
     @users = policy_scope current_organisation.users
     
     all_user_ids = current_organisation.pull_requests.pluck(:created_by_id).uniq

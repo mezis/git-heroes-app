@@ -5,6 +5,7 @@ class TeamsController < ApplicationController
 
   def index
     authorize Team
+    authorize current_organisation, :show?
     @teams = policy_scope organisation_teams
     @dupe_users = compute_dupe_users
   end

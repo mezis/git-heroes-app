@@ -5,6 +5,7 @@ class RepositoriesController < ApplicationController
 
   def index
     authorize Repository
+    authorize current_organisation, :show?
     @repositories = decorate all_repositories.sort_by { |r| r.name.downcase }
   end
   
