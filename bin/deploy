@@ -1,0 +1,279 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+#
+# Deploy to Heroku
+#
+require 'rubygems'
+require 'bundler/setup'
+require 'optparse'
+require 'hashie/mash'
+require 'open3'
+require 'logger'
+require 'term/ansicolor'
+
+$options = Hashie::Mash.new(
+  maintenance:  false,
+  preboot:      true,
+  dry_run:      false,
+  pause:        false,
+  migrations:   nil,
+  force:        false,
+)
+
+OptionParser.new do |o|
+  o.banner = "Usage: #{$0} [options]"
+
+  o.on "-m", "--[no-]maintenance", "Put the site in maintenance mode during deploy. Disables preboot." do |val|
+    $options.maintenance = val
+    $options.preboot     = false if val
+  end
+
+  o.on "-p", "--[no-]preboot", "Enables preboot during the deploy." do |val|
+    $options.preboot = val
+  end
+
+  o.on "-n", "--dry-run", "Don't actually deploy" do |val|
+    $options.dry_run = val
+  end
+
+  o.on "-a", "--pause", "Pause before exiting maintenance mode. Implies -m." do |val|
+    $options.pause = val
+    $options.maintenance = true if val
+  end
+
+  o.on "-g", "--[no-]migrations", "Runs migrations after deploy. Does *not* imply -m." do |val|
+    $options.migrations = val
+  end
+
+  o.on "--force", "Force the push. Use with caution." do |val|
+    $options.force = val
+  end
+
+  begin
+    o.parse!
+  rescue OptionParser::InvalidOption
+    o.abort
+  end
+
+  if ARGV.any?
+    o.abort(o.banner)
+  end
+end
+
+
+module Shell
+  include Term::ANSIColor
+
+  def nobold
+    "\e[22m"
+  end
+
+  def logger
+    @logger ||= Logger.new(STDERR).tap do |l|
+      l.formatter = proc { |severity,_,_,msg|
+        "%s\n" % Term::ANSIColor.public_send(severity_color(severity), msg)
+      }
+    end
+  end
+
+  def run(command)
+    logger.debug("+ #{command}")
+    with_clean_env do
+      Open3.popen2(command) do |input,output,thr|
+        input.close
+        return [output.read, thr.value]
+      end
+    end
+  end
+
+  def run!(command)
+    data, status = run(command)
+    raise RuntimeError, command unless status.success?
+    data
+  end
+
+  def system!(command)
+    logger.debug("+ #{command}")
+    status = with_clean_env do
+      system(command)
+    end
+    return if status
+    raise RuntimeError, command
+  end
+
+  def confirm
+    logger.info "#{reset}Press return to continue, or ^C to abort"
+    $stdin.gets
+  end
+
+  def onoff(boolean)
+    boolean ? "on" : "off"
+  end
+
+  private
+
+  CLEAN_ENV = /^BUNDLE_|^RUBYOPT$|^GEM_/
+
+  def with_clean_env
+    saved_env = {}
+    ENV.each_pair do |k,v|
+      next unless k =~ CLEAN_ENV
+      saved_env[k] = v
+      ENV.delete(k)
+    end
+
+    return yield
+  ensure
+    saved_env.each_pair { |k,v| ENV[k] = v }
+  end
+
+  def severity_color(severity)
+    case severity
+    when 'FATAL', 'ERROR' then :red
+    when 'WARN'           then :yellow
+    when 'INFO'           then :green
+    else                       :reset
+    end
+  end
+end
+extend Shell
+
+class HerokuFeature
+  include Shell
+
+  def initialize(name, app)
+    @name = name
+    @app  = app
+  end
+
+  def set_status(bool)
+    return unless bool ^ enabled?
+    target = bool ? 'enable' : 'disable'
+    system!("heroku features:#{target} #{@name} -a #{@app}")
+    nil
+  end
+
+  def enabled?
+    data = run!("heroku features -a #{@app}")
+    !! /^\[\+\] #{@name}/.match(data)
+  end
+end
+
+# Determine the branch to deploy and the remote
+current_branch = run!('git rev-parse --abbrev-ref HEAD').strip
+current_remote = run!("git config branch.#{current_branch}.remote").strip
+# Bring remote up to date
+run! "git fetch #{current_remote}"
+# Determine hashes
+local_hash     = run!("git rev-parse #{current_branch}").strip[0..7]
+remote_hash    = run!("git rev-parse #{current_remote}/master").strip[0..7]
+# Determine app name
+app_name = run!("git config remote.#{current_remote}.url").
+  strip.
+  gsub(%r{^git@heroku\.com:(.*)\.git$}, '\1').
+  gsub(%r{^https?://git\.heroku\.com/(.*)\.git$}, '\1')
+
+
+# Detect migrations / data migrations
+migrations = run!("git diff --name-only #{current_branch}..#{current_remote}/master").
+  split.
+  select { |path| path =~ %r{^(db/migrate|db/data).*\.rb$} }
+
+# List changes (merged PRs)
+changes = run!("git log --pretty=%s #{current_branch} ^#{current_remote}/master").
+  split(/\n+/).select { |line|
+    line =~ /^Merge pull request/
+  }.map { |line|
+    line.gsub(/^Merge pull request (#\d+) from (.*)/, '\1 \2')
+  }
+
+# Print summary
+logger.info "➜ Deploying to #{bold}#{app_name}"
+logger.info "\tfrom branch #{bold}#{current_branch}#{nobold} @#{local_hash}"
+logger.info "\tto #{bold}#{current_remote}/master#{nobold} @#{remote_hash}"
+
+logger.info "➜ Changes to deploy:"
+changes.each { |line| logger.info("\t#{line}") }
+if changes.empty?
+  logger.info "\t(no pull requests detected)"
+end
+
+logger.info "➜ Deploy options:"
+logger.info "\tMigrations:  #{onoff $options.migrations}"
+logger.info "\tPreboot:     #{onoff $options.preboot}"
+logger.info "\tMaintenance: #{onoff $options.maintenance}"
+logger.info "\tForce push:  #{onoff $options.force}"
+
+# Alert if identical commits
+if remote_hash == local_hash
+  logger.error "Local and remote hashes are identical; there would be no deploy."
+  exit 1
+end
+
+# Alert if migrations
+if migrations.any?
+  if $options.migrations.nil?
+    logger.warn "Migrations detected, but you didn't tell me whether to run them."
+  elsif $options.migrations
+    logger.debug "Migrations detected, I'll run them as asked."
+  else
+    logger.warn "Migrations detected, but I've been told not to run them."
+  end
+  migrations.each { |line| logger.debug("\t#{line}") }
+else
+  logger.debug "No migrations detected."
+  logger.warn "I will still run migrations, since you asked." if $options.migrations
+end
+
+# Alert if not fast-forward
+if run!("git log --pretty=%h #{remote_hash} ^#{local_hash}").strip.empty?
+  logger.debug "Push should be a fast-forward."
+else
+  logger.warn "Push will probably not be a fast forward (remote is ahead of local)."
+  if ! $options.force
+    logger.error "Stopping as --force wasn't specified."
+    exit 1
+  end
+end
+
+# Dry run abort or final confirmation before side effects
+if $options.dry_run
+  logger.debug "Stopping (dry run)."
+  exit 0
+end
+
+logger.info("\nDoes the above look ok?")
+confirm
+
+# Possibly enable preboot, maintenance
+HerokuFeature.new('preboot', app_name).set_status($options.preboot)
+system! "heroku maintenance:on -a #{app_name}" if $options.maintenance
+
+# Trigger push
+force = $options.force ? '--force' : ''
+system! "git push #{current_remote} #{current_branch}:master #{force}"
+
+# Run migrations
+if $options.migrations
+  system! "heroku run rake db:migrate db:data -a #{app_name}"
+  system! "heroku ps:restart -a #{app_name}"
+end
+
+# Possibly pause
+if $options.pause
+  logger.warn "Slug has been deployed, pausing as requested."
+  confirm
+end
+
+# Wait for preboot to complete
+if $options.preboot
+  logger.warn "Since preboot is enabled, I'll wait 3 minutes the app to switch over."
+  sleep 180
+end
+
+# Disable preboot, maintenance
+HerokuFeature.new('preboot', app_name).set_status(true)
+system! "heroku maintenance:off -a #{app_name}" if $options.maintenance
+
+logger.info "All done!"
+exit 0

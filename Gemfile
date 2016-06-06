@@ -161,5 +161,8 @@ group :development, :test do
 
   # Generate fake data
   gem 'faker', require: false
+
+  # Nice colours on the CLI
+  gem 'term-ansicolor', require: false
 end
 
