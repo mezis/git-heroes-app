@@ -255,7 +255,7 @@ system! "git push #{current_remote} #{current_branch}:master #{force}"
 
 # Run migrations
 if $options.migrations
-  system! "heroku run rake db:migrate db:data -a #{app_name}"
+  system! "heroku run rake db:migrate -a #{app_name}"
   system! "heroku ps:restart -a #{app_name}"
 end
 
@@ -272,7 +272,6 @@ if $options.preboot
 end
 
 # Disable preboot, maintenance
-HerokuFeature.new('preboot', app_name).set_status(true)
 system! "heroku maintenance:off -a #{app_name}" if $options.maintenance
 
 logger.info "All done!"
