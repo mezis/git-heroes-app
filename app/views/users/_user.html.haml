@@ -1,5 +1,5 @@
 - _with_link = defined?(with_link) ? with_link : true
-= cache [user, _with_link] do
+= cache [user, current_organisation, _with_link] do
   %div[user]<>
     - if _with_link
       = link_to_user user do
