@@ -5,8 +5,8 @@ class UpdateUserOrganisationsJob < BaseJob
     result = UpdateUserOrganisations.call(user: user)
 
     user.organisations.each do |org|
-      UpdateOrganisationUsersJob.perform_later options.merge(organisation_id: org.id)
       UpdateWebhookJob.perform_later options.merge(organisation: org)
+      UpdateOrganisationUsersJob.perform_later options.merge(organisation_id: org.id)
     end
   end
 end
