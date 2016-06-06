@@ -53,11 +53,15 @@ class ScoreUsers
       scores[user].pull_request_merge_stddev = times.stddev
     end
 
+    organisation.scored_up_to = [organisation.scored_up_to, end_at.to_date].compact.max
+
     OrganisationUserScore.transaction do
       scores.each_pair do |user, score|
         # next if user.nil? # contributions by people no longer in the org
         score.save!
       end
+
+      organisation.save!
     end
   end
 

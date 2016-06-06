@@ -6,6 +6,8 @@ class RewardService
   end
 
   def call
+    raise 'scoring not done yet' unless @organisation.scored_up_to >= @date + 7
+
     seen_users = Set.new()
     rewards = []
     
@@ -19,10 +21,14 @@ class RewardService
       end
     end
 
+    @organisation.rewarded_up_to = [@organisation.rewarded_up_to, @date+7].compact.max
+
     # save all the things
     Reward.transaction do
       @organisation.rewards.where(date: @date).destroy_all
       rewards.each(&:save!)
+
+      @organisation.save!
     end
   end
 

@@ -8,7 +8,8 @@ class EmailUserService
     return unless user.email.present?
     return unless settings.snooze_until.nil? || settings.snooze_until < now
     return if email_type.nil?
-    return unless last_at.nil? || last_at < 23.hours.ago
+    return unless last_at.nil? || last_at <= 24.hours.ago
+    return unless data_present?
     true
   end
 
@@ -46,6 +47,18 @@ class EmailUserService
   def last_at
     return unless email_type.present?
     settings.read_attribute("#{email_type}_email_at")
+  end
+
+  def data_present?
+    case email_type
+    when :daily
+      # always true, until we do daily scoring + use the scores in emails
+      # org.scored?
+      true
+    when :weekly
+      org.rewarded?
+    else false
+    end
   end
 
   def now

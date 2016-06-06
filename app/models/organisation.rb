@@ -16,4 +16,15 @@ class Organisation < ApplicationModel
   def login
     name
   end
+
+  # do we have valid scores to display today?
+  # FIXME: this will change if/when we move to daily scoring
+  def scored?
+    scored_up_to == Date.current.beginning_of_week
+  end
+
+  # do we have valid rewards to display today?
+  def rewarded?
+    rewarded_up_to == Date.current.beginning_of_week
+  end
 end
