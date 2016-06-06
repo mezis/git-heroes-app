@@ -8,15 +8,15 @@ class Reward < ActiveRecord::Base
   enum nature: {
     most_points_twice:         0,
     most_points:               1,
-    reactivated:               4,
-    top_newly_active:          8,
     most_cross_team_comments: 10,
     most_comments:             5,
     most_pull_requests:        6,
+    second_most_points:        3,
     most_other_merges:         7,
     consistent_merge_time:     9,
     team_most_points:          2,
-    second_most_points:        3,
+    reactivated:               4,
+    top_newly_active:          8,
   }
 
   validates_presence_of :organisation
