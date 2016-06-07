@@ -1,6 +1,9 @@
-.title
-  - if policy(:session).update?
-    = link_to 'Act as user', session_path(act_as: @user.id), method: :patch, class: 'btn btn-secondary pull-xs-right'
+= breadcrumb current_organisation.name.titleize, current_organisation
+= breadcrumb 'Members', [current_organisation, User]
+= breadcrumb "@#{@user.login}", [current_organisation, @user]
+
+- if policy(:session).update?
+  = link_to 'Act as user', session_path(act_as: @user.id), method: :patch, class: 'btn btn-secondary pull-xs-right'
 
   %h3
     @#{@user.login}
@@ -10,7 +13,7 @@
   %section.m-b-2
     %span Teams:
     - if @teams.any?
-      %ul.list-inline<
+      %ul.list-inline--text<
         - @teams.each do |team|
           %li<>
             - if team.enabled?

@@ -9,6 +9,12 @@
   display: inline;
   li {
     display: inline-block;
+  }
+}
+
+.list-inline--text {
+  @extend .list-inline;
+  li {
     &::after {
       content: ', ';
     }
@@ -21,6 +27,22 @@
     &:first-child::before {
       content: '';
     }
+  }
+}
+
+.list-inline--caret {
+  @extend .list-inline;
+  li { 
+    &::after {
+      content: '› ';
+      margin: 0 0.75rem;
+    }
+    &:last-child::after {
+      content: '';
+    }
+  }
+  .nav-link {
+    display: inline-block;
   }
 }
 

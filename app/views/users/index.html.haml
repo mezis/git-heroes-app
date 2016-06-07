@@ -1,6 +1,11 @@
-.title
-  %h3 #{current_organisation.name.titleize} members
+= breadcrumb current_organisation.name.titleize, current_organisation
+= breadcrumb 'Members', [current_organisation, User]
+
+%section.m-b-2
+  #{current_organisation.name.titleize}
+  has #{pluralize @users.length, 'active member'} on Github.
   = github_link github_members_url, message: 'View on Github →', target: "_#{current_organisation.login}_members"
+
 
 .row.users-grid
   - @users.sort_by { |u| u.login.downcase }.each do |u|

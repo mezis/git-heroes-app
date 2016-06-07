@@ -1,11 +1,11 @@
-.title
-  %h3 Team #{@team.name}
-  = github_link(@team)
-
+= breadcrumb current_organisation.name.titleize, current_organisation
+= breadcrumb 'Teams', [current_organisation, Team]
+= breadcrumb @team.name.titleize, [current_organisation, @team]
 
 %section.m-b-2
-  Members:
+  Team #{@team.name.titleize} has #{pluralize @team.users.length, 'member'}:
   = render 'users/list', collection: @team.users
+  = github_link(@team)
 
 = render 'pull_requests/top', hottest: @hottest_pull_requests, fastest: @fastest_pull_requests, slowest: @slowest_pull_requests
 

@@ -29,17 +29,12 @@ module ApplicationHelper
     end
   end
 
-  def breadcrumbs(things = {})
-    things = { 'Git Heroes' => root_path }.merge(things)
-    content_tag(:ol, class:'breadcrumb') do
-      buffer = []
-      things.to_a.reverse.each_with_index do |(title,thing),idx|
-        buffer << content_tag(:li, nil, class:(idx == 0 ? 'active' : nil)) do
-          link_to(title, thing)
-        end
+  def breadcrumb(title, thing)
+    tag = 
+      content_tag(:li, nil) do
+        link_to(title, thing, class: 'nav-link')
       end
-      buffer.reverse.join.html_safe
-    end
+    content_for :breadcrumbs, tag
   end
 
   # a link_to that join+compacts the class option (if any)
@@ -79,7 +74,10 @@ module ApplicationHelper
       url = object.to_s
       target ||= '_blank'
     end
-    message ||= 'View on Github →'
+    message ||= [
+      'View on Github ',
+      content_tag(:span, nil, class: 'octicon octicon-link-external')
+    ].join.html_safe
     target ||= "_#{object.class.name.underscore}_#{object.id}"
     link_to message, url, target: target
   end

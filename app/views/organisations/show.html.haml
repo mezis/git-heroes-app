@@ -1,4 +1,5 @@
-%h3.title #{current_organisation.name} stats
+= breadcrumb current_organisation.name.titleize, current_organisation
+= breadcrumb 'dashboard', current_organisation
 
 = render 'pull_requests/top', hottest: @hottest_pull_requests, fastest: @fastest_pull_requests, slowest: @slowest_pull_requests
 

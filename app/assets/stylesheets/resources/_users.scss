@@ -22,7 +22,7 @@
 }
 
 .users-list {
-  @extend .list-inline;
+  @extend .list-inline--text;
 
   .user {
     display: inline-block;
