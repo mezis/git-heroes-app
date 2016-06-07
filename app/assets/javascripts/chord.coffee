@@ -56,10 +56,17 @@ class ChordGraph
 
     # Add a text label.
     groupText = group.append('text').attr('x', 6).attr('dy', 20)
-    groupText.append('textPath').attr('xlink:href', (d, i) ->
-      "#group#{i}"
-    ).text (d, i) =>
-      @series[i].name
+    groupText.
+      append('textPath').
+      attr('xlink:href', (d, i) ->
+        "#group#{i}"
+      ).
+      append('a').
+      attr('href', (d, i) =>
+        @series[i].url
+      ).
+      text (d, i) =>
+        @series[i].name
 
     # Remove the labels that don't fit. :(
     groupText.filter((d, i) ->

@@ -18,14 +18,14 @@ class TeamMetricsController < ApplicationController
   #   %w[blue  #0000FF],
   # ]
   def members_list
-    [%w[name color]] +
+    [%w[name color url]] +
     if team
       users.map do |user|
-        [user.login, colour_for(user.login)]
+        [user.login, colour_for(user.login), url_for([organisation, user])]
       end
     else
       teams.map do |team|
-        [team.name, colour_for(team.name)]
+        [team.name, colour_for(team.name), url_for([organisation, team])]
       end
     end
   end
