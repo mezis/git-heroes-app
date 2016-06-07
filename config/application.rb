@@ -56,16 +56,14 @@ module GitHeroes
     config.quiet_assets = false
 
     # Set up caching
-    config.cache_store = :level2, 
-      :memory_store, {
-        size:  32.megabytes,
-        name:  'level1',
-      },
-      :redis_store, {
-        pool:       redis_cache_pool,
-        expires_in: 1.day,
-        name:  'level2',
-      }
+    config.cache_store = :level2, {
+      L1: [
+        :memory_store, size: 32.megabytes,
+      ],
+      L2: [
+        :redis_store, pool: redis_cache_pool, expires_in: 1.day,
+      ]
+    }
 
     # Configure ActionMailer
     config.action_mailer.default_url_options = { host: ENV.fetch('HOSTNAME') }

@@ -144,7 +144,7 @@ GEM
     kaminari (0.16.3)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
-    level2 (0.1.0)
+    level2 (0.2.0)
       activesupport
     lol_dba (2.0.3)
       actionpack (>= 3.0, < 5.0)
