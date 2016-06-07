@@ -15,12 +15,12 @@ class LeaderboardGraph
     d.points = +d.points
     d
 
-  maxTextWidth: (labels) ->
+  maxTextWidth: (data) ->
     tmp = d3.select(@el).append('svg').attr('width', 100).attr('height', 100)
-    lengths = labels.map (l) ->
+    lengths = data.map (d) ->
       tmp.append('text')
         .attr('class', 'graph-label')
-        .text(l)[0][0]
+        .text(d.user)[0][0]
         .getBBox().width
     tmp.remove()
     d3.max(lengths)
@@ -29,22 +29,18 @@ class LeaderboardGraph
     return unless @data?
     $(@el).empty()
 
-    labels = @data.map (d) ->
-      d.user
-    values = @data.map (d) ->
-      d.points
 
     containerWidth = $(@el).width()
     barHeight = 20
     barGap = 5
     labelOffset = 10
     groupHeight = barHeight * @data.length
-    spaceForLabels = this.maxTextWidth(labels) + labelOffset
+    spaceForLabels = this.maxTextWidth(@data) + labelOffset
     chartWidth = containerWidth - spaceForLabels
 
-    chartHeight = barHeight * labels.length - barGap
+    chartHeight = barHeight * @data.length - barGap
     x = d3.scale.linear()
-      .domain([0, d3.max(values)])
+      .domain([0, d3.max(@data.map (d) -> d.points)])
       .range([0, chartWidth])
     y = d3.scale.linear()
       .range([chartHeight, 0])
@@ -59,7 +55,7 @@ class LeaderboardGraph
 
     # Create bars
     bar = chart.selectAll('g')
-      .data(values)
+      .data(@data)
       .enter()
       .append('g')
       .attr('transform', (d, i) ->
@@ -69,18 +65,20 @@ class LeaderboardGraph
     # Create rectangles of the correct width
     bar.append('rect')
       .attr('class', 'graph-bar')
-      .attr('width', x)
+      .attr('width', (d) ->
+        x(d.points)
+      )
       .attr('height', barHeight - barGap)
 
     # Add text label in bar
     bar.append('text')
       .attr('class', 'graph-value')
       .attr('x', (d) ->
-        x(d) - 3
+        x(d.points) - 3
       )
       .attr('y', (barHeight-barGap)/2)
       .text (d) ->
-        d
+        d.points
 
     # Draw labels
     bar.append('text')
@@ -89,8 +87,11 @@ class LeaderboardGraph
         -labelOffset
       )
       .attr('y', (barHeight-barGap)/2)
-      .text (d, i) ->
-        labels[i]
+      .append('a').attr('href', (d) ->
+        d.url
+      )
+      .text (d) ->
+        d.user
     return
 
 

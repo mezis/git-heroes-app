@@ -1,4 +1,5 @@
 class MetricsService
+  include RouterConcern
 
   attr_reader :organisation, :team
 
@@ -39,9 +40,9 @@ class MetricsService
       sum(:points).
       sort_by(&:last).reverse.take(5)
     users = User.where(id: data.map(&:first)).to_a.index_by(&:id)
-    data.each_with_object({}) { |(user_id, points), h|
-      h[users[user_id].login] = points
-    }.reverse_merge(user: :points)
+    data.each_with_object([%w[user points url]]) do |(user_id, points), a|
+      a << [users[user_id].login, points, router.url_for([@organisation, users[user_id]])]
+    end
   end
 
   def comments_over_time
