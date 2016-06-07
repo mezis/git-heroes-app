@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
     )
 
     unless result.success?
-      flash[:alert] = 'Oh now! Somehow we could not log you in.'
+      flash[:alert] = 'Oops! Somehow we could not log you in.'
       redirect_to root_path
       return
     end
@@ -21,7 +21,7 @@ class SessionsController < ApplicationController
       UpdateUserRepositoriesJob.perform_later  actor_id: current_user.id
     end
 
-    flash[:notice] = result.created ? 'Account created' : 'Welcome back'
+    flash[:notice] = result.created ? 'Welcome aboard!' : 'Welcome back!'
 
     if target = request.env['omniauth.origin'] && target.present?
       redirect_to target
@@ -53,12 +53,12 @@ class SessionsController < ApplicationController
 
   def destroy
     logout!
-    flash[:notice] = 'Sorry to see you go'
+    flash[:notice] = 'Bye, see you soon!'
     redirect_to root_path
   end
 
   def failure
-    flash[:alert] = 'Authentication failed'
+    flash[:alert] = 'Oops. Authentication failed.'
     redirect_to root_url
   end
 end
