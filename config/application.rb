@@ -31,7 +31,6 @@ require 'git_heroes/redis_connection'
 module GitHeroes
   class Application < Rails::Application
     include RedisConnection
-    extend RedisConnection
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -59,11 +58,13 @@ module GitHeroes
     # Set up caching
     config.cache_store = :level2, 
       :memory_store, {
-        size: 32.megabytes,
+        size:  32.megabytes,
+        name:  'level1',
       },
       :redis_store, {
         pool:       redis_cache_pool,
-        expires_in: 1.day
+        expires_in: 1.day,
+        name:  'level2',
       }
 
     # Configure ActionMailer
