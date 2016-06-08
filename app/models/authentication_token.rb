@@ -1,28 +1,29 @@
-class AuthenticationToken < RedisModel
+class AuthenticationToken
+  include RedisModel::Attributable
+  
   MAX_USES = 5
   EXPIRY = 1.day
 
   attr_accessor :uses
-  attr_reader :token, :user_id
+  attr_reader :user
 
-  validates_presence_of :token, :user_id
+  validates_presence_of :user
   validates_inclusion_of :uses, in: 1..MAX_USES
 
   def initialize(options = {})
     super
-    @token = options.fetch(:token) { generate_token }
-    @user_id = options.fetch(:user_id)
-    @uses = Integer(options.fetch(:uses, MAX_USES))
+    @id ||= generate_token
+    @uses ||= MAX_USES
   end
 
-  def user
-    @user ||= User.find_by(id: @user_id)
+  def attribute_names
+    %i[uses user]
   end
 
   def expires_at
     return unless persisted?
     @expires_at ||= begin
-      ttl = _redis.ttl(_key_id(@token))
+      ttl = _redis.ttl(_key_id)
       ttl < 0 ? nil : (Time.current + ttl)
     end
   end
@@ -43,32 +44,12 @@ class AuthenticationToken < RedisModel
   end
 
   def save
-    super do
-      _redis.multi do |m|
-        m.hmset(_key_id(@token), 'uses', @uses, 'user_id', @user_id)
-        m.expire(_key_id(@token), EXPIRY) unless persisted?
-      end
-    end
-  end
-
-  def destroy
-    super do
-      _redis.del(_key_id(@token))
+    super do |m|
+      m.expire(_key_id, EXPIRY) unless persisted?
     end
   end
 
   module ClassMethods
-    def create!(options = {})
-      new(options).tap(&:save!)
-    end
-
-    def find_by(token:)
-      data = _redis.hgetall(_key_id(token))
-      return if data.empty?
-      attrs = data.symbolize_keys.reverse_merge(token: token, persisted: true)
-      new(attrs)
-    end
-
     def delete_all
       cursor = 0
       loop do

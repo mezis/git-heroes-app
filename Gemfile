@@ -148,6 +148,11 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
 
+  # Preloader
+  gem 'spring'
+  gem 'spring-commands-rspec'
+  gem 'spring-watcher-listen'
+
   # REPLs
   gem 'pry-rails'
   gem 'binding_of_caller'
@@ -155,9 +160,16 @@ group :development, :test do
 
   # Unit/integration testing
   gem 'rspec-rails'
+  gem 'rspec-its'
 
   # Test factories
   gem 'factory_girl_rails'
+
+  # Time travel in tests
+  gem 'timecop', require: false
+
+  # Auto runner
+  gem 'guard-rspec'
 
   # Debug logging for HTTP requests
   gem 'httplog', require: false
