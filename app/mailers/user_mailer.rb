@@ -49,7 +49,13 @@ class UserMailer < ApplicationMailer
   private
 
   def roadie_options
-    super.merge keep_uninlinable_css: false
+    super.combine(
+      keep_uninlinable_css: false,
+      url_options: {
+        host:     ENV.fetch('HOSTNAME'),
+        protocol: 'https',
+      },
+    )
   end
 
   def recipient(user)

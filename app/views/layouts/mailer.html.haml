@@ -2,18 +2,16 @@
 %html
   %head
     = stylesheet_link_tag 'application', media: 'all'
-  %body
+  %body.email
     .container.m-t-2
       .row
         .col-xs-12
           = yield
-          %hr/
-        .col-xs-12.col-md-6
+          %hr.m-t-2.m-b-2/
           %p
             = link_to @organisation do
               = image_tag 'logo-small.svg', height:24
               Git Heroes
-        .col-xs-12.col-md-6
           %p.small.text-muted
             Want to give feedback, report a bug? Simply reply to this email.
             %br/
