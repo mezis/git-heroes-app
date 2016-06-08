@@ -54,7 +54,8 @@ class EmailUserService
     when :daily
       # always true, until we do daily scoring + use the scores in emails
       # org.scored?
-      true
+      # don't send email if inactive for several days
+      stats.activity?
     when :weekly
       org.rewarded?
     else false
@@ -75,5 +76,9 @@ class EmailUserService
 
   def org
     @org_user.organisation
+  end
+
+  def stats
+    PersonalStatsService.new(organisation: org, user: user, range: 2.working.days.ago .. Time.current)
   end
 end
