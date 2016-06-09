@@ -29,7 +29,7 @@ class JobStats
     _ancestors = ancestors # load before the transaction
     super do |m|
       _actors_sentinel.each do |actor|
-        m.sadd(_key_actor(actor), @id)
+        m.zadd(_key_actor(actor), _timestamp, @id)
       end
       m.sadd(_key_uniq, @args_hash)
       _ancestors.each { |a| a.add_descendant!(id) }
@@ -39,7 +39,7 @@ class JobStats
   def destroy
     super do |m|
       _actors_sentinel.each do |actor|
-        m.srem(_key_actor(actor), @id)
+        m.zrem(_key_actor(actor), @id)
       end
       m.srem(_key_uniq, @args_hash)
     end
@@ -129,9 +129,9 @@ class JobStats
     # lazily enumerated!!
     def where(actor: nil)
       actor_key = _key_actor(actor)
-      _redis.smembers(actor_key).lazy.map { |id|
+      _redis.zrange(actor_key, 0, -1).lazy.map { |id|
         obj = find(id)
-        _redis.srem(actor_key, id) unless obj.present?
+        _redis.zrem(actor_key, id) unless obj.present?
         obj
       }.select(&:present?)
     end
