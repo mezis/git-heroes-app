@@ -12,6 +12,7 @@ require 'pundit/rspec'
 require 'support/factory_girl'
 require 'support/redis'
 require 'support/timecop'
+require 'support/active_job'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are

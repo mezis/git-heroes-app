@@ -40,5 +40,9 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
   
+  # Be less chatty with logging
   config.log_level = :warn
+
+  # Don't actually queue jobs
+  config.active_job.queue_adapter = :test
 end

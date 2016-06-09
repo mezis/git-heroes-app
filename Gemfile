@@ -161,6 +161,7 @@ group :development, :test do
   # Unit/integration testing
   gem 'rspec-rails'
   gem 'rspec-its'
+  gem 'rspec-activejob'
 
   # Test factories
   gem 'factory_girl_rails'

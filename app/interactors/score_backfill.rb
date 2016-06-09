@@ -11,7 +11,7 @@ class ScoreBackfill
 
       date = oldest_pull_request.created_at.beginning_of_week.to_date
       while date < Date.current.beginning_of_week
-        ScoreUsersJob.perform_later organisation_id: org.id, date: date.to_s
+        ScoreUsersJob.perform_later organisation: org, date: date.to_s, actors: [org]
         date += 1.week
       end
     end

@@ -4,7 +4,7 @@ module RedisModel
     include Base
     
     included do
-      Invalid = Class.new(StandardError)
+      const_set :Invalid, Class.new(StandardError)
       include ActiveModel::Validations
     end
 

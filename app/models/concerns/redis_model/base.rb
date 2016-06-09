@@ -22,8 +22,10 @@ module RedisModel
     def save
       _redis.multi do |m|
         yield m if block_given?
+        m.after_multi do
+          @persisted = true
+        end
       end
-      @persisted = true
       self
     end
 
@@ -31,8 +33,10 @@ module RedisModel
       return self unless @persisted
       _redis.multi do |m|
         yield m if block_given?
+        m.after_multi do
+          @persisted = false
+        end
       end
-      @persisted = false
       self
     end
 

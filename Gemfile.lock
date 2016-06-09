@@ -293,6 +293,9 @@ GEM
       rspec-core (~> 3.4.0)
       rspec-expectations (~> 3.4.0)
       rspec-mocks (~> 3.4.0)
+    rspec-activejob (0.6.1)
+      activejob (>= 4.2)
+      rspec-mocks
     rspec-core (3.4.4)
       rspec-support (~> 3.4.0)
     rspec-expectations (3.4.0)
@@ -420,6 +423,7 @@ DEPENDENCIES
   redis-rails
   redlock
   roadie-rails
+  rspec-activejob
   rspec-its
   rspec-rails
   sass-rails

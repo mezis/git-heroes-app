@@ -23,7 +23,7 @@ class BaseJob < ActiveJob::Base
       block.call
     ensure
       logger.info "Clearing stats for #{self.class}"
-      job_stats.destroy
+      job_stats.complete!
     end
   end
 

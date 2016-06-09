@@ -67,6 +67,12 @@ describe JobStats do
       it { is_expected.to be_persisted }
       its(:attempts) { are_expected.to eq(666) }
     end
+
+    it 'ignores actors when hashing arguments' do
+      other = described_class.find_or_initialize_by(
+        job: FailJob.new(:foo, actors: create(:user)))
+      expect(subject.args_hash).to eq(other.args_hash)
+    end
   end
 
   describe '.where' do
@@ -105,4 +111,66 @@ describe JobStats do
       expect(results.count).to eq 2
     end
   end
+
+  describe 'root/parent/children' do
+    let(:gen1job) { FailJob.new(:foo) }
+    let(:gen2job) { FailJob.new(:foo, parent: gen1job) }
+    let(:gen3job) { FailJob.new(:foo, parent: gen2job) }
+
+    def gen1 ; described_class.find(gen1job.job_id) ; end
+    def gen2 ; described_class.find(gen2job.job_id) ; end
+    def gen3 ; described_class.find(gen3job.job_id) ; end
+
+    before do
+      described_class.find_or_initialize_by(job: gen1job).save!
+      described_class.find_or_initialize_by(job: gen2job).save!
+      described_class.find_or_initialize_by(job: gen3job).save!
+    end
+
+    it 'associates parents' do
+      expect(gen1.parent_id).to be_nil
+      expect(gen2.parent_id).to eq(gen1.id)
+      expect(gen3.parent_id).to eq(gen2.id)
+    end
+
+    it 'associates roots' do
+      expect(gen1.root_id).to eq(gen1.id)
+      expect(gen2.root_id).to eq(gen1.id)
+      expect(gen3.root_id).to eq(gen1.id)
+    end
+
+    it 'lists descendants' do
+      expect(gen1.descendants).to eq([gen2.id, gen3.id])
+      expect(gen2.descendants).to eq([gen3.id])
+      expect(gen3.descendants).to eq([])
+    end
+
+    describe '#complete!' do
+      it 'does not destroy when no descendants' do
+        gen1.complete!
+        expect(gen1).not_to be_nil
+      end
+
+      it 'destroys when no descendants' do
+        gen3.complete!
+        expect(gen3).to be_nil
+      end 
+
+      it 'updates descendants in ancestors' do
+        gen3.complete!
+        expect(gen2.descendants).to eq([])
+        expect(gen1.descendants).to eq([gen2.id])
+      end
+
+      it 'cleans up after itself' do
+        gen1.complete!
+        gen2.complete!
+        gen3.complete!
+        expect(gen1).to be_nil
+        expect(gen2).to be_nil
+        expect(gen3).to be_nil
+      end
+    end
+  end
+
 end

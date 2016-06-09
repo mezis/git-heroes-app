@@ -1,12 +1,15 @@
 class UpdateRepositoryPullRequestsJob < BaseJob
   def perform(options = {})
-    repo = Repository.find(options[:repository_id])
+    actors = options.fetch(:actors, [])
+    repo =   options.fetch(:repository)
     result = UpdateRepositoryPullRequests.call(repository: repo)
 
-    # FIXME: catch failures / rate limits, retry
-
     result.records.each do |record|
-      UpdatePullRequestJob.perform_later pull_request_id: record.id
+      UpdatePullRequestJob.perform_later(
+        pull_request: record,
+        actors:       actors | [repo.owner],
+        parent:       self,
+      )
     end
   end
 end

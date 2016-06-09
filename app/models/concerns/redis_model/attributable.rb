@@ -23,6 +23,22 @@ module RedisModel
       ]
     end
 
+    def assign_attributes(attrs = {})
+      attrs.each_pair do |k,v|
+        public_send("#{k}=", v)
+      end
+    end
+
+    def update_attributes(attrs = {})
+      assign_attributes(attrs)
+      save
+    end
+
+    def update_attributes!(attrs = {})
+      assign_attributes(attrs)
+      save!
+    end
+
     def changes
       result = {}
       attributes.each_pair do |k,v|

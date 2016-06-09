@@ -4,7 +4,7 @@ class JobStats
   include RedisModel::Attributable
 
   attr_accessor :attempts, :status
-  attr_reader   :actors, :args_hash, :job_class, :enqueued_at
+  attr_reader   :actors, :args_hash, :job_class, :enqueued_at, :parent_id, :root_id
 
   validates_presence_of :id, :args_hash
   validates_numericality_of :attempts
@@ -14,10 +14,11 @@ class JobStats
     @actors       = [@actors].flatten.compact
     @attempts     ||= 0
     @enqueued_at  ||= Time.current.to_i
+    @root_id      ||= parent&.root_id || id
   end
 
   def attribute_names
-    %i[job_class args_hash actors attempts status]
+    %i[job_class args_hash actors attempts status parent_id root_id]
   end
 
   def duplicate?
@@ -25,11 +26,13 @@ class JobStats
   end
 
   def save
+    _ancestors = ancestors # load before the transaction
     super do |m|
       _actors_sentinel.each do |actor|
         m.sadd(_key_actor(actor), @id)
       end
       m.sadd(_key_uniq, @args_hash)
+      _ancestors.each { |a| a.add_descendant!(id) }
     end
   end
 
@@ -43,7 +46,57 @@ class JobStats
     self
   end
 
+  def complete!
+    update_attributes!(status: 'done')
+    ancestors.each { |a| a.complete_descendant!(id) }
+    destroy if !has_descendants?
+    self
+  end
+
+  def root
+    @root ||= @root_id ? self.class.find(@root_id) : nil
+  end
+
+  def parent
+    @parent ||= @parent_id ? self.class.find(@parent_id) : nil
+  end
+
+  def descendants 
+    _redis.zrange(_key_descendants, 0, -1)
+  end
+
+  protected
+
+  def add_descendant!(id)
+    _redis.multi do |m|
+      m.zadd(_key_descendants, _timestamp, id)
+    end
+  end
+
+  def complete_descendant!(id)
+    _redis.multi do |m|
+      m.zrem(_key_descendants, id)
+    end
+    destroy if !has_descendants? && status == 'done'
+  end
+
   private
+
+  def ancestors
+    ancestors = [parent, (root if root_id != id)].compact
+  end
+
+  def has_descendants?
+    _redis.zcard(_key_descendants) > 0
+  end
+
+  def _timestamp
+    (Time.current.to_f * 1e9).to_i
+  end
+
+  def _key_descendants
+    _key 'children', @id
+  end
 
   def _key_uniq
     _key 'uniq', @job_class
@@ -59,13 +112,18 @@ class JobStats
 
   module ClassMethods
     def find_or_initialize_by(job:)
-      find(job.job_id) ||
-      new(
-        id:        job.job_id,
-        actors:    job.arguments.dup.extract_options![:actors],
-        job_class: job.class.name,
-        args_hash: Digest::MD5.hexdigest(job.arguments.to_json)
-      )
+      find(job.job_id) || begin
+        argv = job.arguments.dup
+        options = argv.extract_options!
+
+        new(
+          id:        job.job_id,
+          actors:    options.delete(:actors),
+          parent_id: options.delete(:parent)&.job_id,
+          job_class: job.class.name,
+          args_hash: Digest::MD5.hexdigest(serializer.dump([argv,options]))
+        )
+      end
     end
 
     # lazily enumerated!!

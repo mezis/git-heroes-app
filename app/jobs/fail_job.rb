@@ -1,6 +1,6 @@
 class FailJob < BaseJob
   def perform(*args)
-    Rails.logger.info 'failing!'
+    Rails.logger.info "FailJob: #{args.inspect}"
     raise 'failing job!'
   end
 end

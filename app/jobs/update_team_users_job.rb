@@ -1,6 +1,8 @@
 class UpdateTeamUsersJob < BaseJob
   def perform(options = {})
-    team = Team.find_by_id(options[:team_id])
+    actors =  options.fetch(:actors, [])
+    team =    options.fetch(:team)
+
     UpdateTeamUsers.call(team: team)
   end
 end

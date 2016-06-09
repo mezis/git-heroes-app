@@ -5,8 +5,6 @@ class SerializationService
 
   def load(string)
     untransform(JSON.load(string))
-  rescue => e
-    binding.pry
   end
 
   protected

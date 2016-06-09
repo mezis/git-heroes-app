@@ -1,7 +1,7 @@
 class UpdateOrganisationUsers
   include GithubInteractor
 
-  delegate :user, :organisation, to: :context
+  delegate :organisation, to: :context
 
   def call
     users = %w[admin member].each_with_object({}) do |role,h|
@@ -23,6 +23,10 @@ class UpdateOrganisationUsers
   end
 
   private
+
+  def user
+    context.user || pick_user(organisation.users)
+  end
 
   def all_members(options = {})
     paginate { client.organization_members(organisation.name, options) }

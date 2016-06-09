@@ -3,13 +3,13 @@ namespace :cron do
   end
 
   task :every_hour => :environment do
-    Organisation.find_each { |org| ScoreUsersJob.perform_later organisation_id: org.id }
+    ScoreUsersJob.perform_later
     EmailUserJob.perform_later
   end
 
   task :every_day => :environment do
-    ScoreBackfill.call # aggressive, but let's not just add the latest scores for now
     UpdateWebhookJob.perform_later
+    ScoreBackfill.call # aggressive, but let's not just add the latest scores for now
   end
 end
 
