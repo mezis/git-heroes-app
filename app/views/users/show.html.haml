@@ -1,6 +1,9 @@
-= breadcrumb current_organisation.name.titleize, current_organisation
-= breadcrumb 'Members', [current_organisation, User]
-= breadcrumb "@#{@user.login}", [current_organisation, @user]
+- if current_organisation
+  = breadcrumb current_organisation.name.titleize, current_organisation
+  = breadcrumb 'Members', [current_organisation, User]
+  = breadcrumb "@#{@user.login}", [current_organisation, @user]
+- else
+  = breadcrumb "Your profile", [@user]
 
 - if policy(:session).update?
   = link_to 'Act as user', session_path(act_as: @user.id), method: :patch, class: 'btn btn-secondary pull-xs-right'
