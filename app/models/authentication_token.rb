@@ -49,20 +49,6 @@ class AuthenticationToken
     end
   end
 
-  module ClassMethods
-    def delete_all
-      cursor = 0
-      loop do
-        cursor, keys = _redis.scan(cursor, match: "#{_key_prefix}:*")
-        break if Integer(cursor) == 0
-        next if keys.empty?
-        _redis.del(*keys)
-      end
-    end
-  end
-  extend ClassMethods
-
-
   private
 
   def generate_token

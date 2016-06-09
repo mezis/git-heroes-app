@@ -51,6 +51,16 @@ module RedisModel
         new(options).tap(&:save!)
       end
 
+      def delete_all
+        cursor = 0
+        loop do
+          cursor, keys = _redis.scan(cursor, match: "#{_key_prefix}:*", count: 100)
+          break if Integer(cursor) == 0
+          next if keys.empty?
+          _redis.del(*keys)
+        end
+      end
+
       protected
 
       def _key_prefix
