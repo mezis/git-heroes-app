@@ -47,7 +47,10 @@ class UsersController < ApplicationController
     end
 
     if request.xhr?
-      render partial: 'flashes'
+      render partial: 'shared/loner', collection: [
+        { partial: 'flashes' },
+        { partial: 'email_prompt'},
+      ]
       flash.clear
     else
       redirect_to :back

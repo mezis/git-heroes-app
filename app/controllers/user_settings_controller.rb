@@ -20,8 +20,10 @@ class UserSettingsController < ApplicationController
       flash[:alert] = "Sorry, we did not quite get that. #{@user.errors.full_messages.to_sentence}."
     end
 
-    @collection = [@user.settings]
-    render partial: 'flashes'
+    render partial: 'shared/loner', collection: [
+      { partial: 'flashes' },
+      @user.settings
+    ]
     flash.clear
   end
 end
