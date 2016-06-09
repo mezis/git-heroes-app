@@ -3,6 +3,34 @@ require 'redis-namespace'
 require 'connection_pool'
 
 module GitHeroes
+  module RedisTransaction
+    # re-entrant transactions
+    # not thread-safe
+    def multi
+      if @transaction
+        yield @transaction
+        nil
+      else 
+        begin
+          status, count = super do |m|
+            @transaction = m
+            @transaction_callbacks = []
+            yield m
+          end
+          @transaction_callbacks.each(&:call) if status == 'OK'
+          [status, count]
+        ensure
+          @transaction_callbacks = nil
+          @transaction = nil
+        end
+      end
+    end
+
+    def after_multi(&block)
+      @transaction_callbacks << block
+    end
+  end
+
   module RedisConnection
 
     %i[redis redis_sidekiq_pool redis_cache_pool locks].each do |m|
@@ -17,7 +45,7 @@ module GitHeroes
 
       def redis
         @_redis ||=
-          Redis::Namespace.new('data', redis: Redis.new(url: ENV.fetch('REDIS_URL')))
+          Redis::Namespace.new('data', redis: Redis.new(url: ENV.fetch('REDIS_URL'))).extend(RedisTransaction)
       end
 
       def redis_sidekiq_pool
