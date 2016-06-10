@@ -13,7 +13,7 @@ class JobStats
     super
     @actors       = [@actors].flatten.compact
     @attempts     ||= 0
-    @enqueued_at  ||= Time.current.to_i
+    @enqueued_at  ||= _timestamp
     @root_id      ||= parent&.root_id || id
   end
 
@@ -28,11 +28,11 @@ class JobStats
   def save
     _ancestors = ancestors # load before the transaction
     super do |m|
-      _actors_sentinel.each do |actor|
-        m.zadd(_key_actor(actor), _timestamp, @id)
-      end
       m.sadd(_key_uniq, @args_hash)
-      _ancestors.each { |a| a.add_descendant!(id) }
+      _actors_sentinel.each do |actor|
+        m.zadd(_key_actor(actor), @enqueued_at, @id)
+      end
+      _ancestors.each { |a| a.add_descendant!(self) } unless persisted?
     end
   end
 
@@ -42,13 +42,14 @@ class JobStats
         m.zrem(_key_actor(actor), @id)
       end
       m.srem(_key_uniq, @args_hash)
+      m.hdel(_key_descendants_max, @id)
     end
     self
   end
 
   def complete!
     update_attributes!(status: 'done')
-    ancestors.each { |a| a.complete_descendant!(id) }
+    ancestors.each { |a| a.complete_descendant!(self) }
     destroy if !has_descendants?
     self
   end
@@ -65,17 +66,27 @@ class JobStats
     _redis.zrange(_key_descendants, 0, -1)
   end
 
+  def descendants_max
+    value = _redis.hget(_key_descendants_max, @id)
+    Integer(value || 0)
+  end
+
+  def descendants_left
+    _redis.zcard(_key_descendants)
+  end
+
   protected
 
-  def add_descendant!(id)
+  def add_descendant!(other)
     _redis.multi do |m|
-      m.zadd(_key_descendants, _timestamp, id)
+      m.zadd(_key_descendants, other.enqueued_at, other.id)
+      m.hincrby(_key_descendants_max, @id, 1)
     end
   end
 
-  def complete_descendant!(id)
+  def complete_descendant!(other)
     _redis.multi do |m|
-      m.zrem(_key_descendants, id)
+      m.zrem(_key_descendants, other.id)
     end
     destroy if !has_descendants? && status == 'done'
   end
@@ -83,7 +94,7 @@ class JobStats
   private
 
   def ancestors
-    ancestors = [parent, (root if root_id != id)].compact
+    ancestors = [parent, (root if root_id != id && root_id != parent_id)].compact
   end
 
   def has_descendants?
@@ -95,7 +106,11 @@ class JobStats
   end
 
   def _key_descendants
-    _key 'children', @id
+    _key 'chld', @id
+  end
+
+  def _key_descendants_max
+    _key 'chdlcount', @id
   end
 
   def _key_uniq

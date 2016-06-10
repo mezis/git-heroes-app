@@ -171,6 +171,34 @@ describe JobStats do
         expect(gen3).to be_nil
       end
     end
+
+    describe '#descendants_max' do
+      it 'counts descendants before any job runs' do
+        expect(gen1.descendants_max).to eq 2
+        expect(gen2.descendants_max).to eq 1
+        expect(gen3.descendants_max).to eq 0
+      end
+
+      it 'does not change when children complete' do
+        gen2.complete!
+        gen3.complete!
+        expect(gen1.descendants_max).to eq(2)
+      end
+    end
+
+    describe '#descendants_left' do
+      it 'counts descendants before any job runs' do
+        expect(gen1.descendants_left).to eq 2
+        expect(gen2.descendants_left).to eq 1
+        expect(gen3.descendants_left).to eq 0
+      end
+
+      it 'lowers when children complete' do
+        gen2.complete!
+        gen3.complete!
+        expect(gen1.descendants_left).to eq(0)
+      end
+    end
   end
 
 end
