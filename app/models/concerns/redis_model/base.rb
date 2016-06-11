@@ -55,9 +55,8 @@ module RedisModel
         cursor = 0
         loop do
           cursor, keys = _redis.scan(cursor, match: "#{_key_prefix}:*", count: 100)
-          break if Integer(cursor) == 0
-          next if keys.empty?
           _redis.del(*keys)
+          break if Integer(cursor) == 0
         end
       end
 
