@@ -1,5 +1,5 @@
-$(document).on "page:change", ->
-  Heroes.dispatch "tooltip:update"
+$(document).on "turbolinks:load", ->
+  $(document).trigger("tooltip:update")
 
 $(document).on "tooltip:update", (e) ->
   $(e.target).find('[data-toggle="tooltip"]').tooltip

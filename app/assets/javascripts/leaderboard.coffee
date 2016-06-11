@@ -92,10 +92,12 @@ class LeaderboardGraph
       )
       .text (d) ->
         d.user
+
+    $(@el).trigger('svg:load')
     return
 
 
-$(document).on "page:change", ->
+$(document).on "turbolinks:load", ->
   $('.graph-leaderboard').each (idx, el) ->
     new LeaderboardGraph(el).fetch()
     

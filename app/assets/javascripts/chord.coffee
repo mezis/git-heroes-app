@@ -100,9 +100,11 @@ class ChordGraph
       attr('x', 0).attr('y', 0).
       attr('id', 'chord-info').
       attr('text-anchor', 'middle')
+
+    $(@el).trigger('svg:load')
     return
 
-$(document).on "page:change", ->
+$(document).on "turbolinks:load", ->
   $('#chord-graph').each (idx,el) ->
     new ChordGraph(el).fetch()
 

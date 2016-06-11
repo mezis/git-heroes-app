@@ -147,9 +147,9 @@ class TimeSeriesGraph
       )
       .attr('data-toggle', 'tooltip')
 
-    Heroes.dispatch "tooltip:update", target: @el
+    $(@el).trigger('svg:load')
     return
 
-$(document).on "page:change", ->
+$(document).on "turbolinks:load", ->
   $('.graph-timeseries').each (idx, el) ->
     new TimeSeriesGraph(el).fetch()
