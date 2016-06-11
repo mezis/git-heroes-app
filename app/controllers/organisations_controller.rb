@@ -32,7 +32,7 @@ class OrganisationsController < ApplicationController
   end
 
   def load_organisation
-    current_organisation! Organisation.find_by_name(params.require(:id))
+    current_organisation! Organisation.find_by!(name: params.require(:id))
     authorize current_organisation
   end
 end
