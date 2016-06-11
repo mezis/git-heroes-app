@@ -112,6 +112,28 @@ describe JobStats do
     end
   end
 
+  describe '.all' do
+    let(:result) { described_class.all.to_a }
+    let(:jobs) {[
+      FailJob.new(:foo),
+      FailJob.new(:bar),
+      FailJob.new(:baz)
+    ]}
+    let(:stats) { jobs.map { |j|
+      described_class.find_or_initialize_by(job: j).save!
+    }}
+
+    it 'lists all jobs' do
+      stats
+      expect(result.map &:id).to eq(jobs.map(&:job_id))
+    end
+
+    it 'updates when jobs complete' do
+      stats.last.complete!
+      expect(result.length).to eq(2)
+    end
+  end
+
   describe 'root/parent/children' do
     let(:gen1job) { FailJob.new(:foo) }
     let(:gen2job) { FailJob.new(:foo, parent: gen1job) }

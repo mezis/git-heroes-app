@@ -29,6 +29,7 @@ class JobStats
     _ancestors = ancestors # load before the transaction
     super do |m|
       m.sadd(_key_uniq, @args_hash)
+      m.zadd(_key_all, @enqueued_at, @id)
       _actors_sentinel.each do |actor|
         m.zadd(_key_actor(actor), @enqueued_at, @id)
       end
@@ -38,11 +39,13 @@ class JobStats
 
   def destroy
     super do |m|
+      m.srem(_key_uniq, @args_hash)
+      m.zrem(_key_all, @id)
       _actors_sentinel.each do |actor|
         m.zrem(_key_actor(actor), @id)
       end
-      m.srem(_key_uniq, @args_hash)
       m.hdel(_key_descendants_max, @id)
+      m.del(_key_descendants)
     end
     self
   end
@@ -150,6 +153,14 @@ class JobStats
         obj
       }.select(&:present?)
     end
+
+    def all
+      _redis.zrange(_key_all, 0, -1).lazy.map { |id|
+        obj = find(id)
+        _redis.zrem(_key_all, id) unless obj.present?
+        obj
+      }.select(&:present?)
+    end
   end
   extend ClassMethods
 
@@ -161,6 +172,10 @@ class JobStats
       else
         _key 'actor', serializer.dump(actor)
       end
+    end
+
+    def _key_all
+      _key 'all'
     end
   end
   extend SharedMethods
