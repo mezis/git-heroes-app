@@ -30,6 +30,17 @@
   }
 }
 
+.list-inline--semicolon {
+  @extend .list-inline;
+  li {
+    &::after {
+      content: '; ';
+    }
+    &:last-child::after {
+      content: '';
+    }
+  }
+}
 .list-inline--caret {
   @extend .list-inline;
   li { 

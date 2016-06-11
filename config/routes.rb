@@ -1,6 +1,8 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  get 'background_jobs/index'
+
   namespace :admin do
     resources :users,         only: %i[index]
     resources :organisations, only: %i[index]
@@ -23,6 +25,7 @@ Rails.application.routes.draw do
     run Sidekiq::Web
   }, at: '/admin/jobs', as: 'admin_jobs'
 
+  match '/_jobs'                                => 'background_jobs#index', via: %i[get],       as: 'background_jobs'
   match '/_events'                              => 'events#create',         via: %i[post],      as: 'events'
   match '/_users/@:id'                          => 'users#show',            via: %i[get],       as: 'user'
   match '/_users/@:id'                          => 'users#update',          via: %i[patch put]

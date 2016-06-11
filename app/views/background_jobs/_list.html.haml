@@ -1,0 +1,14 @@
+- jobs = [] unless defined?(jobs)
+#background-jobs{ data: { 'refresh-delay': jobs&.any? ? 10_000 : 30_000, 'turbolinks-permanent': true } }
+  - if jobs&.any?
+    .container.small
+      .row
+        .col-xs-12
+          %ul.background-jobs<>
+            - jobs.each_with_index do |job, idx|
+              %li.background-job<>
+                - if idx == 0
+                  %span.fa.fa-spin.fa-spinner
+                %span.background-job-type= job.title
+                %span.background-job-completion= job.completion
+        

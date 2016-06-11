@@ -15,15 +15,13 @@
     = render 'navbar'
     = render 'flash_acting_as', acting_user: @acting_user
     = render 'flashes'
+    = render 'background_jobs/container'
     = render 'email_prompt'
 
     .container.m-t-2
       .row
         .col-sm-12
           = yield
-      .row
-        .col-sm-12
-          = render 'shared/jobs', jobs: @jobs
 
     = render 'footer'
     = render 'shared/help_modals'

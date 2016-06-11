@@ -1,0 +1,9 @@
+.background-jobs {
+  @extend .list-inline;
+  @extend .list--no-bullets;
+  @extend .list-inline--semicolon;
+  @extend .pull-xs-right;
+}
+.background-job {
+  @extend .text-muted;
+}
