@@ -4,9 +4,9 @@ class SessionsController < ApplicationController
     
   def callback
     auth_hash = request.env['omniauth.auth']
-    result = FindOrCreateUser.call(
-      data:    auth_hash.extra.raw_info,
-      token:  auth_hash.credentials.token,
+    result = LoginUser.call(
+      data:  auth_hash.extra.raw_info,
+      token: auth_hash.credentials.token,
     )
 
     unless result.success?
@@ -15,10 +15,6 @@ class SessionsController < ApplicationController
       return
     end
     authenticate! result.record
-
-    if result.created
-      InitialSyncJob.perform_later actors: [current_user], user: current_user
-    end
 
     flash[:notice] = result.created ? 'Welcome aboard!' : 'Welcome back!'
 

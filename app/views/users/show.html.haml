@@ -26,14 +26,6 @@
     - else
       Not member of any team.
 
-- if @user_settings.present?
-  .row
-    .col-xs-12
-      .card
-        .card-block
-          %h5 Settings
-          = render @user_settings 
-
 - if current_organisation
   .row
     .col-xs-12.col-md-6
@@ -79,4 +71,14 @@
         .card-block
           %h5 Pull request merged
           = gh_column_chart [current_organisation, :metric, id:'hour_of_comment_created', user_id: @user.id], library: { series: { 1 => { targetAxisIndex: 1 } } }
+
+- if policy(@user).update?
+  .row
+    .col-xs-12
+      .card
+        .card-block
+          %h5 Settings
+          = render @user_settings 
+          %hr.m-t-2.m-b-2/
+          = render 'form', user: @user
 

@@ -29,3 +29,11 @@
 a.dropdown-toggle {
   cursor:           pointer;
 }
+
+// correct alignment for column'd forms
+.form-control-label {
+  padding-left:     0;
+}
+select.form-control {
+  height:           2.25rem;
+}

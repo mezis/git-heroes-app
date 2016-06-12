@@ -2,7 +2,7 @@
 class FindOrCreateUser
   include Interactor
 
-  delegate :data, :token, :record, to: :context
+  delegate :data, :record, to: :context
 
   def call
     context.record = User.find_or_create_by!(github_id: data.id) do |u|
@@ -12,7 +12,6 @@ class FindOrCreateUser
 
     assign_attributes(record, data)
     context.updated = true if record.changed?
-    record.github_token = token if token.present?
     record.save! if record.changed?
   end
 

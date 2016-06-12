@@ -37,7 +37,7 @@ class UsersController < ApplicationController
     @user = load_user
     authorize @user
 
-    data = params.require(:user).permit(:email)
+    data = params.require(:user).permit(:email, :tz)
 
     if @user.update_attributes(data)
       flash[:notice] = 'Thanks, your data was updated!'
@@ -49,7 +49,8 @@ class UsersController < ApplicationController
     if request.xhr?
       render partial: 'shared/loner', collection: [
         { partial: 'flashes' },
-        { partial: 'email_prompt'},
+        { partial: 'email_prompt' },
+        { partial: 'users/form', locals: { user: @user } },
       ]
       flash.clear
     else
