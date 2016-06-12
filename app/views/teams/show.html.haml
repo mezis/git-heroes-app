@@ -7,10 +7,11 @@
   = render 'users/list', collection: @team.users
   = github_link(@team)
 
-= render 'pull_requests/top', hottest: @hottest_pull_requests, fastest: @fastest_pull_requests, slowest: @slowest_pull_requests
-
 .row
-  .col-xs-12
+  .col-xs-12.col-lg-5
+    = render 'pull_requests/top', hottest: @hottest_pull_requests, fastest: @fastest_pull_requests, slowest: @slowest_pull_requests
+
+  .col-xs-12.col-lg-7
     .card.text-xs-center
       .card-block
         %h5.card-title Comment interactions

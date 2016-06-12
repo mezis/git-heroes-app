@@ -1,10 +1,11 @@
 = breadcrumb current_organisation.name.titleize, current_organisation
 = breadcrumb 'dashboard', current_organisation
 
-= render 'pull_requests/top', hottest: @hottest_pull_requests, fastest: @fastest_pull_requests, slowest: @slowest_pull_requests
 
 .row
-  .col-xs-12.col-lg-6
+  .col-xs-12.col-lg-5
+    = render 'pull_requests/top', hottest: @hottest_pull_requests, fastest: @fastest_pull_requests, slowest: @slowest_pull_requests
+  .col-xs-12.col-lg-7
     .card
       .card-block
         %h5.card-title 
@@ -14,7 +15,6 @@
       .card-footer.text-muted.small
         = render 'shared/help_scoring'
         These people contributed the most activity on Github. Let's hear it for these folks!
-  .col-xs-12.col-lg-6
     .card.text-xs-center
       .card-block
         %h5.card-title Comment interactions
