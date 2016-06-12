@@ -41,7 +41,7 @@ gem 'quiet_assets'
 
 # Chrome
 gem 'bootstrap', '~> 4.0.0.alpha3'
-gem 'rails-assets-tether'
+gem 'rails-assets-tether',          source: 'https://rails-assets.org'
 gem 'font-awesome-rails'
 gem 'octicons-rails', git: 'https://github.com/mezis/octicons-rails', branch: 'upstream-pr'
 
