@@ -12,13 +12,13 @@ module GitHeroes
         nil
       else 
         begin
-          status, count = super do |m|
+          statuses = super do |m|
             @transaction = m
             @transaction_callbacks = []
             yield m
           end
-          @transaction_callbacks.each(&:call) if status == 'OK'
-          [status, count]
+          @transaction_callbacks.each(&:call)
+          statuses
         ensure
           @transaction_callbacks = nil
           @transaction = nil

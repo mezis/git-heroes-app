@@ -2,6 +2,7 @@ class JobStats
   include RedisModel::Base
   include RedisModel::Lockable
   include RedisModel::Attributable
+  include RedisModel::Callbacks
 
   attr_accessor :attempts, :status
   attr_reader   :actors, :args_hash, :job_class, :enqueued_at, :parent_id, :root_id
@@ -18,7 +19,7 @@ class JobStats
   end
 
   def attribute_names
-    %i[job_class args_hash actors attempts status parent_id root_id]
+    super + %i[job_class args_hash actors attempts status parent_id root_id]
   end
 
   def duplicate?

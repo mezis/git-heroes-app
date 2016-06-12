@@ -86,7 +86,7 @@ module RedisModel
     protected
 
     def attribute_names
-      raise NotImplementedError
+      []
     end
 
 

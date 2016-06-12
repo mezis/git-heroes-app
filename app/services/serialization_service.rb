@@ -22,8 +22,12 @@ class SerializationService
       GlobalID.create(data).to_s
     when Symbol
       "__symbol_#{data}__"
-    else
+    when Class
+      "__class_#{data.name}__"
+    when NilClass, Fixnum, Float, String, TrueClass, FalseClass
       data
+    else
+      raise "unsupported type for #{data.inspect}"
     end
   end
 
@@ -39,8 +43,12 @@ class SerializationService
       GlobalID.find(data)
     when %r{^__symbol_(.*)__$}
       $1.to_sym
-    else
+    when %r{^__class_(.*)__$}
+      $1.constantize
+    when NilClass, Fixnum, Float, String, TrueClass, FalseClass
       data
+    else
+      raise "unsupported type for #{data.inspect}"
     end
   end
 

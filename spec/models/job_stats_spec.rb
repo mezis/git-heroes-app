@@ -223,4 +223,21 @@ describe JobStats do
     end
   end
 
+  describe '#after_destroy' do
+    it 'is settable' do
+      expect {
+        subject.after_destroy(FailJob, :foo)
+        subject.save!
+      }.not_to raise_error
+    end
+
+    it 'causes the callback to be scheduled' do
+      subject.after_destroy(FailJob, foo: 'bar')
+      subject.save!
+      reloaded = described_class.find(subject.id)
+      expect {
+        reloaded.destroy
+      }.to enqueue_a(FailJob).with(deserialize_as(foo: 'bar'))
+    end
+  end
 end
