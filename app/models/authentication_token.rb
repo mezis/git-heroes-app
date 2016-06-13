@@ -44,8 +44,13 @@ class AuthenticationToken
   end
 
   def save
+    current_ttl = _redis.ttl(_key_id)
     super do |m|
-      m.expire(_key_id, EXPIRY) unless persisted?
+      if !persisted?
+        m.expire(_key_id, EXPIRY)
+      elsif current_ttl > 0
+        m.expire(_key_id, current_ttl)
+      end
     end
   end
 

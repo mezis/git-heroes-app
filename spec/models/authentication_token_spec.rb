@@ -22,15 +22,13 @@ RSpec.describe AuthenticationToken, type: :model do
     before { subject.save! }
     
     its(:expires_at) { is_expected.to be_within(1.minute).of(1.day.from_now) }
+
+    describe 'when saving again' do
+      before { 2.times { subject.save! } }
+      its(:expires_at) { is_expected.not_to be_nil }
+    end
   end
   
-  # describe 'expired?' do
-  #   before { subject.save! }
-  #   before { Timecop.travel(24.hours.from_now + 1) }
-
-  #   it { is_expected.to be_expired }
-  # end
-
   describe 'decrement!' do
     before { subject.save! }
     let(:perform) { subject.decrement! }

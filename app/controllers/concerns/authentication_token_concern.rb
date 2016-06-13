@@ -5,7 +5,7 @@ module AuthenticationTokenConcern
   def token_authenticate!
     return unless request.method == 'GET'
     return unless string = params[:t]
-    return unless token = AuthenticationToken.find_by(token: string)
+    return unless token = AuthenticationToken.find(string)
     return unless token.user
 
     token.decrement!
