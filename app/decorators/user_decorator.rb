@@ -5,6 +5,6 @@ class UserDecorator < SimpleDelegator
   end
 
   def auth_token
-    @auth_token ||= AuthenticationToken.create!(user: self).id
+    @auth_token ||= AuthenticationToken.create!(user: __getobj__).id
   end
 end
