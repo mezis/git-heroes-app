@@ -16,9 +16,10 @@ class RewardJob < BaseJob
     elsif date.nil?
       org.scores.pluck('DISTINCT date').sort.each do |date|
         RewardJob.perform_later(
-          date:   date.to_s,
-          actors: actors | [org],
-          parent: self,
+          organisation: org,
+          date:         date.to_s,
+          actors:       actors | [org],
+          parent:       self,
         )
       end
     else
