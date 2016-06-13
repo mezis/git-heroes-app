@@ -7,21 +7,23 @@ module GitHeroes
     # re-entrant transactions
     # not thread-safe
     def multi
-      if @transaction
-        yield @transaction
-        nil
-      else 
-        begin
-          statuses = super do |m|
-            @transaction = m
-            @transaction_callbacks = []
-            yield m
+      redis.synchronize do |client|
+        if @transaction
+          yield @transaction
+          nil
+        else 
+          begin
+            statuses = super do |m|
+              @transaction = m
+              @transaction_callbacks = []
+              yield m
+            end
+            @transaction_callbacks.each(&:call)
+            statuses
+          ensure
+            @transaction_callbacks = nil
+            @transaction = nil
           end
-          @transaction_callbacks.each(&:call)
-          statuses
-        ensure
-          @transaction_callbacks = nil
-          @transaction = nil
         end
       end
     end
