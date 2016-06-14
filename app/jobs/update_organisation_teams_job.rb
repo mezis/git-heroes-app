@@ -14,7 +14,7 @@ class UpdateOrganisationTeamsJob < BaseJob
       return
     end
 
-    result =  UpdateOrganisationTeams.call(organisation: org)
+    result = UpdateOrganisationTeams.call(organisation: org)
 
     result.updated.each do |team|
       UpdateTeamUsersJob.perform_later(

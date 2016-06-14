@@ -2,7 +2,18 @@ class UpdateUserRepositoriesJob < BaseJob
 
   def perform(options = {})
     actors =  options.fetch(:actors, [])
-    user =    options.fetch(:user)
+    user =    options[:user]
+
+    if user.nil?
+      User.where.not(github_token: nil).find_each do |user|
+        UpdateUserRepositoriesJob.perform_later(
+          user:     user,
+          actors:   actors | [user],
+          parent:   self,
+        )
+      end
+      return
+    end
 
     result = UpdateUserRepositories.call(user: user)
 
