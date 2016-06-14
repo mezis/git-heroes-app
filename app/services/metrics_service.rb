@@ -35,7 +35,7 @@ class MetricsService
   # TODO: only limit the list if not admin
   def contribution_per_contributor
     data = scope_for(OrganisationUserScore).
-      where(date: 4.weeks.ago..Time.now).
+      where(date: time_range).
       group(:user_id).
       sum(:points).
       sort_by(&:last).reverse.take(5)
@@ -89,7 +89,7 @@ class MetricsService
     OrganisationUserScore.where(
       organisation_id: organisation.id,
       user_id:         user_ids,
-      date:            1.year.ago..Time.current,
+      date:            time_range,
     )
   end
 
@@ -98,7 +98,7 @@ class MetricsService
       where(
         pull_requests: { repository_id: repository_ids },
         user_id:       user_ids,
-        created_at:    1.year.ago..Time.current,
+        created_at:    time_range,
     )
   end
 
@@ -122,5 +122,17 @@ class MetricsService
       else
         User.joins(:teams).where(teams: { id: organisation.teams.enabled.pluck(:id) }).pluck(:id)
       end
+  end
+
+  def end_at
+    Time.current.beginning_of_week
+  end
+
+  def start_at
+    end_at - 1.year
+  end
+
+  def time_range
+    start_at .. end_at
   end
 end
