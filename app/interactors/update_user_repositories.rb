@@ -5,8 +5,15 @@ class UpdateUserRepositories
 
   def call
     user.member_repositories = all_repositories.map { |h|
-      FindOrCreateRepository.call(data: h).record
-    }.to_a
+      # double check the repository does exist
+      # listing all repos will occasionally yield "dead" / removed repositories
+      begin
+        data = client.repo(h.full_name)
+      rescue Octokit::NotFound
+        next
+      end
+      FindOrCreateRepository.call(data: data).record
+    }.to_a.compact
   end
 
   private
