@@ -13,10 +13,16 @@
               = image_tag 'logo-small.svg', height:24
               Git Heroes
           %p.small.text-muted
-            Want to give feedback, report a bug? Simply reply to this email.
+            Want to give feedback, report a bug? Simply
+            = mail_to 'hello@githeroes.io', 'reply', subject: 'Bug report / feature request', body: "Hi!\n\nI'm @#{@user.login}. I wanted to ask you about..."
+            to this email.
             %br/
             Too much noise?
             = link_to 'Unsubscribe', [@user, t: @user.auth_token]
             from theses updates.
+            %br/
+            Not receiving emails at the appropriate time? Maybe you haven't
+            = link_to 'told us', [@user, t: @user.auth_token]
+            in which timezone you work.
 
 
