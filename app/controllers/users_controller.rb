@@ -37,7 +37,7 @@ class UsersController < ApplicationController
     @user = load_user
     authorize @user
 
-    data = params.require(:user).permit(:email, :tz)
+    data = params.require(:user).permit(:email, settings_attributes: :tz)
 
     if @user.update_attributes(data)
       flash[:notice] = 'Thanks, your data was updated!'

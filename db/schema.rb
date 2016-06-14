@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160613070357) do
+ActiveRecord::Schema.define(version: 20160614171610) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -171,15 +171,16 @@ ActiveRecord::Schema.define(version: 20160613070357) do
   add_index "user_repositories", ["user_id"], name: "index_user_repositories_on_user_id", using: :btree
 
   create_table "user_settings", force: :cascade do |t|
-    t.integer  "user_id",                             null: false
+    t.integer  "user_id",                              null: false
     t.datetime "weekly_email_at"
     t.datetime "daily_email_at"
     t.datetime "snooze_until"
-    t.boolean  "weekly_email_enabled", default: true, null: false
-    t.boolean  "daily_email_enabled",  default: true, null: false
-    t.boolean  "newsletter_enabled",   default: true, null: false
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.boolean  "weekly_email_enabled", default: true,  null: false
+    t.boolean  "daily_email_enabled",  default: true,  null: false
+    t.boolean  "newsletter_enabled",   default: true,  null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+    t.string   "tz",                   default: "UTC", null: false
   end
 
   add_index "user_settings", ["user_id"], name: "index_user_settings_on_user_id", unique: true, using: :btree
@@ -200,7 +201,6 @@ ActiveRecord::Schema.define(version: 20160613070357) do
     t.integer  "owned_repositories_count", default: 0,     null: false
     t.integer  "repositories_count",       default: 0,     null: false
     t.boolean  "admin",                    default: false, null: false
-    t.string   "tz",                       default: "UTC", null: false
   end
 
   add_index "users", ["github_id"], name: "index_users_on_github_id", unique: true, using: :btree

@@ -12,14 +12,15 @@
         This is where we'll send the regular emails, and the occasional product
         updates. We'll never, ever share your email with anyone.
 
-  .form-group.row
-    .col-xs-12.col-sm-3.col-md-3.col-lg-2
-      = f.label :tz, 'Time zone', class: 'form-control-label'
-    .col-xs-12.col-sm-9.col-md-9.col-lg-10
-      = f.time_zone_select :tz, nil, {}, { class:' form-control' }
-      .small.text-muted
-        We'll do our best to only send email to you during office hours in your
-        time zone.
+  = f.fields_for :settings do |ff|
+    .form-group.row
+      .col-xs-12.col-sm-3.col-md-3.col-lg-2
+        = ff.label :tz, 'Time zone', class: 'form-control-label'
+      .col-xs-12.col-sm-9.col-md-9.col-lg-10
+        = ff.time_zone_select :tz, nil, {}, { class:' form-control' }
+        .small.text-muted
+          We'll do our best to only send email to you during office hours in your
+          time zone.
       
       
   = f.submit 'Save', class: 'btn btn-primary'
