@@ -5,6 +5,12 @@ class UpdateRepositoryPullRequests
 
   def call
     context.records = []
+  
+    if user.nil?
+      Rails.logger.warn "cannot update #{repository.full_name}: no member user"
+      return
+    end
+
     all_pull_requests.each do |hash|
       result = FindOrCreatePullRequest.call(repository: repository, data: hash)
       context.records << result.record if result.created || result.updated
