@@ -22,7 +22,6 @@ class FindOrCreateUser
       login:      data.login,
       name:       user.name || data.name,
       email:      user.email || data.email,
-      avatar_url: data.avatar_url,
     )
   end
 end
