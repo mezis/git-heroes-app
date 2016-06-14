@@ -9,6 +9,7 @@ class GithubClient
   end
 
   def initialize(user)
+    raise ArgumentError, 'user required' if user.nil?
     @user = user
   end
 
@@ -37,7 +38,11 @@ class GithubClient
   private
 
   def client
-    @client ||= Octokit::Client.new(login: @user.login, password: @user.github_token, middleware: stack)
+    @client ||= Octokit::Client.new(login: @user.login, password: @user.github_token, middleware: stack, user_agent: user_agent)
+  end
+
+  def user_agent
+    "%s (%s)" % [ Octokit.user_agent, 'githeroes.io' ]
   end
   
   def stack
