@@ -1,26 +1,32 @@
 class EmailUserService
+  include WithZoneConcern
+
   def initialize(org_user)
     @org_user = org_user
   end
 
   def can_email?
-    return unless now.in_working_hours?
-    return unless user.email.present?
-    return unless settings.snooze_until.nil? || settings.snooze_until < now
-    return if email_type.nil?
-    return unless last_at.nil? || last_at <= 24.hours.ago
-    return unless data_present?
+    with_time_zone(settings.tz) do
+      return unless now.in_working_hours?
+      return unless user.email.present?
+      return unless settings.snooze_until.nil? || settings.snooze_until < now
+      return if email_type.nil?
+      return unless last_at.nil? || last_at.to_date < Date.current
+      return unless data_present?
+    end
     true
   end
 
   def deliver
     return unless can_email?
-    settings.update_attributes!("#{email_type}_email_at": now)
-    UserMailer.public_send(
-      email_type,
-      organisation: org,
-      user:         user,
-    ).deliver_now
+    with_time_zone(settings.tz) do
+      settings.update_attributes!("#{email_type}_email_at": now)
+      UserMailer.public_send(
+        email_type,
+        organisation: org,
+        user:         user,
+      ).deliver_now
+    end
   end
 
   private
@@ -46,7 +52,7 @@ class EmailUserService
 
   def last_at
     return unless email_type.present?
-    settings.read_attribute("#{email_type}_email_at")
+    settings.read_attribute("#{email_type}_email_at")&.in_time_zone(settings.tz)
   end
 
   def data_present?
@@ -63,7 +69,7 @@ class EmailUserService
   end
 
   def now
-    @now ||= Time.current
+    @now ||= Time.current.in_time_zone(settings.tz)
   end
 
   def user
