@@ -16,15 +16,12 @@ class BaseJob < ActiveJob::Base
   end
 
   around_perform do |job, block|
-    begin
-      job_stats.attempts += 1
-      job_stats.status = 'running'
-      job_stats.save!
-      block.call
-    ensure
-      logger.info "Clearing stats for #{self.class}"
-      job_stats.complete!
-    end
+  job_stats.attempts += 1
+    job_stats.status = 'running'
+    job_stats.save!
+    block.call
+    logger.info "Marking #{self.class} as completed"
+    job_stats.complete!
   end
 
 
@@ -32,10 +29,14 @@ class BaseJob < ActiveJob::Base
     logger.warn "Failure in #{self.class}: #{e.class} (#{e.message}}"
     logger.debug e.backtrace.take(5).map(&:indent).join("\n")
     Appsignal.add_exception(e)
+
     if job_stats.attempts > max_attempts
       logger.info "(final failure)"
+      job_stats.complete!
     else
       logger.info "Retrying #{job_stats.job_class} (#{job_stats.attempts} attempts so far)"
+
+      job_stats.destroy
       retry_job wait: (2**job_stats.attempts * 10).seconds
       job_stats.status = 'retrying'
       job_stats.save!
@@ -44,6 +45,8 @@ class BaseJob < ActiveJob::Base
 
   rescue_from(GithubClient::Throttled) do |e|
     logger.warn "Throttled in #{self.class}, retrying later (#{e.class})"
+
+    job_stats.destroy
     retry_job wait_until: (e.retry_at + 5.minutes)
     job_stats.status = 'throttled'
     job_stats.save!
