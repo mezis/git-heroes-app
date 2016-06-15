@@ -23,6 +23,7 @@ class JobStats
   end
 
   def duplicate?
+    return false if %w[retrying throttled].include?(status)
     !!_redis.sismember(_key_uniq, @args_hash)
   end
 
@@ -52,18 +53,21 @@ class JobStats
   end
 
   def complete!
-    update_attributes!(status: 'done')
-    ancestors.each { |a| a.complete_descendant!(self) }
-    destroy if !has_descendants?
+    lock do
+      Rails.logger.info "Marking #{self.job_class} as completed (ancestors: #{ancestors.map(&:id).join(' ')})"
+      update_attributes!(status: 'done')
+      ancestors.each { |a| a.complete_descendant!(self) }
+      destroy if descendants_left == 0
+    end
     self
   end
 
   def root
-    @root ||= @root_id ? self.class.find(@root_id) : nil
+    @root_id ? self.class.find(@root_id) : nil
   end
 
   def parent
-    @parent ||= @parent_id ? self.class.find(@parent_id) : nil
+    @parent_id ? self.class.find(@parent_id) : nil
   end
 
   def descendants 
@@ -89,20 +93,25 @@ class JobStats
   end
 
   def complete_descendant!(other)
+    Rails.logger.info("removing descendant on #{id}")
     _redis.multi do |m|
       m.zrem(_key_descendants, other.id)
     end
-    destroy if !has_descendants? && status == 'done'
+    n = descendants_left
+    if n > 0
+      Rails.logger.info("#{n} descendants left on #{id}")
+    elsif status == 'done'
+      Rails.logger.info("no more descendants on #{id} - destroying")
+      destroy
+    else
+      Rails.logger.info("no more descendants on #{id}, but job is not done")
+    end
   end
 
   private
 
   def ancestors
     ancestors = [parent, (root if root_id != id && root_id != parent_id)].compact
-  end
-
-  def has_descendants?
-    _redis.zcard(_key_descendants) > 0
   end
 
   def _timestamp

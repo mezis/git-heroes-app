@@ -8,19 +8,16 @@ class BaseJob < ActiveJob::Base
       if j.duplicate?
         logger.info "Not enqueuing duplicate #{self.class}"
       else
+        j.update_attributes! status: 'queued'
         block.call
-        j.status = 'queued'
-        j.save!
       end
     end
   end
 
   around_perform do |job, block|
   job_stats.attempts += 1
-    job_stats.status = 'running'
-    job_stats.save!
+    job_stats.update_attributes! status: 'running'
     block.call
-    logger.info "Marking #{self.class} as completed"
     job_stats.complete!
   end
 
@@ -36,20 +33,16 @@ class BaseJob < ActiveJob::Base
     else
       logger.info "Retrying #{job_stats.job_class} (#{job_stats.attempts} attempts so far)"
 
-      job_stats.destroy
+      job_stats.update_attributes! status: 'retrying'
       retry_job wait: (2**job_stats.attempts * 10).seconds
-      job_stats.status = 'retrying'
-      job_stats.save!
     end
   end
 
   rescue_from(GithubClient::Throttled) do |e|
     logger.warn "Throttled in #{self.class}, retrying later (#{e.class})"
 
-    job_stats.destroy
+    job_stats.update_attributes! status: 'throttled'
     retry_job wait_until: (e.retry_at + 5.minutes)
-    job_stats.status = 'throttled'
-    job_stats.save!
   end
 
   protected

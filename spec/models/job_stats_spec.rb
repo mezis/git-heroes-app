@@ -192,6 +192,15 @@ describe JobStats do
         expect(gen2).to be_nil
         expect(gen3).to be_nil
       end
+
+      it 'cleans up if jobs complete out of order' do
+        gen3.complete!
+        gen1.complete!
+        gen2.complete!
+        expect(gen1).to be_nil
+        expect(gen2).to be_nil
+        expect(gen3).to be_nil
+      end
     end
 
     describe '#descendants_max' do
@@ -219,6 +228,12 @@ describe JobStats do
         gen2.complete!
         gen3.complete!
         expect(gen1.descendants_left).to eq(0)
+      end
+
+      it 'lowers when children complete out of order' do
+        gen3.complete!
+        gen1.complete!
+        expect(gen1.descendants_left).to eq(1)
       end
     end
   end
