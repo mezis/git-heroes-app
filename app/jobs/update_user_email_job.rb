@@ -1,6 +1,6 @@
 class UpdateUserEmailJob < BaseJob
   def perform(options = {})
-    user = options.delete(:user)
+    user = options[:user]
 
     if user.nil?
       User.where.not(github_token: nil).find_each do |u|
