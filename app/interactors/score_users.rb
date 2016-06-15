@@ -84,8 +84,11 @@ class ScoreUsers
     @repository_ids ||= organisation.repositories.enabled.pluck(:id)
   end
 
+  # Either the argument date, or Monday last week, at the beginning of the day
   def start_at
-    @start_at ||= (date || Date.current).beginning_of_week.beginning_of_day
+    @start_at ||= (
+      date || (Date.current - 7)
+    ).beginning_of_week.beginning_of_day
   end
 
   def end_at
