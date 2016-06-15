@@ -5,6 +5,9 @@ ruby '2.3.1'
 # Rails basics
 #
 
+# REPL
+gem 'pry-rails'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 4.2'
 # Use postgresql as the database for Active Record
@@ -154,7 +157,6 @@ group :development, :test do
   gem 'spring-watcher-listen'
 
   # REPLs
-  gem 'pry-rails'
   gem 'binding_of_caller'
   gem 'better_errors'
 
