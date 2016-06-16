@@ -4,6 +4,7 @@ namespace :cron do
 
   task :every_hour => :environment do
     ScoreUsersJob.perform_later
+    RewardJob.perform_later
     EmailUserJob.perform_later
   end
 
