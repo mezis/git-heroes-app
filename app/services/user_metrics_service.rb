@@ -1,11 +1,11 @@
 class UserMetricsService
   attr_reader :organisation, :user
 
-  def initialize(organisation:, team:nil, user:nil, compare: false)
+  def initialize(organisation:, team:nil, user:nil, start_at:nil, end_at:nil, compare: false)
     @organisation = organisation
     @user = user
-    @org_metrics = MetricsService.new(organisation: @organisation)
-    @user_metrics = MetricsService.new(organisation: @organisation, user: @user)
+    @org_metrics = MetricsService.new(organisation: @organisation, start_at: start_at, end_at: end_at)
+    @user_metrics = MetricsService.new(organisation: @organisation, start_at: start_at, end_at: end_at, user: @user)
     @compare = compare
   end
 

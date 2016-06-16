@@ -21,13 +21,19 @@ class MetricsController < ApplicationController
   private
 
   def metrics_service
-    @metrics_service ||=
+    @metrics_service ||= begin
+      options = {
+        organisation: current_organisation,
+        start_at:     params_start_at,
+        end_at:       params_end_at,
+      }
       if params_user
         can_compare = policy(current_user).compare?
-        UserMetricsService.new(organisation: current_organisation, user: params_user, compare: can_compare)
+        UserMetricsService.new options.merge(user: params_user, compare: can_compare)
       else
-        MetricsService.new(organisation: current_organisation, team: params_team)
+        MetricsService.new options.merge(team: params_team)
       end
+    end
   end
 
   def params_team
@@ -36,6 +42,14 @@ class MetricsController < ApplicationController
 
   def params_user
     @params_user ||= params[:user_id] ? current_organisation.users.find(params[:user_id]) : nil
+  end
+
+  def params_start_at
+    params[:start_at] ? Time.at(params[:start_at].to_i) : nil
+  end
+
+  def params_end_at
+    params[:end_at] ? Time.at(params[:end_at].to_i) : nil
   end
 
   def load_organisation
