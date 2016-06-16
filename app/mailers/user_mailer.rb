@@ -4,6 +4,7 @@ class UserMailer < ApplicationMailer
 
   helper :date
   helper :application
+  helper :copy
 
   helper do 
     def current_organisation

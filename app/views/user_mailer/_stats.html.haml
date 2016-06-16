@@ -11,22 +11,22 @@
     Since #{human_date stats.range.first} you've
 
     = make_sentence do
-      - phrase do
+      - (stats.prs_issued > 0) && phrase do
         issued 
         %strong= stats.prs_issued
         = 'pull request'.pluralize stats.prs_issued
       
-      - phrase do
+      - (stats.prs_merged > 0) && phrase do
         merged
         %strong= stats.prs_merged
         = 'pull request'.pluralize stats.prs_merged
 
-      - phrase do
+      - (stats.comments_written > 0) && phrase do
         written
         %strong= stats.comments_written
         = 'comment'.pluralize stats.comments_written
 
-      - phrase do
+      - (stats.comments_received > 0) && phrase do
         received
         %strong= stats.comments_received
         = 'comment'.pluralize stats.comments_received
@@ -37,9 +37,7 @@
   -#   %strong 6
   -#   points for the day!
 
-  %p
-    -# dynamic: lower, middle, top third - once we have daily score though
-    Not bad at all — keep it coming!
+  %p= activity_copy(stats.actions)
 
 %hr/
 

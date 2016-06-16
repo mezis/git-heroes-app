@@ -8,7 +8,11 @@ class PersonalStatsService
   end
 
   def activity?
-    (comments_written + comments_received + prs_issued + prs_merged) > 0
+    actions > 0
+  end
+
+  def actions
+    comments_written + comments_received + prs_issued + prs_merged
   end
 
   # Need daily scores for this

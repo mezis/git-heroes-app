@@ -123,7 +123,7 @@ module ApplicationHelper
   def make_sentence
     @phrases = []
     yield
-    sentence = @phrases.map(&:strip).to_sentence
+    sentence = @phrases.compact.map(&:strip).to_sentence
     sentence.html_safe + '.'
   end
 end
