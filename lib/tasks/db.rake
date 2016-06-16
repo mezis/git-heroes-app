@@ -25,4 +25,20 @@ namespace :db do
     anonymise(Repository, :name)    { Faker::Hacker.ingverb }
     anonymise(Team, :name)          { Faker::Company.profession }
   end
+
+  task :reset_counters => :environment do
+    models = {
+      Organisation  => %i[users repositories],
+      User          => %i[owner_repositories],
+      Repository    => %i[users],
+      PullRequest   => %i[comments],
+    }
+
+    models.each_pair do |model, counters|
+      model.pluck(:id).each do |id|
+        model.reset_counters(id, *counters)
+      end
+    end
+
+  end
 end
