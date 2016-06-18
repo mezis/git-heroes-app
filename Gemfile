@@ -53,6 +53,8 @@ gem 'octicons-rails', git: 'https://github.com/mezis/octicons-rails', branch: 'u
 
 # Graphs!
 gem 'chartkick'
+gem 'rails-assets-d3', source: 'https://rails-assets.org'
+gem 'rails-assets-sprintf', source: 'https://rails-assets.org'
 
 # Email CSS inliner
 gem 'roadie-rails'
