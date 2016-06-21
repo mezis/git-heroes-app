@@ -44,3 +44,46 @@
   // stroke-width:       1px;
 }
 
+
+
+.chart-radar-series {
+  path {
+    stroke-width:     1px;
+    fill-opacity:     0.5;
+
+    &:nth-child(1) {
+      stroke:         $brand-primary;
+      fill:           $brand-primary;
+    }
+    &:nth-child(2) {
+      stroke:         $brand-secondary;
+      fill:           $brand-secondary;
+    }
+  }
+}
+.chart-radar-axes {
+  line {
+    stroke:         $gray-light;
+    stroke-width:   0.5px;
+  }
+  circle {
+    stroke:         $gray-lighter;
+    stroke-width:   0.5px;
+    fill:           none;
+  }
+}
+.chart-radar-dim-name {
+  fill:               $gray;
+
+  text-anchor:        middle;
+  alignment-baseline: central;
+
+  font-size:          x-small;
+}
+
+.chart-text-protected {
+  text:first-child {
+    stroke:           white;
+    stroke-width:     2px;
+  }
+}

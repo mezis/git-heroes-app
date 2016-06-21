@@ -65,22 +65,25 @@ class MetricsService
     }.reverse_merge(date: 'comments per contributor')
   end
 
-  def hour_of_pull_request_created
-    scope_for(PullRequest).
-      group_by_hour_of_day(:created_at).
-      count
+  def hour_of_pull_request_created(tz: 'UTC')
+    [scope_for(PullRequest).
+      group_by_hour_of_day(:created_at, time_zone: tz).
+      count.
+      reverse_merge('name': 'Pull Requests')]
   end
 
-  def hour_of_comment_created
-    scope_for(Comment).
-      group_by_hour_of_day('comments.created_at').
-      count
+  def hour_of_comment_created(tz: 'UTC')
+    [scope_for(Comment).
+      group_by_hour_of_day('comments.created_at', time_zone: tz).
+      count.
+      reverse_merge('name': 'Comments')]
   end
 
-  def hour_of_pull_request_marged
-    scope_for(PullRequest).
-      group_by_hour_of_day(:merged_at).
-      count
+  def hour_of_pull_request_merged(tz: 'UTC')
+    [scope_for(PullRequest).
+      group_by_hour_of_day(:merged_at, time_zone: tz).
+      count.
+      reverse_merge('name': 'Merges')]
   end
 
   private
@@ -108,9 +111,11 @@ class MetricsService
 
 
   def _pull_request_scope
-    PullRequest.
-      where(repository_id: repository_ids).
-      where(created_by_id: user_ids)
+    PullRequest.where(
+      repository_id: repository_ids,
+      created_by_id: user_ids,
+      created_at:    @time_range,
+    )
   end
 
   def repository_ids

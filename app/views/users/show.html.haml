@@ -57,18 +57,22 @@
     .col-xs-12.col-md-4
       .card
         .card-block
-          %h5 Pull requests issued
-          = gh_column_chart [current_organisation, :metric, id:'hour_of_pull_request_created', user_id: @user.id], library: { series: { 1 => { targetAxisIndex: 1 } } }
+          %h5
+            Pull requests issued
+          .graph-radar{ data: { url: url_for([current_organisation, :metric, id:'hour_of_pull_request_created', user_id: @user.id, format: 'csv']), offset: 90, scaling: 'series' }}
+          %small.text-muted Past year, by hour of day, in user's timezone
     .col-xs-12.col-md-4
       .card
         .card-block
-          %h5 Comment written
-          = gh_column_chart [current_organisation, :metric, id:'hour_of_comment_created', user_id: @user.id], library: { series: { 1 => { targetAxisIndex: 1 } } }
+          %h5 Comments written
+          .graph-radar{ data: { url: url_for([current_organisation, :metric, id:'hour_of_comment_created', user_id: @user.id, format: 'csv']), offset: 90, scaling: 'series' }}
+          %small.text-muted Past year, by hour of day, in user's timezone
     .col-xs-12.col-md-4
       .card
         .card-block
           %h5 Pull request merged
-          = gh_column_chart [current_organisation, :metric, id:'hour_of_comment_created', user_id: @user.id], library: { series: { 1 => { targetAxisIndex: 1 } } }
+          .graph-radar{ data: { url: url_for([current_organisation, :metric, id:'hour_of_pull_request_merged', user_id: @user.id, format: 'csv']), offset: 90, scaling: 'series' }}
+          %small.text-muted Past year, by hour of day, in user's timezone
 
 - if policy(@user).update?
   .row

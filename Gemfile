@@ -52,7 +52,6 @@ gem 'font-awesome-rails'
 gem 'octicons-rails', git: 'https://github.com/mezis/octicons-rails', branch: 'upstream-pr'
 
 # Graphs!
-gem 'chartkick'
 gem 'rails-assets-d3', source: 'https://rails-assets.org'
 gem 'rails-assets-sprintf', source: 'https://rails-assets.org'
 

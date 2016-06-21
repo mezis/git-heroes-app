@@ -37,20 +37,20 @@
   .card
     .card-block
       %h5 Pull requests issued
-      = gh_column_chart [organisation, :metric, id:'hour_of_pull_request_created', team_id: team_id]
+      .graph-radar{ data: { url: url_for([organisation, :metric, id:'hour_of_pull_request_created', team_id: team_id, format: 'csv']), offset: 90 }}
     .card-footer.small.text-muted
-      By time of day (UTC)
+      Past year, by hour of day (UTC)
 .col-xs-12.col-md-4
   .card
     .card-block
       %h5 Comment written
-      = gh_column_chart [organisation, :metric, id:'hour_of_comment_created', team_id: team_id]
+      .graph-radar{ data: { url: url_for([organisation, :metric, id:'hour_of_comment_created', team_id: team_id, format: 'csv']), offset: 90 }}
     .card-footer.small.text-muted
-      By time of day (UTC)
+      Past year, by hour of day (UTC)
 .col-xs-12.col-md-4
   .card
     .card-block
       %h5 Pull request merged
-      = gh_column_chart [organisation, :metric, id:'hour_of_comment_created', team_id: team_id]
+      .graph-radar{ data: { url: url_for([organisation, :metric, id:'hour_of_pull_request_merged', team_id: team_id, format: 'csv']), offset: 90 }}
     .card-footer.small.text-muted
-      By time of day (UTC)
+      Past year, by hour of day (UTC)

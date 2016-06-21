@@ -20,35 +20,23 @@ class UserMetricsService
     end
     data
   end
+  
+  %i[hour_of_pull_request_created hour_of_comment_created hour_of_pull_request_merged].each do |m|
+    define_method m do
+      result = []
 
-  def hour_of_pull_request_created
-    [compare? && {
-      name: 'organisation',
-      data: @org_metrics.public_send(__method__),
-    }, {
-      name: 'user',
-      data:  @user_metrics.public_send(__method__),
-    }].compact
-  end
+      if compare?
+        result += @org_metrics.public_send(__method__, tz: @user.settings.tz).tap { |ary|
+          ary.first.reverse_merge!(name: 'Organisation')
+        }
+      end
 
-  def hour_of_comment_created
-    [compare? && {
-      name: 'organisation',
-      data: @org_metrics.public_send(__method__),
-    }, {
-      name: 'user',
-      data:  @user_metrics.public_send(__method__),
-    }].compact
-  end
+      result += @user_metrics.public_send(__method__, tz: @user.settings.tz).tap { |ary|
+        ary.first.reverse_merge!(name: 'User')
+      }
 
-  def hour_of_pull_request_marged
-    [compare? && {
-      name: 'organisation',
-      data: @org_metrics.public_send(__method__),
-    }, {
-      name: 'user',
-      data:  @user_metrics.public_send(__method__),
-    }].compact
+      result
+    end
   end
 
   private
