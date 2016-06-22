@@ -1,3 +1,17 @@
+.graph--coloured-item {
+  stroke-width:     1px;
+  fill-opacity:     0.25;
+
+  &:nth-child(1) {
+    stroke:         $brand-primary;
+    fill:           $brand-primary;
+  }
+  &:nth-child(2) {
+    stroke:         $brand-secondary;
+    fill:           $brand-secondary;
+  }
+}
+
 .graph-bar {
   fill:       $brand-info;
 }
@@ -14,9 +28,7 @@
   fill:               white;
 }
 .graph-line {
-  fill:               none;
-  stroke:             $brand-info;
-  stroke-width:       2px;
+  @extend .graph--coloured-item;
 }
 .graph-axis {
   font-size:          small;
@@ -40,25 +52,13 @@
 }
 .graph-point {
   fill:               transparent;
-  // stroke:             red;
-  // stroke-width:       1px;
 }
 
 
 
 .chart-radar-series {
   path {
-    stroke-width:     1px;
-    fill-opacity:     0.5;
-
-    &:nth-child(1) {
-      stroke:         $brand-primary;
-      fill:           $brand-primary;
-    }
-    &:nth-child(2) {
-      stroke:         $brand-secondary;
-      fill:           $brand-secondary;
-    }
+    @extend .graph--coloured-item;
   }
 }
 .chart-radar-axes {

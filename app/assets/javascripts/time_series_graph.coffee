@@ -54,11 +54,13 @@ class TimeSeriesGraph
       .scale(y)
       .orient('right')
       .ticks(d3.min([10, height/30]))
-    line = d3.svg.line()
+    line = d3.svg.area()
       .interpolate('cardinal')
       .x((d) ->
         x d.date
-      ).y((d) ->
+      ).y0((d) ->
+        y 0
+      ).y1((d) ->
         y d.y
       )
 
@@ -94,19 +96,17 @@ class TimeSeriesGraph
     ]
 
     # The actual curves
-    graph = svg.selectAll('.line')
+    graph = svg
+      .append('g')
+      .selectAll('.graph-line')
       .data(series)
       .enter()
-      .append('g')
-      .attr('class', 'line')
-    graph.append('path')
-      .attr('class', 'graph-line')
-      .attr('d', (d) ->
-        line d.values
-      ).style('stroke', (d) ->
-        color d.name
-      )
-    
+      .append('path')
+        .attr('class', 'graph-line')
+        .attr('d', (d) ->
+          line d.values
+        )
+
     # Axes
     svg.append('g')
       .attr('class', 'graph-axis graph-axis--x')
