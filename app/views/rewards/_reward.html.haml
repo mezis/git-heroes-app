@@ -1,8 +1,7 @@
-.reward
-  .reward-header
-    .reward-avatar<>
-      %img{ src: reward.user.avatar_url(size: 64) }/
-      %img{ src: image_path("rewards/#{reward.nature}.svg") }/
-  .reward-footer
+%tr.reward
+  %td.reward-header
+    %img.reward-avatar{ src: reward.user.avatar_url(size: 128) }/
+    %img.reward-badge{ src: image_path("rewards/#{reward.nature}.png") }/
+  %td.reward-footer
     .reward-title= reward.nature_text
     .reward-details= reward.nature_info

@@ -21,7 +21,7 @@ class RewardDecorator < SimpleDelegator
     :most_points:
       :title:     Hero of the Week
       :details:   Round of applause, @%<login>s outdid us all this week!
-                  But will they stay un the podium?
+                  But will they stay on the podium?
     :reactivated:
       :title:     Zombie Arising
       :details:   We hadn't seen @%<login>s for a couple weeks. Hmmm...
