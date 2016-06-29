@@ -1,6 +1,14 @@
 %footer.gh-footer
   .container
     %p
+      Want to give feedback, report a bug? Simply 
+      - user_chunk = current_user ? "I'm @#{current_user.login}. " : ''
+      = mail_to 'Git Heroes <hello@githeroes.io>', 'drop us a line', subject: 'Bug report / feature request', body: "Hi!\n\n#{user_chunk}I wanted to ask you about..."
+      at
+      = succeed '.' do
+        = mail_to 'hello@githeroes.io'
+
+    %p
       The Git Heroes logo is derived from the Git Logo by
       = link_to 'Jason Long', 'http://twitter.com/jasonlong'
       and is licensed under the
