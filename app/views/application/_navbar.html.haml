@@ -45,4 +45,10 @@
                 = image_tag org.avatar_url, class: 'img-rounded organisation-avatar'
                 = org.login
 
-
+      -# quick links
+      - if current_organisation
+        - if team = current_user.teams.where(organisation_id: current_organisation).enabled.first
+          %li.nav-item.pull-xs-right
+            = link_to 'Your team', [current_organisation, team], class: 'nav-link'
+        %li.nav-item.pull-xs-right
+          = link_to 'Your activity', [current_organisation, current_user], class: 'nav-link'
