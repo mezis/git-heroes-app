@@ -65,6 +65,9 @@ module GitHeroes
       ]
     }
 
+    # Cache public assets
+    config.static_cache_control = 'public, max-age=31536000'
+
     # Configure ActionMailer
     config.action_mailer.default_url_options = { host: ENV.fetch('HOSTNAME') }
 
