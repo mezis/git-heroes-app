@@ -1,6 +1,11 @@
 class SessionsController < ApplicationController
   before_filter :skip_authorization
   before_filter :skip_policy_scope
+
+  def show
+    flash[:alert] = "Sorry, we couldn't log you in... something weird seems to have happened"
+    redirect_to root_url
+  end
     
   def callback
     auth_hash = request.env['omniauth.auth']
