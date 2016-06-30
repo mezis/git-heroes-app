@@ -5,6 +5,8 @@
     %title Git Heroes
     = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    - %w[16 64 96 32].each do |x|
+      = favicon_link_tag image_path("favicon-#{x}.png"), type: 'image/png', sizes: "#{x}x#{x}"
     = csrf_meta_tags
     = yield :head
   %body
