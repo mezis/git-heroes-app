@@ -177,6 +177,8 @@ group :development, :test do
 
   # Auto runner
   gem 'guard-rspec'
+  gem 'guard-rails'
+  gem 'guard-livereload'
 
   # Debug logging for HTTP requests
   gem 'httplog', require: false
