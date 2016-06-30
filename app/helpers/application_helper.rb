@@ -63,6 +63,7 @@ module ApplicationHelper
   end
 
   def github_link(object, message:nil, target:nil)
+    object = object.__getobj__ if object.respond_to?(:__getobj__)
     case object
     when User, Organisation
       url = "https://github.com/#{object.login}"
