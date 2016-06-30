@@ -21,3 +21,14 @@
 #= require nprogress-turbolinks
 #= require nprogress-ajax
 #= require_tree .
+#= require_self
+
+
+$(document).on "turbolinks:load", ->
+  $('[data-smooth-scroll] a').on('click', (e) ->
+    target = e.target.hash
+    $('html, body').animate({
+      scrollTop: $(target).offset().top
+    }, 300)
+    false
+  )

@@ -5,6 +5,8 @@
         = link_to root_path, class: 'nav-link navbar-logo' do
           = image_tag 'logo-small.svg'
 
+      = yield :navbar
+
       %li.nav-item
         %ul.list-inline--caret
           = yield :breadcrumbs

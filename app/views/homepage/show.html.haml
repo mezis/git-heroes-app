@@ -1,10 +1,18 @@
+- content_for :navbar do
+  %li.nav-item
+    %ul.list-inline--bullet{ data: { 'smooth-scroll': true } }
+      %li= link_to 'About',     '#section-about',     class: 'nav-link'
+      %li= link_to 'Features',  '#section-features',  class: 'nav-link'
+      %li= link_to 'Pricing',   '#section-pricing',   class: 'nav-link'
+      %li= link_to 'Terms',     '#section-terms',     class: 'nav-link'
 
 - if current_user
   = render 'organisations', organisations: @organisations
 
   %hr/
 
-.container.homepage-hero
+
+.container.homepage-hero#section-about
   .row
     = image_tag 'logo-large.svg', class: 'homepage-hero-logo col-xs-12'
     %h1.homepage-hero-tagline.col-xs-12.title
@@ -38,94 +46,175 @@
           %br/
           %small to find out who your heroes are!
 
-.row.m-t-2
-  .col-xs-12.col-md-6.col-lg-4
-    .card
-      %h5.card-header
+
+.container.m-t-2#section-features
+  %h2.hp-section-title Features
+
+  .homepage-features
+    .homepage-feature
+      %h5.homepage-feature-header
         .mega-octicon--block.octicon-comment
         Encourage code reviews within teams
-      .card-block
-        %p
-          Team chord graphs shows who comments on who's pull requests regularly,
-          so you can pinpoint isolated contributors, for instance.
-        %img.img-fluid{ 'src': image_path('hero/chord-users.png') }
+      %p
+        Team chord graphs shows who comments on who's pull requests regularly,
+        so you can pinpoint isolated contributors, for instance.
+      %img.img-fluid{ 'src': image_path('hero/chord-users.png') }
 
 
-  .col-xs-12.col-md-6.col-lg-4
-    .card
-      %h5.card-header
+    .homepage-feature
+      %h5.homepage-feature-header
         .mega-octicon--block.octicon-comment-discussion
         Promote code reviews across organisation teams
-      .card-block
-        %p
-          Organisations chord graphs shows which teams interact and how much they
-          interact with other teams.
-        %img.img-fluid{ 'src': image_path('hero/chord-teams.png') }
+      %p
+        Organisations chord graphs shows which teams interact and how much they
+        interact with other teams.
+      %img.img-fluid{ 'src': image_path('hero/chord-teams.png') }
 
 
-  .col-xs-12.col-md-6.col-lg-4
-    .card
-      %h5.card-header
+    .homepage-feature
+      %h5.homepage-feature-header
         .mega-octicon--block.octicon-git-pull-request
         Highlight reviewing bottlenecks
-      .card-block
-        %p
-          Each organisation, team, and user page has a short list of pull
-          requests with potential issues: open for too long, merged too quickly,
-          or with a lot of comments.
+      %p
+        Each organisation, team, and user page has a short list of pull
+        requests with potential issues: open for too long, merged too quickly,
+        or with a lot of comments.
+        %br/
+        We'll point them out!
 
-        %img.img-fluid{ 'src': image_path('hero/slow-prs.png') }
+      %img.img-fluid{ 'src': image_path('hero/slow-prs.png') }
           
           
-  .col-xs-12.col-md-6.col-lg-4
-    .card
-      %h5.card-header
+    .homepage-feature
+      %h5.homepage-feature-header
         .mega-octicon--block.octicon-organization
         Know your best contributors
-      .card-block
-        %p
-          Contributors are awarded points for each action on Github: issuing pull requests,
-          commenting, and merging.
-          We give more points to actions on others' pull requests, more so if they're members of a different team.
-          %br/
-          The organisation dashboard includes a daily updated leaderboard of the highest scoring users.
-        %img.img-fluid{ 'src': image_path('hero/leaderboard.png') }
+      %p
+        Contributors are awarded points for each action on Github: issuing pull requests,
+        commenting, and merging.
+        We give more points to actions on others' pull requests, more so if they're members of a different team.
+        %br/
+        The organisation dashboard includes a daily updated leaderboard of the highest scoring users.
+      %img.img-fluid{ 'src': image_path('hero/leaderboard.png') }
           
 
-  .col-xs-12.col-md-6.col-lg-4
-    .card
-      %h5.card-header
+    .homepage-feature
+      %h5.homepage-feature-header
         .mega-octicon--block.octicon-graph
         Visualize your team's progress
-      .card-block
-        %p
-          Any team has changing dynamics: great morale and new starters can push
-          contribution up; postcrunch-mode blues can deteriorate it.
-          %br/
-          We provide daily updated graphs of normalised (and absolute) contribution volumes.
-        %img.img-fluid{ 'src': image_path('hero/contributions.png') }
+      %p
+        Any team has changing dynamics: great morale and new starters can push
+        contribution up; postcrunch-mode blues can deteriorate it.
+        %br/
+        We provide daily updated graphs of normalised (and absolute) contribution volumes.
+      %img.img-fluid{ 'src': image_path('hero/contributions.png') }
 
-  .col-xs-12.col-md-6.col-lg-4
-    .card
-      %h5.card-header
+    .homepage-feature
+      %h5.homepage-feature-header
         .mega-octicon--block.octicon-radio-tower
         Get regular updates on your Github rhythm
-      .card-block
-        %p
-          Git Heroes updates in real time using Github webhook notifications.
-          %br/
-          We'll also send every active organisation member daily updates to
-          encourage reviews.
-        %img.img-fluid{ 'src': image_path('hero/daily_email.png') }
+      %p
+        Git Heroes updates in real time using Github webhook notifications.
+        %br/
+        We'll also send every active organisation member daily updates to
+        encourage reviews.
+      %img.img-fluid{ 'src': image_path('hero/daily_email.png') }
 
-  .col-xs-12.col-md-6.col-lg-4
-    .card
-      %h5.card-header
+    .homepage-feature
+      %h5.homepage-feature-header
         .mega-octicon--block.octicon-radio-tower
         Gamify the Github experience
-      .card-block
-        %p
-          We want to encourage contribution and interactions in Github.
-          %br/
-          Every week, the top contributors in a number of categories are identified and named in an email sent to the organisation members.
-        %img.img-fluid{ 'src': image_path('hero/weekly_email.png') }
+      %p
+        We want to encourage contribution and interactions in Github.
+        %br/
+        Every week, the top contributors in a number of categories are identified and named in an email sent to the organisation members.
+      %img.img-fluid{ 'src': image_path('hero/weekly_email.png') }
+
+
+.container#section-pricing
+  %h2.hp-section-title Pricing
+
+  .hp-pricing
+    .hp-price
+      .btn.btn-primary.m-b-1
+        Beta
+      %p
+        $0/user/month
+      %p
+        Git Heroes is entirely free during the open beta.
+      %p
+        Any orgnisation who participates will get a steep discount
+        once the beta closes.
+    .hp-price
+      .btn.btn-primary.m-b-1
+        Open source
+      %p
+        $0/user/month
+      %p
+        We will never charge for access to publicly accessible data.
+      %p
+        If your organisation is mainly open source, we get Git Heroes for free.
+    .hp-price--disabled
+      .btn.btn-primary.m-b-1
+        Private repos
+      %p
+        ??/user/month
+      %p
+        At the end of our beta period, we'll consult with users to determine the
+        suitable price point for Git Heroes for private repos.
+
+.container#section-terms
+  %h2.hp-section-title Terms &amp; Conditions
+
+  .card.card-block
+    %p
+      We dislike lawerly terms and conditions as much as the next person. So like
+      a few other companies, we're electing to keep things simple and readable.
+
+    %ol
+      %li
+        By using Git Heroes, you agree to these terms. If you disagree, simply
+        don't use the service.
+
+      %li
+        If these terms change, and you're a registered user, we will notify you.
+
+      %li
+        At times things can go wrong and the service may be interrupted.
+        It's unlikely, but sometimes things can go really wrong.
+
+      %li 
+        The intellectual property any content pulled from Github repositories
+        stays with its owners. We don't claim any ownership and will not share
+        it beyond what you enabled through Github.
+
+      %li
+        To fully use the services, you'll need to create your own account by
+        signing up with Github. This means we'll keep some personal data about you.
+
+      %li
+        We'll strive to keep any confidential information confidential, and will
+        never share it with third parties.  This includes your Github data, user
+        name, and email address.
+        If anything seems untowards, contact us and we'll fix it as soon as
+        possible.
+
+      %li
+        You can terminate your account at any time without cost.
+
+      %li 
+        "Git heroes" is our brand, and you may not use it our its logo without
+        our permission.
+
+      %li
+        We are not liable if things go really wrong. Things can happen — we do our
+        best.
+
+    %p.m-b-0
+      See? We're not even using small print.
+
+
+
+
+
+

@@ -56,6 +56,23 @@
     display: inline-block;
   }
 }
+.list-inline--bullet {
+  @extend .list-inline;
+  li { 
+    &::after {
+      content: '∙ ';
+      margin: 0 0.75rem;
+    }
+    &:last-child::after {
+      content: '';
+    }
+  }
+  .nav-link {
+    display: inline-block;
+  }
+}
+
+
 
 .list--no-bullets {
   ul, & {

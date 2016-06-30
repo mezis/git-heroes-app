@@ -1,0 +1,65 @@
+// hero
+
+.homepage-hero {
+  @extend .p-t-2;
+  @extend .p-x-2;
+  background-color:   white;
+  position:           relative;
+  align-items:        stretch;
+}
+.homepage-hero-logo {
+  max-height:       12rem;
+}
+.homepage-hero-tagline {
+  @extend           .text-xs-center;
+}
+.homepage-hero-item {
+  @extend .text-xs-center;
+  @extend .m-y-1;
+}
+
+// sections
+
+.hp-section-title {
+  @extend .m-t-3;
+  @extend .m-b-3;
+  font-weight:      100;
+  text-align:       center;
+}
+
+// features
+
+.homepage-features {
+  @extend .card-columns;
+
+  column-count:      1;
+  @include media-breakpoint-up(md) {
+    column-count:    2;
+  }
+  @include media-breakpoint-up(lg) {
+    column-count:    3;
+  }
+}
+.homepage-feature {
+  @extend .card;
+  @extend .card-block;
+}
+.homepage-feature-header {
+  @extend .m-b-1;
+  text-align:       center;
+}
+
+// pricing
+
+.hp-pricing {
+  @extend .card-deck;
+}
+.hp-price {
+  @extend .card;
+  @extend .card-block;
+  @extend .text-xs-center;
+}
+.hp-price--disabled {
+  @extend .hp-price;
+  opacity: 0.5;
+}
