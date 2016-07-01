@@ -1,5 +1,11 @@
 .navbar--admin {
+  @extend .small;
   padding: 0;
+
+  .nav-link {
+    padding-top:    0.2rem;
+    padding-bottom: 0.2rem;
+  }
 }
 
 .navbar--heroes {
