@@ -33,6 +33,14 @@ class GithubClient
     UpdateUserRateLimit.new(user: @user, rate_limit: client.rate_limit).run
 
     result
+  rescue Octokit::Unauthorized, Octokit::NotFound => e
+    if e.message =~ /Bad credentials/
+      Rails.logger.warn "Removing Github token from #{@user&.login}"
+      @user.update_attributes! github_token: nil
+    end
+
+    e.message << "\n[#{@user&.login}]"
+    raise
   end
 
   private
