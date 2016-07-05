@@ -146,6 +146,9 @@ gem 'appsignal-redis'
 # Force SSL usage
 gem 'rack-ssl'
 
+# Memory debugging
+gem 'rbtrace', require: false
+gem 'fog', require: false
 
 #
 # Development/test support
