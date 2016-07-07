@@ -45,7 +45,7 @@ Rails.application.configure do
   config.log_level = :debug
 
   config.after_initialize do
-    Bullet.enable = true
+    Bullet.enable = !!(ENV.fetch('BULLET_ENABLED', 'FALSE') =~ /YES|TRUE|1/)
     Bullet.bullet_logger = true
     Bullet.console = true
     Bullet.rails_logger = true
