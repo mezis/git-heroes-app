@@ -127,5 +127,13 @@ module ApplicationHelper
     sentence = @phrases.compact.map(&:strip).to_sentence
     sentence.html_safe + '.'
   end
+
+  def tz_options_for_select
+    ActiveSupport::TimeZone.all.each_with_object({}) do |tz,h|
+      group = tz.tzinfo.canonical_identifier.split('/').first
+      h[group] ||= []
+      h[group] << [tz.name, tz.tzinfo.identifier]
+    end
+  end
 end
 
