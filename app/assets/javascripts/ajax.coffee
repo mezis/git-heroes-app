@@ -8,6 +8,7 @@ class AjaxUpdater
       id = $(el).attr("id")
       return unless id?
       $("##{id}").replaceWith(el)
+      $("##{id}").trigger('ajax:replaced')
     true
 
 $(document).ready (new AjaxUpdater).onReady

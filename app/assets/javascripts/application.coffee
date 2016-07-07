@@ -32,3 +32,9 @@ $(document).on "turbolinks:load", ->
     }, 300)
     false
   )
+
+$(document).on "turbolinks:load ajax:replaced", (e) ->
+  $(e.target).find('select[data-autosubmit]').on('change', (e) ->
+    $(e.target).closest('form').submit()
+    false
+  )

@@ -1,0 +1,11 @@
+- org = organisation_user.organisation
+- user = organisation_user.user
+= form_for organisation_user, url: url_for([org, user]), remote: true, method: :patch, html: { id: "organisation-user-form-#{organisation_user.id}" } do |f|
+  .form-group.row
+    .col-xs-12.col-sm-3.col-md-3.col-lg-2
+      = f.label :email, "#{org.name.titleize} Email", class: 'form-control-label'
+    .col-xs-12.col-sm-9.col-md-9.col-lg-10
+      = f.select :email, user.settings.emails, {}, class: 'form-control', 'data-autosubmit': true
+      .small.text-muted
+        This is where we'll send the regular emails regarding your contributions to the "#{org.name}" organization.
+        You can select from emails you added to your Github account.
