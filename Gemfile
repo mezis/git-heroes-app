@@ -188,5 +188,10 @@ group :development, :test do
 
   # Nice colours on the CLI
   gem 'term-ansicolor', require: false
+
+  # Benchmarking
+  gem 'derailed_benchmarks'
+  gem 'stackprof'
+  gem 'benchmark-ips'
 end
 
