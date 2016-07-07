@@ -8,7 +8,8 @@
   align-items:        stretch;
 }
 .homepage-hero-logo {
-  max-height:       12rem;
+  max-height:         12rem;
+  max-width:          100%;
 }
 .homepage-hero-tagline {
   @extend           .text-xs-center;
