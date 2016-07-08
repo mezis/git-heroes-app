@@ -20,6 +20,7 @@ class BaseJob < ActiveJob::Base
     block.call
     job_stats.complete!
     GC.start
+    logger.info "Process memory: #{GetProcessMem.new.mb} MB"
   end
 
 
