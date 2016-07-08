@@ -15,10 +15,11 @@ class BaseJob < ActiveJob::Base
   end
 
   around_perform do |job, block|
-  job_stats.attempts += 1
+    job_stats.attempts += 1
     job_stats.update_attributes! status: 'running'
     block.call
     job_stats.complete!
+    GC.start
   end
 
 
