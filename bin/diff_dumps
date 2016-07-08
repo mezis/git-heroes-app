@@ -1,0 +1,67 @@
+#!/usr/bin/env ruby
+
+require 'set'  
+require 'json'
+require 'zlib'
+
+IGNORES = %r{
+  fog/core |
+  fog/aws |
+  debug/heap_dump
+}x
+
+if ARGV.length != 3  
+  puts "Usage: diff_dumps [FIRST.json] [SECOND.json] [THIRD.json]"
+  exit 1
+end
+
+first_addrs = Set.new  
+third_addrs = Set.new
+
+# Get a list of memory addresses from the first dump
+puts "* reading dump 1 #{ARGV[0]})"
+Zlib::GzipReader::open(ARGV[0]).each_line do |line|  
+  parsed = JSON.parse(line)
+  first_addrs << parsed["address"] if parsed && parsed["address"]
+end
+
+# Get a list of memory addresses from the last dump
+puts "* reading dump 3 #{ARGV[2]})"
+Zlib::GzipReader::open(ARGV[2]).each_line do |line|  
+  parsed = JSON.parse(line)
+  third_addrs << parsed["address"] if parsed && parsed["address"]
+end
+
+diff = []
+
+# Get a list of all items present in both the second and
+# third dumps but not in the first.
+puts "* reading dump 2 #{ARGV[1]})"
+Zlib::GzipReader::open(ARGV[1]).each_line do |line|  
+  parsed = JSON.parse(line)
+  if parsed && parsed["address"]
+    if !first_addrs.include?(parsed["address"]) && third_addrs.include?(parsed["address"])
+      diff << parsed
+    end
+  end
+end
+
+# Group items
+puts '* diffing'
+diff.group_by do |x|  
+  [x["type"], x["file"], x["line"]]
+end.map do |x,y|  
+  # Collect memory size
+  [x, y.count, y.inject(0){|sum,i| sum + (i['bytesize'] || 0) }, y.inject(0){|sum,i| sum + (i['memsize'] || 0) }]
+end.sort do |a,b|  
+  b[1] <=> a[1]
+end.each do |x,y,bytesize,memsize|  
+  # Output information about each potential leak
+  next if IGNORES =~ x[1]
+  puts "Leaked #{y} #{x[0]} objects of size #{bytesize}/#{memsize} at: #{x[1]}:#{x[2]}"
+end
+
+# Also output total memory usage, because why not?
+memsize = diff.inject(0){|sum,i| sum + (i['memsize'] || 0) }  
+bytesize = diff.inject(0){|sum,i| sum + (i['bytesize'] || 0) }  
+puts "\n\nTotal Size: #{bytesize}/#{memsize}"  
