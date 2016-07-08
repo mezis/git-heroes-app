@@ -23,8 +23,7 @@ class EmailUserService
       settings.update_attributes!("#{email_type}_email_at": now)
       UserMailer.public_send(
         email_type,
-        organisation: org,
-        user:         user,
+        org_user: @org_user,
       ).deliver_now
     end
   end

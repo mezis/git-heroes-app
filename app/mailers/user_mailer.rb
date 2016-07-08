@@ -15,21 +15,23 @@ class UserMailer < ApplicationMailer
   default from: 'Git Heroes <hello@githeroes.io>'
   layout 'mailer'
 
-  def daily(organisation:, user:)
-    @organisation = organisation
-    @user = decorate user
+  def daily(org_user:)
+    @organisation = org_user.organisation
+    @user = decorate org_user.user
+    @org_user = @organisation.organisation_users.find_by(user_id: @user.id)
     @stats = PersonalStatsService.new(organisation: @organisation, user: @user)
     @pull_requests = PullRequestFinder.new(organisation: @organisation, user: @user)
     
     mail(
-      to: recipient(user),
+      to: recipient(org_user),
       subject: "🕘 Daily #{@organisation.name} update -🏆  Git Heroes",
     )
-    end
+  end
 
-  def weekly(organisation:, user:)
-    @organisation = organisation
-    @user = decorate user
+  def weekly(org_user:)
+    @organisation = org_user.organisation
+    @user = decorate org_user.user
+    @org_user = @organisation.organisation_users.find_by(user_id: @user.id)
     date = organisation.scores.maximum(:date)
     @stats = PersonalStatsService.new(organisation: @organisation, user: @user)
     @pull_requests = PullRequestFinder.new(organisation: @organisation, user: @user)
@@ -42,7 +44,7 @@ class UserMailer < ApplicationMailer
     )
 
     mail(
-      to: recipient(user),
+      to: recipient(org_user),
       subject: "🏅 Weekly #{@organisation.name} update -🏆  Git Heroes",
     )
   end
@@ -59,11 +61,12 @@ class UserMailer < ApplicationMailer
     )
   end
 
-  def recipient(user)
-    if user.name
-      "#{user.name} <#{user.email}>"
+  def recipient(org_user)
+    email = org_user.email || org_user.user.email
+    if name = org_user.user.name
+      "#{name} <#{email}>"
     else
-      user.email
+      email
     end
   end
 

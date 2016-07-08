@@ -4,7 +4,7 @@ class EmailUserJob < BaseJob
     actors = options.fetch(:actors, [])
 
     if org_user.nil?
-      OrganisationUser.includes(user: :settings).find_each do |ou|
+      OrganisationUser.includes(:organisation, user: :settings).find_each do |ou|
         next unless EmailUserService.new(ou).can_email?
         EmailUserJob.perform_later(
           organisation_user:  ou, 
