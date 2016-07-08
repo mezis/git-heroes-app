@@ -292,6 +292,7 @@ GEM
       railties (>= 4.0.1)
     hashie (3.4.4)
     heapy (0.1.2)
+    hiredis (0.6.1)
     html2haml (2.0.0)
       erubis (~> 2.7.0)
       haml (~> 4.0.0)
@@ -546,6 +547,7 @@ GEM
       activesupport (>= 3.2)
       tzinfo
     xml-simple (1.1.5)
+    yajl-ruby (1.2.1)
 
 PLATFORMS
   ruby
@@ -578,6 +580,7 @@ DEPENDENCIES
   guard-rails
   guard-rspec
   haml-rails
+  hiredis
   httplog
   interactor
   jbuilder
@@ -585,6 +588,7 @@ DEPENDENCIES
   kaminari
   level2
   lol_dba
+  multi_json
   net-http-persistent
   nprogress-rails
   octicons-rails!
@@ -622,6 +626,7 @@ DEPENDENCIES
   turbolinks (~> 5.0.0.beta)
   uglifier
   working_hours
+  yajl-ruby
 
 RUBY VERSION
    ruby 2.3.1p112
