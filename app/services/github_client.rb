@@ -55,9 +55,9 @@ class GithubClient
   
   def stack
     @stack ||= Faraday::RackBuilder.new do |builder|
-      builder.use     Faraday::HttpCache,
-        store:        Rails.cache, 
-        instrumenter: ActiveSupport::Notifications
+      # builder.use     Faraday::HttpCache,
+      #   store:        Rails.cache, 
+      #   instrumenter: ActiveSupport::Notifications
       builder.use     Octokit::Response::RaiseError
       builder.adapter :net_http_persistent
     end
