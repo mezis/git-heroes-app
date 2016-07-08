@@ -12,7 +12,9 @@ class UserPolicy < ApplicationPolicy
   end
 
   def show?
-    super || (user && (user.organisations & record.organisations).any?)
+    super ||
+      (user == record) ||
+      (user && (user.organisations & record.organisations).any?)
   end
 
   def update?

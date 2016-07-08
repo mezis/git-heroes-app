@@ -83,4 +83,6 @@
           = render @user_settings 
           %hr.m-t-2.m-b-2/
           = render 'form', user: @user
+          - @user.organisation_users.each do |ou|
+            = render 'organisation_users/form', organisation_user: ou
 

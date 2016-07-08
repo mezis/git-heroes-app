@@ -1,26 +1,25 @@
 = form_for user, remote: true, method: :patch, html: { id: "user-form-#{user.id}" } do |f|
   - errors = user.errors.full_messages_for(:email)
-  .form-group.row{ class: ('has-danger' if errors&.any?) }
-    .col-xs-12.col-sm-3.col-md-3.col-lg-2
-      = f.label :email, 'Email address', class: 'form-control-label'
-    .col-xs-12.col-sm-9.col-md-9.col-lg-10
-      = f.text_field :email, placeholder: 'john.doe@example.com', class: 'form-control'
-      - errors = user.errors.full_messages_for(:email)
-      - if errors&.any?
-        .small.text-danger= errors.join('. ')
-      .small.text-muted
-        This is where we'll send the regular emails, and the occasional product
-        updates. We'll never, ever share your email with anyone.
 
   = f.fields_for :settings do |ff|
     .form-group.row
       .col-xs-12.col-sm-3.col-md-3.col-lg-2
         = ff.label :tz, 'Time zone', class: 'form-control-label'
       .col-xs-12.col-sm-9.col-md-9.col-lg-10
-        = ff.time_zone_select :tz, nil, {}, { class:' form-control' }
+        = ff.select :tz, tz_options_for_select, {}, class:' form-control', 'data-autosubmit': true
         .small.text-muted
           We'll do our best to only send email to you during office hours in your
           time zone.
-      
-      
-  = f.submit 'Save', class: 'btn btn-primary'
+
+  .form-group.row{ class: ('has-danger' if errors&.any?) }
+    .col-xs-12.col-sm-3.col-md-3.col-lg-2
+      = f.label :email, 'General Email', class: 'form-control-label'
+    .col-xs-12.col-sm-9.col-md-9.col-lg-10
+      = f.text_field :email, placeholder: 'john.doe@example.com', class: 'form-control', 'data-autosubmit': true
+      - errors = user.errors.full_messages_for(:email)
+      - if errors&.any?
+        .small.text-danger= errors.join('. ')
+      .small.text-muted
+        This is where we'll send the occasional product updates. We'll never,
+        ever share your email with anyone.
+
