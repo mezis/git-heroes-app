@@ -11,3 +11,14 @@ end
 ActiveSupport::Notifications.subscribe 'cache_write.active_support' do |*args|
   Appsignal.increment_counter("cache_writes", 1)
 end
+
+Thread.new do
+  dyno = ENV.fetch('DYNO', 'local').split('.').first
+  gauge_name = "process.#{dyno}.rss"
+  loop do
+    mem_mb = GetProcessMem.new.mb
+    Appsignal.set_gauge(gauge_name, mem_mb)
+    Rails.logger.info("Process memory: #{mem_mb}")
+    sleep 60
+  end
+end
