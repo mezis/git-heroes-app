@@ -156,6 +156,7 @@ gem 'rack-ssl'
 # Memory debugging
 gem 'rbtrace', require: false
 gem 'fog', require: false
+gem 'get_process_mem'
 
 #
 # Development/test support
