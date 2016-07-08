@@ -56,14 +56,18 @@ module GitHeroes
     config.quiet_assets = false
 
     # Set up caching
-    config.cache_store = :level2, {
-      L1: [
-        :memory_store, size: 32.megabytes,
-      ],
-      L2: [
-        :redis_store, pool: redis_cache_pool, expires_in: 1.day,
-      ]
-    }
+    if ENV.fetch('CACHE_ENABLED', 'YES') =~ /ON|TRUE|YES|1/i
+      config.cache_store = :level2, {
+        L1: [
+          :memory_store, size: 32.megabytes,
+        ],
+        L2: [
+          :redis_store, pool: redis_cache_pool, expires_in: 1.day,
+        ]
+      }
+    else
+      config.cache_store = nil
+    end
 
     # Cache public assets
     config.static_cache_control = 'public, max-age=31536000'
