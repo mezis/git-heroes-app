@@ -60,7 +60,8 @@ class GithubClient
         shared_cache: false,
         instrumenter: ActiveSupport::Notifications
       builder.use     Octokit::Response::RaiseError
-      builder.adapter :net_http_persistent
+      # builder.adapter :net_http_persistent
+      builder.adapter :net_http
     end
   end
 
