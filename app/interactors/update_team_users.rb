@@ -13,7 +13,7 @@ class UpdateTeamUsers
     # create new users & memberships
     %w[maintainer member].each do |role|
       paginate { 
-        client.team_members(team.github_id, role: role, per_page: 100)
+        client.team_members(team.github_id, role: role, per_page: 10)
       }.each do |d|
         user = FindOrCreateUser.call(data: d).record
         tu = team.team_users.find_or_create_by!(user: user)

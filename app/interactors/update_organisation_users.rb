@@ -16,7 +16,7 @@ class UpdateOrganisationUsers
         client.organization_members(
           organisation.name, 
           role:     role,
-          per_page: 100) 
+          per_page: 10) 
       }.each do |h|
         user = FindOrCreateUser.call(data: h).record
 

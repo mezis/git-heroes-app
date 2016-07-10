@@ -21,7 +21,10 @@ class UpdatePullRequestComments
 
   def all_comments
     paginate do
-      client.pull_request_comments(pull_request.repository.full_name, pull_request.github_number)
+      client.pull_request_comments(
+        pull_request.repository.full_name,
+        pull_request.github_number,
+        per_page: 10)
     end
   end
 end

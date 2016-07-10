@@ -31,7 +31,7 @@ class UpdateRepositoryPullRequests
         repository.full_name, 
         state:    'all',
         sort:     'created',
-        per_page: 100)
+        per_page: 10)
     end
   end
 end

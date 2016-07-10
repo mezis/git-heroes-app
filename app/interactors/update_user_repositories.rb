@@ -19,7 +19,7 @@ class UpdateUserRepositories
   private
 
   def all_repositories
-    paginate { client.repositories }
+    paginate { client.repositories(per_page: 10) }
   end
 
 end
