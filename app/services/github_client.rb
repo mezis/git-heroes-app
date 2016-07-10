@@ -1,3 +1,4 @@
+require 'yajl'
 require 'net/http/persistent'
 
 class GithubClient
