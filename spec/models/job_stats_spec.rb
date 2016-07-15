@@ -6,7 +6,7 @@ describe JobStats do
   subject { described_class.new(
     id:        'dead-beef',
     actors:    actor,
-    job_class: 'FailJob',
+    job_class: 'Debug::FailJob',
     args_hash: '1234abcd',
   )}
 
@@ -35,7 +35,7 @@ describe JobStats do
       before do
         described_class.create!(
           id:        '1337-f00d',
-          job_class: 'FailJob',
+          job_class: 'Debug::FailJob',
           args_hash: '1234abcd',
         )
       end
@@ -49,7 +49,7 @@ describe JobStats do
   end
 
   describe '.find_or_initialize_by' do
-    let(:job) { FailJob.new(:foo, actors: actor) }
+    let(:job) { Debug::FailJob.new(:foo, actors: actor) }
     subject { described_class.find_or_initialize_by(job: job) }
 
     context 'when not existing' do
@@ -70,7 +70,7 @@ describe JobStats do
 
     it 'ignores actors when hashing arguments' do
       other = described_class.find_or_initialize_by(
-        job: FailJob.new(:foo, actors: create(:user)))
+        job: Debug::FailJob.new(:foo, actors: create(:user)))
       expect(subject.args_hash).to eq(other.args_hash)
     end
   end
@@ -78,10 +78,10 @@ describe JobStats do
   describe '.where' do
     let(:other_actor) { create :organisation }
     let(:jobs) {[
-      FailJob.new(:foo, actors: actor),
-      FailJob.new(:foo, actors: [actor, other_actor]),
-      FailJob.new(:bar, actors: []),
-      FailJob.new(:baz, actors: [])
+      Debug::FailJob.new(:foo, actors: actor),
+      Debug::FailJob.new(:foo, actors: [actor, other_actor]),
+      Debug::FailJob.new(:bar, actors: []),
+      Debug::FailJob.new(:baz, actors: [])
     ]}
 
     before do
@@ -115,9 +115,9 @@ describe JobStats do
   describe '.all' do
     let(:result) { described_class.all.to_a }
     let(:jobs) {[
-      FailJob.new(:foo),
-      FailJob.new(:bar),
-      FailJob.new(:baz)
+      Debug::FailJob.new(:foo),
+      Debug::FailJob.new(:bar),
+      Debug::FailJob.new(:baz)
     ]}
     let(:stats) { jobs.map { |j|
       described_class.find_or_initialize_by(job: j).save!
@@ -135,9 +135,9 @@ describe JobStats do
   end
 
   describe 'root/parent/children' do
-    let(:gen1job) { FailJob.new(:foo) }
-    let(:gen2job) { FailJob.new(:foo, parent: gen1job) }
-    let(:gen3job) { FailJob.new(:foo, parent: gen2job) }
+    let(:gen1job) { Debug::FailJob.new(:foo) }
+    let(:gen2job) { Debug::FailJob.new(:foo, parent: gen1job) }
+    let(:gen3job) { Debug::FailJob.new(:foo, parent: gen2job) }
 
     def gen1 ; described_class.find(gen1job.job_id) ; end
     def gen2 ; described_class.find(gen2job.job_id) ; end
@@ -241,18 +241,18 @@ describe JobStats do
   describe '#after_destroy' do
     it 'is settable' do
       expect {
-        subject.after_destroy(FailJob, :foo)
+        subject.after_destroy(Debug::FailJob, :foo)
         subject.save!
       }.not_to raise_error
     end
 
     it 'causes the callback to be scheduled' do
-      subject.after_destroy(FailJob, foo: 'bar')
+      subject.after_destroy(Debug::FailJob, foo: 'bar')
       subject.save!
       reloaded = described_class.find(subject.id)
       expect {
         reloaded.destroy
-      }.to enqueue_a(FailJob).with(deserialize_as(foo: 'bar'))
+      }.to enqueue_a(Debug::FailJob).with(deserialize_as(foo: 'bar'))
     end
   end
 end

@@ -47,12 +47,12 @@ module GitHeroes
 
       def redis
         @_redis ||=
-          Redis::Namespace.new('data', redis: Redis.new(url: ENV.fetch('REDIS_URL'))).extend(RedisTransaction)
+          Redis::Namespace.new('data', redis: Redis.new(url: ENV.fetch('REDIS_URL'), driver: 'hiredis')).extend(RedisTransaction)
       end
 
       def redis_sidekiq_pool
         @_redis_sidekiq_pool ||= ConnectionPool.new(size: ENV.fetch('REDIS_POOL_SIZE'), timeout: 1) do
-          Redis::Namespace.new('sidekiq', redis: Redis.new(url: ENV.fetch('REDIS_URL')))
+          Redis::Namespace.new('sidekiq', redis: Redis.new(url: ENV.fetch('REDIS_URL'), driver: 'hiredis'))
         end
       end
 
@@ -60,7 +60,7 @@ module GitHeroes
         @_redis_cache_pool ||= ConnectionPool.new(size: ENV.fetch('REDIS_POOL_SIZE'), timeout: 1) do
           # redis-store-activerecord expects a Redis::Store which has a slightly
           # nonstandard API
-          Redis::Store::Factory.create(namespace: 'cache', url: ENV.fetch('REDIS_CACHE_URL'))
+          Redis::Store::Factory.create(namespace: 'cache', url: ENV.fetch('REDIS_CACHE_URL'), driver: 'hiredis')
         end
       end
 

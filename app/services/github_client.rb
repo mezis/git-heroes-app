@@ -56,10 +56,31 @@ class GithubClient
   def stack
     @stack ||= Faraday::RackBuilder.new do |builder|
       builder.use     Faraday::HttpCache,
-        store:        Rails.cache, 
+        store:        Rails.cache.extend(NamespacedCache).with_prefix("http_cache:#{@user.id}"),
+        serializer:   Yajl,
+        shared_cache: false,
         instrumenter: ActiveSupport::Notifications
       builder.use     Octokit::Response::RaiseError
       builder.adapter :net_http_persistent
+    end
+  end
+
+  module NamespacedCache
+    def with_prefix(prefix)
+      @_prefix = prefix
+      self
+    end
+
+    def read_entry(key, options)
+      super "#{@_prefix}:#{key}", options
+    end
+
+    def write_entry(key, entry, options)
+      super "#{@_prefix}:#{key}", entry, options
+    end
+
+    def delete_entry(key, options)
+      super "#{@_prefix}:#{key}", options
     end
   end
 end

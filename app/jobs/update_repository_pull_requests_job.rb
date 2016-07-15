@@ -4,9 +4,9 @@ class UpdateRepositoryPullRequestsJob < BaseJob
     repo =   options.fetch(:repository)
     result = UpdateRepositoryPullRequests.call(repository: repo)
 
-    result.records.each do |record|
+    result.record_ids.each do |id|
       UpdatePullRequestJob.perform_later(
-        pull_request: record,
+        pull_request: PullRequest.find(id),
         actors:       actors | [repo.owner],
         parent:       self,
       )

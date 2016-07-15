@@ -6,7 +6,7 @@ class UpdateOrganisationTeams
   def call
     context.updated = []
     organisation.teams = paginate {
-      client.organization_teams(organisation.name) 
+      client.organization_teams(organisation.name, per_page: 10)
     }.map { |hash|
       result = FindOrCreateTeam.call(organisation: organisation, data: hash)
       context.updated << result.record if result.created || result.changed

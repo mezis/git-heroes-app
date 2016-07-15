@@ -3,22 +3,37 @@ class UpdateOrganisationUsers
 
   delegate :organisation, to: :context
 
+  # Not transactional as there can be a huge number of members
+  # in an organisation.
+  # Not parallel-safe, but this is run job exclusive jobs.
   def call
-    users = %w[admin member].each_with_object({}) do |role,h|
-      h[role] = all_members(role: role).map { |h| FindOrCreateUser.call(data: h).record }.to_a
-    end
+    org_users_ids = Set.new
+    admin_ids = Set.new
     
-    org_users = users.map do |role, users|
-      users.map do |u|
-        ou = organisation.organisation_users.find_or_initialize_by user: u
-        ou.role = role
-        ou
+    # create new users & memberships
+    %w[admin member].each do |role|
+      paginate {
+        client.organization_members(
+          organisation.name, 
+          role:     role,
+          per_page: 10) 
+      }.each do |h|
+        user = FindOrCreateUser.call(data: h).record
+
+        ou = organisation.organisation_users.find_or_create_by!(user: user)
+        org_users_ids << ou.id
+        admin_ids << ou.id if role == 'admin'
       end
     end
 
-    organisation.transaction do
-      org_users.flatten.each { |ou| ou.save! if ou.changed? }
-      organisation.organisation_users = org_users.flatten
+    # destroy old memberships, set roles
+    organisation.organisation_users.find_each do |ou|
+      if org_users_ids.exclude?(ou.id)
+        ou.destroy
+        next
+      end
+      ou.role = admin_ids.include?(ou.id) ? 'admin' : 'member'
+      ou.save! if ou.changed?
     end
   end
 
@@ -26,10 +41,6 @@ class UpdateOrganisationUsers
 
   def user
     context.user || pick_user(organisation.users)
-  end
-
-  def all_members(options = {})
-    paginate { client.organization_members(organisation.name, options) }
   end
 end
 

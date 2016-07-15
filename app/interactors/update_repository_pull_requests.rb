@@ -4,7 +4,7 @@ class UpdateRepositoryPullRequests
   delegate :repository, :records, to: :context
 
   def call
-    context.records = []
+    context.record_ids = Set.new
   
     if user.nil?
       Rails.logger.warn "cannot update #{repository.full_name}: no member user"
@@ -13,7 +13,7 @@ class UpdateRepositoryPullRequests
 
     all_pull_requests.each do |hash|
       result = FindOrCreatePullRequest.call(repository: repository, data: hash)
-      context.records << result.record if result.created || result.updated
+      context.record_ids << result.record.id if result.created || result.updated
     end
   end
 
@@ -29,7 +29,9 @@ class UpdateRepositoryPullRequests
     paginate do
       client.pull_requests(
         repository.full_name, 
-        state: 'all', sort: 'created')
+        state:    'all',
+        sort:     'created',
+        per_page: 10)
     end
   end
 end

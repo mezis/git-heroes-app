@@ -25,7 +25,6 @@ class FindOrCreatePullRequest
       github_number:      data.number,
       title:              data.title,
       merged_at:          data.merged_at,
-      status:             data.state.to_sym,
       created_at:         data.created_at,
       github_updated_at:  data.updated_at,
     )

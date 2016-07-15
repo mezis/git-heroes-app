@@ -34,6 +34,9 @@ gem 'jbuilder'
 # Faster caching
 gem 'level2'
 
+# Faster Redis driver
+gem 'hiredis'
+
 
 #
 # Views
@@ -110,6 +113,10 @@ gem 'octokit'
 # Business time
 gem 'working_hours'
 
+# API parsing
+gem 'yajl-ruby'
+gem 'multi_json'
+
 #
 # Background jobs
 #
@@ -149,6 +156,7 @@ gem 'rack-ssl'
 # Memory debugging
 gem 'rbtrace', require: false
 gem 'fog', require: false
+gem 'get_process_mem'
 
 #
 # Development/test support
