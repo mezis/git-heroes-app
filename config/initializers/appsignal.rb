@@ -18,7 +18,6 @@ Thread.new do
   loop do
     mem_mb = GetProcessMem.new.mb
     Appsignal.set_gauge(gauge_name, mem_mb)
-    Rails.logger.info("Process memory: #{mem_mb}")
     sleep 60
   end
 end
