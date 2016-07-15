@@ -33,6 +33,7 @@ Zlib::GzipReader::open(ARGV[2]).each_line do |line|
 end
 
 diff = []
+diff_json = File.open('diff.json', 'w')
 
 # Get a list of all items present in both the second and
 # third dumps but not in the first.
@@ -42,9 +43,12 @@ Zlib::GzipReader::open(ARGV[1]).each_line do |line|
   if parsed && parsed["address"]
     if !first_addrs.include?(parsed["address"]) && third_addrs.include?(parsed["address"])
       diff << parsed
+      diff_json.puts line
     end
   end
 end
+
+diff_json.close
 
 # Group items
 puts '* diffing'
