@@ -40,7 +40,7 @@ class UserMailer < ApplicationMailer
       rewards: @organisation.rewards.
         includes(:user).
         where(date: date),
-      user: user
+      user: @user
     )
 
     mail(
