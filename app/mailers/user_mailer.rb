@@ -32,15 +32,15 @@ class UserMailer < ApplicationMailer
     @organisation = org_user.organisation
     @user = decorate org_user.user
     @org_user = @organisation.organisation_users.find_by(user_id: @user.id)
-    date = organisation.scores.maximum(:date)
+    date = @organisation.scores.maximum(:date)
     @stats = PersonalStatsService.new(organisation: @organisation, user: @user)
     @pull_requests = PullRequestFinder.new(organisation: @organisation, user: @user)
 
     @rewards = RewardsDecorator.new(
-      rewards: organisation.rewards.
+      rewards: @organisation.rewards.
         includes(:user).
         where(date: date),
-      user: user
+      user: @user
     )
 
     mail(
