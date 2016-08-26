@@ -4,7 +4,7 @@ class FindOrCreateTeam
   delegate :organisation, :data, :record, to: :context
 
   def call
-    context.record = Team.find_or_create_by!(github_id: data.id) do |u|
+    context.record = Team.find_or_create_by!(github_id: data.id, enabled: true) do |u|
       assign_attributes(u, data)
       context.created = true
     end

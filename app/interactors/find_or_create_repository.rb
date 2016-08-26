@@ -4,7 +4,7 @@ class FindOrCreateRepository
   delegate :data, :record, to: :context
 
   def call
-    context.record = Repository.find_or_create_by!(github_id: data.id) do |r|
+    context.record = Repository.find_or_create_by!(github_id: data.id, enabled: true) do |r|
       assign_attributes(r, data)
       context.created = true
       binding.pry unless r.owner
