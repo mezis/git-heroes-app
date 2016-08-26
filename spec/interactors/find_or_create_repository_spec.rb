@@ -1,10 +1,6 @@
 require 'rails_helper'
 
 describe FindOrCreateRepository do
-  def load_sample(name)
-    Hashie::Mash.new JSON.parse File.read "spec/data/#{name}.json"
-  end
-
   let(:data) { load_sample('event_repository') }
   let(:context) {{
     data: data['repository']
