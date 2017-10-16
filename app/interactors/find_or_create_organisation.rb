@@ -1,4 +1,4 @@
-# Given an Github org hash, finds or creates Users.
+# Given an Github org hash, finds or creates Organisations.
 class FindOrCreateOrganisation
   include Interactor
 
