@@ -23,6 +23,7 @@ class FindOrCreateRepository
     record.assign_attributes(
       name:         data.name,
       description:  data.description,
+      public:       !data.private,
     )
     record.owner = get_owner(data.owner)
   end
