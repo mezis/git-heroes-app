@@ -57,7 +57,7 @@ class GithubClient
   def stack
     @stack ||= Faraday::RackBuilder.new do |builder|
       builder.use     Faraday::HttpCache,
-        store:        Rails.cache.extend(NamespacedCache).with_prefix("http_cache:#{@user.id}"),
+        store:        Rails.cache.dup.extend(NamespacedCache).with_prefix("http_cache:#{@user.id}"),
         serializer:   Yajl,
         shared_cache: false,
         instrumenter: ActiveSupport::Notifications
