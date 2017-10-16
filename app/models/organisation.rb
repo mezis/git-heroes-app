@@ -17,6 +17,11 @@ class Organisation < ApplicationModel
     name
   end
 
+  # An organisation is considered public if all its (known) repos are
+  def public?
+    !repositories.where(public: false).exists?
+  end
+
   # do we have valid scores to display today?
   # FIXME: this will change if/when we move to daily scoring
   def scored?

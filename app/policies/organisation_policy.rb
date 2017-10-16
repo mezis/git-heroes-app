@@ -14,7 +14,7 @@ class OrganisationPolicy < ApplicationPolicy
   end
 
   def show?
-    super || (is_member? && record.enabled?)
+    super || is_public? || (is_member? && record.enabled?)
   end
 
   def update?
@@ -22,6 +22,10 @@ class OrganisationPolicy < ApplicationPolicy
   end
 
   private
+
+  def is_public?
+    record.kind_of?(Organisation) && record.public?
+  end
 
   def is_member?
     record.kind_of?(Organisation) && !!user.role_at?(record)

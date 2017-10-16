@@ -11,7 +11,7 @@ class RepositoryPolicy < ApplicationPolicy
   end
 
   def show?
-    super || is_member?
+    super || record.public? || is_member?
   end
 
   def update?
@@ -27,7 +27,6 @@ class RepositoryPolicy < ApplicationPolicy
     else
       user.organisation_users.any? { |ou| ou.organisation_id = record.owner_id }
     end
-
   end
   
   def is_admin?
