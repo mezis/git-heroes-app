@@ -1,7 +1,8 @@
 FactoryGirl.define do
   factory :repository do
-    owner nil
-    name "MyString"
-    github_id 1
+    name { Faker::App.name }
+    github_id { Faker::Number.number(8) }
+
+    association :owner, factory: :organisation
   end
 end
