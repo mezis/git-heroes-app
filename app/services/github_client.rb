@@ -16,6 +16,17 @@ class GithubClient
     @user = user
   end
 
+  # pass a block that performs a paginable request
+  # to the client
+  def paginate
+    Enumerator.new { |y|
+      yield.each { |h| y << h }
+      while uri = client.last_response.rels[:next]&.href
+        client.get(uri).each { |h| y << h }
+      end
+    }.lazy
+  end
+
   def respond_to_missing?(name, include_private=false)
     client.respond_to?(name, include_private)
   end
