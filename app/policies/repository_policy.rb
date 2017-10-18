@@ -1,7 +1,11 @@
 class RepositoryPolicy < ApplicationPolicy
   class Scope < Scope
     def resolve
-      scope.all
+      if user.admin?
+        scope.all
+      else
+        scope.visible_by(user)
+      end
     end
   end
 
@@ -11,7 +15,7 @@ class RepositoryPolicy < ApplicationPolicy
   end
 
   def show?
-    super || record.public? || is_member?
+    super || record.public? || is_member? || is_admin?
   end
 
   def update?
@@ -19,7 +23,7 @@ class RepositoryPolicy < ApplicationPolicy
   end
 
   private
-  
+
   def is_member?
     case record.owner_type
     when 'User'

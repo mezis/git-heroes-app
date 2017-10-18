@@ -6,7 +6,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def index?
-    # can calways list users, but scope limited to member organisations
+    # can always list users, but scope limited to member organisations
     # in controllers
     true
   end
