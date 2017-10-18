@@ -3,6 +3,9 @@
     .col-md-2
       = button_toggles repository.owner, repository
     .col-md-2
-      #{repository.name}
+      = link_to repository.name, [repository.owner, repository]
     .col-md-8.repository-users.user--no-name
       = render 'users/list', collection: repository.contributors
+      - delta = repository.contributor_count - repository.contributors.count
+      - if delta > 0
+        (and #{delta} more)
