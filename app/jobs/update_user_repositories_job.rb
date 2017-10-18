@@ -17,12 +17,28 @@ class UpdateUserRepositoriesJob < BaseJob
 
     result = UpdateUserRepositories.call(user: user)
 
-    user.member_repositories.find_each do |repo|
-      UpdateRepositoryPullRequestsJob.perform_later(
+    options = {
+        repository: repo.record, 
+        actors:     actors | [user, repo.owner],
+        parent:     self,
+    }
+
+    result.created.each do |repo|
+      ImportRepositoryPullRequestsJob.perform_later(options.merge(repository: repo))
+    end
+
+    result.updated.each do |repo|
+      UpdateRepositoryPullRequestsJob.perform_later(options.merge(repository: repo))
+    end
+  end
+
+  private
+
+  def _import_or_update(klass, repo)
+    klass.perform_later(
         repository: repo, 
         actors:     actors | [user, repo.owner],
         parent:     self,
-      )
-    end
+    )
   end
 end

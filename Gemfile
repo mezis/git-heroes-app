@@ -105,6 +105,7 @@ gem 'interactor'
 gem 'faraday'
 gem 'faraday_middleware'
 gem 'faraday-http-cache'
+# gem 'net-http-persistent'
 gem 'typhoeus'
 
 # Github API client
@@ -116,6 +117,9 @@ gem 'working_hours'
 # API parsing
 gem 'yajl-ruby'
 gem 'multi_json'
+
+# Recursive object freezer
+gem 'ice_nine', require: %w[ice_nine ice_nine/core_ext/object]
 
 #
 # Background jobs

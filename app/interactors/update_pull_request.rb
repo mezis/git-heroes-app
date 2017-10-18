@@ -7,6 +7,9 @@ class UpdatePullRequest
     Rails.logger.info "updating pull request: #{repository.full_name}##{pull_request.github_number}"
     data = client.pull_request(repository.full_name, pull_request.github_number)
     result = FindOrCreatePullRequest.call(repository: repository, data: data)
+    context.created = result.created
+    context.updated = result.updated
+    context.record = result.record
   end
 
   private
@@ -16,9 +19,8 @@ class UpdatePullRequest
   end
 
   # pick a user to fetch pull requests
-  # FIXME: round robin?
   def user
-    @user ||= pick_user repository.users
+    @user ||= pick_user(repository.public? ? User : repository.users)
   end
 
 end

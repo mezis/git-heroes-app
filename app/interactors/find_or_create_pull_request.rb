@@ -33,7 +33,7 @@ class FindOrCreatePullRequest
       when ['open',   false] then :open
       when ['closed', true]  then :merged
       when ['closed', false] then :closed
-      else raise 'unrecognized PR status'
+      else raise "unrecognized PR status '#{data.state}'"
       end
     record.created_by ||= FindOrCreateUser.call(data: data.user).record
     record.merged_by  ||= FindOrCreateUser.call(data: data.user).record if data.merged_by

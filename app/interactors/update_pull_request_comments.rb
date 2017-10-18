@@ -14,9 +14,12 @@ class UpdatePullRequestComments
   private
 
   # pick a user to fetch pull requests
-  # FIXME: round robin?
   def user
-    @user ||= pick_user pull_request.repository.users
+    @user ||= pick_user(repository.public? ? User : repository.users)
+  end
+
+  def repository
+    pull_request.repository
   end
 
   def all_comments

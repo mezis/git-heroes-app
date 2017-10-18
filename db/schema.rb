@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171016091732) do
+ActiveRecord::Schema.define(version: 20171016153226) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -106,16 +106,17 @@ ActiveRecord::Schema.define(version: 20171016091732) do
   add_index "pull_requests", ["repository_id"], name: "index_pull_requests_on_repository_id", using: :btree
 
   create_table "repositories", force: :cascade do |t|
-    t.integer  "owner_id",                    null: false
-    t.string   "owner_type",                  null: false
-    t.string   "name",                        null: false
-    t.integer  "github_id",                   null: false
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-    t.boolean  "enabled",     default: false, null: false
-    t.integer  "users_count", default: 0,     null: false
+    t.integer  "owner_id",                       null: false
+    t.string   "owner_type",                     null: false
+    t.string   "name",                           null: false
+    t.integer  "github_id",                      null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.boolean  "enabled",        default: false, null: false
+    t.integer  "users_count",    default: 0,     null: false
     t.string   "description"
-    t.boolean  "public",      default: false
+    t.boolean  "public",         default: false
+    t.datetime "prs_updated_at"
   end
 
   add_index "repositories", ["github_id"], name: "index_repositories_on_github_id", unique: true, using: :btree
@@ -207,6 +208,7 @@ ActiveRecord::Schema.define(version: 20171016091732) do
 
   add_index "users", ["github_id"], name: "index_users_on_github_id", unique: true, using: :btree
   add_index "users", ["login"], name: "index_users_on_login", unique: true, using: :btree
+  add_index "users", ["throttle_left"], name: "index_users_on_throttle_left", where: "(github_token IS NOT NULL)", using: :btree
 
   add_foreign_key "comments", "pull_requests"
   add_foreign_key "comments", "users"

@@ -11,7 +11,9 @@ module GithubInteractor
 
   # pick a user with enough rate limit left
   def pick_user(scope)
-    scope.where.not(github_token: nil).order(:throttle_left).last
+    u = scope.where.not(github_token: nil).order(:throttle_left).last
+    raise 'failed to pick a valid user' if u.nil?
+    return u
   end
 
   def client
