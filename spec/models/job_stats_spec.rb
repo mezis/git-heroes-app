@@ -252,7 +252,7 @@ describe JobStats do
       reloaded = described_class.find(subject.id)
       expect {
         reloaded.destroy
-      }.to enqueue_a(Debug::FailJob).with(deserialize_as(foo: 'bar'))
+      }.to have_enqueued_job(Debug::FailJob).with(foo: 'bar')
     end
   end
 end

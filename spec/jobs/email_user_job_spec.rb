@@ -17,20 +17,14 @@ describe EmailUserJob do
   context 'without arguments' do
     let(:options) {{}}
 
-    let!(:ou1) { create(:organisation_user) }
-    let!(:ou2) { create(:organisation_user) }
+    let!(:ou) { create(:organisation_user) }
 
     it 'schedules jobs for each organisation user with valid settings' do
       allow_any_instance_of(EmailUserService).to receive(:can_email?).and_return(true)
 
-      perform
-
-      expect(described_class).
-        to have_been_enqueued.
-        with deserialize_as(organisation_user: ou1)
-      expect(described_class).
-        to have_been_enqueued.
-        with deserialize_as(organisation_user: ou2)
+      expect {
+        perform
+      }.to have_enqueued_job(described_class).with(organisation_user: ou)
     end
   end
 end
