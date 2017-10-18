@@ -21,7 +21,7 @@ class GithubClient
   def paginate
     Enumerator.new { |y|
       yield.each { |h| y << h }
-      while uri = client.last_response&.rels&.fetch(:next)&.href
+      while uri = client.last_response&.rels&.fetch(:next, nil)&.href
         client.get(uri).each { |h| y << h }
       end
     }.lazy

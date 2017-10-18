@@ -14,6 +14,7 @@ require 'support/redis'
 require 'support/timecop'
 require 'support/active_job'
 require 'support/samples'
+require 'support/vcr'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are

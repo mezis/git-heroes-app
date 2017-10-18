@@ -195,8 +195,10 @@ group :development, :test do
   gem 'guard-rails'
   gem 'guard-livereload'
 
-  # Debug logging for HTTP requests
+  # Logging, stubbing, replaying HTTP requests
   gem 'httplog', require: false
+  gem 'webmock'
+  gem 'vcr'
 
   # Generate fake data
   gem 'faker', require: false
