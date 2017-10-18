@@ -1,5 +1,7 @@
 require 'yajl'
-require 'net/http/persistent'
+require 'faraday'
+require 'typhoeus'
+require 'typhoeus/adapters/faraday'
 
 class GithubClient
   class Throttled < StandardError
@@ -62,7 +64,7 @@ class GithubClient
         shared_cache: false,
         instrumenter: ActiveSupport::Notifications
       builder.use     Octokit::Response::RaiseError
-      builder.adapter :net_http_persistent
+      builder.adapter :typhoeus
     end
   end
 

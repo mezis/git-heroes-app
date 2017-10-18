@@ -105,7 +105,7 @@ gem 'interactor'
 gem 'faraday'
 gem 'faraday_middleware'
 gem 'faraday-http-cache'
-gem 'net-http-persistent'
+gem 'typhoeus'
 
 # Github API client
 gem 'octokit'
