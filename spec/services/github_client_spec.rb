@@ -5,7 +5,6 @@ describe GithubClient do
   let(:user) { create(:user, github_token: token) }
 
   # pass a valid token if creating/updating cassettes - but do not commit it!
-  let(:token) { 'ccd8e3e3254b12eb4dc0bf53f4955c5c4de5771b' }
   let(:token) { Faker::Crypto.sha1 }
 
   describe '#paginate' do
