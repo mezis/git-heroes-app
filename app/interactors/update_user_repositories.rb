@@ -6,6 +6,12 @@ class UpdateUserRepositories
   def call
     context.created = []
     context.updated = []
+
+    if user.github_token.nil?
+      user.member_repositories = []
+      return
+    end
+
     user.member_repositories = all_repositories.map { |h|
       # double check the repository does exist
       # listing all repos will occasionally yield "dead" / removed repositories

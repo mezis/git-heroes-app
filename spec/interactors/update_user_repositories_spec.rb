@@ -18,5 +18,18 @@ describe UpdateUserRepositories do
   it { expect { perform }.to change { user.member_repositories.count } }
   it { expect(perform.created.length).to eq(1) }
   it { expect(perform.updated.length).to eq(0) }
+
+  context 'when user is not logged in' do
+    let(:user) { create(:user) }
+    let(:repo) { create(:repository) }
+    
+    before do
+      create(:user_repository, user: user, repository: repo)
+    end
+
+    it 'removes known repo memberships' do
+      expect { perform }.to change { user.member_repositories.count }.to(0)
+    end
+  end
 end
 
