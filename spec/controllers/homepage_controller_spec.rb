@@ -1,12 +1,38 @@
 require 'rails_helper'
 
-RSpec.describe HomepageController, type: :controller do
+describe HomepageController, type: :controller do
+  render_views
 
   describe "GET #show" do
-    it "returns http success" do
-      get :show
-      expect(response).to have_http_status(:success)
+    let(:perform) { get :show }
+
+    shared_examples 'status' do
+      it 'responds 200' do
+        perform
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context 'when logged out' do
+      include_examples 'status'
+    end
+
+    context 'when logged in' do
+      let(:user) { create(:user, :logged_in) }
+      let(:o1) { create(:organisation) }
+      let(:o2) { create(:organisation) }
+
+      before do
+        user.organisations = [o1,o2]
+        request.session[:token] = user.token
+      end
+
+      include_examples 'status'
+
+      it 'assigns @organisations' do
+        perform
+        expect(assigns(:organisations)).to match([o1, o2])
+      end
     end
   end
-
 end

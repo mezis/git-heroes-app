@@ -7,6 +7,7 @@ FactoryGirl.define do
     login       { Faker::Internet.user_name }
 
     trait :logged_in do
+      token { Faker::Crypto.sha1 }
       github_token { Faker::Crypto.sha1 }
       throttle_limit 5000
       throttle_left  4000
