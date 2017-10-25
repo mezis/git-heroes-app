@@ -22,12 +22,7 @@ RSpec.describe MetricsController, type: :controller do
     JSON.parse(response.body)
   end
 
-  before do
-    log_in! user
-
-    user.organisations = [org]
-    user.teams = [team]
-
+  def setup_data
     create(:organisation_user_score,
            user:          user,
            organisation:  org,
@@ -48,102 +43,149 @@ RSpec.describe MetricsController, type: :controller do
           )
   end
 
-  shared_examples 'responds 200' do
-    it 'responds 200' do
-      perform
-      expect(response).to have_http_status(:success)
-    end
+  before do
+    log_in! user
+
+    user.organisations = [org]
+    user.teams = [team]
   end
 
   describe "GET #show" do
     let(:format) { 'csv' }
-    let(:perform) { get :show, format: format, organisation_id: org.name, id: metric_name }
+    let(:options) {{}}
+    let(:perform) {
+      get :show, {
+        format: format, organisation_id: org.name, id: metric_name
+      }.merge(options)
+    }
 
-    describe 'contribution_per_contributor' do
-      let(:metric_name) { 'contribution_per_contributor' }
+    shared_examples 'a successful endpoint' do |options|
+      let(:metric_name) { options[:metric] }
 
-      include_examples 'responds 200'
+      %w[csv json].each do |format|
+        describe "with format #{format}" do
+          let(:format) { format }
 
-      it 'returns points per user' do
-        perform
-        expect(csv_data.headers).to eq %w[user points url]
-        expect(csv_data.first['user']).to eq(user.login)
-        expect(csv_data.first['points']).to eq("42")
+          it "responds 200 for format #{format}" do
+            perform
+            expect(response).to have_http_status(:success)
+          end
+        end
       end
     end
 
-    describe 'contribution_per_contributor_over_time' do
-      let(:metric_name) { 'contribution_per_contributor_over_time' }
+    shared_examples 'a metric endpoint' do |options|
+      context 'without data' do
+        options[:metrics].each do |m|
+          it_behaves_like 'a successful endpoint', metric: m
+        end
+      end
 
-      include_examples 'responds 200'
+      context 'with data' do
+        before { setup_data }
 
-      it 'returns points per date' do
-        perform
-        expect(csv_data.headers).to eq %w[date points]
-        expect(csv_data.first['date']).to eq(monday.to_s)
-        expect(csv_data.first['points'].to_f).to be_within(1e-3).of(42)
+        options[:metrics].each do |m|
+          it_behaves_like 'a successful endpoint', metric: m
+        end
       end
     end
 
-    describe 'contributors_over_time' do
-      let(:metric_name) { 'contributors_over_time' }
+    describe 'org metrics' do
+      org_metrics = %w[
+        contribution_per_contributor
+        contribution_per_contributor_over_time
+        contributors_over_time
+        contributions_over_time
+        comments_over_time
+        hour_of_pull_request_merged
+      ]
 
-      include_examples 'responds 200'
-
-      it 'returns points per date' do
-        perform
-        expect(csv_data.headers).to eq %w[date count]
-        expect(csv_data.first['date']).to eq(monday.to_s)
-        expect(csv_data.first['count'].to_f).to eq(1)
-      end
-    end
-
-    describe 'contributions_over_time' do
-      let(:metric_name) { 'contributions_over_time' }
-
-      include_examples 'responds 200'
-
-      it 'returns points per date' do
-        perform
-        expect(csv_data.headers).to eq %w[date points]
-        expect(csv_data.first['date']).to eq(monday.to_s)
-        expect(csv_data.first['points'].to_f).to eq(42)
-      end
-    end
-
-    describe 'comments_over_time' do
-      let(:metric_name) { 'comments_over_time' }
-
-      include_examples 'responds 200'
-
-      it 'returns points per week' do
-        perform
-        expect(csv_data.headers).to eq %w[date comments]
-        expect(csv_data.first['date']).to eq(friday.beginning_of_week.to_date.to_s)
-        expect(csv_data.first['comments'].to_i).to eq(1)
-      end
-    end
-
-    describe 'hour_of_pull_request_merged' do
-      let(:format) { 'json' }
-      let(:metric_name) { 'hour_of_pull_request_merged' }
-      let(:data) { perform ; json_data.first }
-
-      include_examples 'responds 200'
-
-      it 'returns an array' do
-        perform
-        expect(json_data.length).to eq(1)
+      describe 'with team filter' do
+        let(:options) {{ team_id: team.id }}
+        it_behaves_like 'a metric endpoint', metrics: org_metrics
       end
 
-      describe 'the response object' do
-        let(:subject) { data }
+      describe 'without team filter' do
+        it_behaves_like 'a metric endpoint', metrics: org_metrics
 
-        it { expect(subject['name']).to eq('Merges') }
-        it { expect(subject.keys - ['name']).to match((0..23).map(&:to_s)) }
-        it { expect(subject['12']).to eq(1) } # the only PR was merged last Friday at noon
-      end
-    end
-  end
+        describe 'output data' do
+          before { setup_data }
 
+          describe 'contribution_per_contributor' do
+            let(:metric_name) { 'contribution_per_contributor' }
+
+            it 'returns points per user' do
+              perform
+              expect(csv_data.headers).to eq %w[user points url]
+              expect(csv_data.first['user']).to eq(user.login)
+              expect(csv_data.first['points']).to eq("42")
+            end
+          end
+
+          describe 'contribution_per_contributor_over_time' do
+            let(:metric_name) { 'contribution_per_contributor_over_time' }
+
+            it 'returns points per date' do
+              perform
+              expect(csv_data.headers).to eq %w[date points]
+              expect(csv_data.first['date']).to eq(monday.to_s)
+              expect(csv_data.first['points'].to_f).to be_within(1e-3).of(42)
+            end
+          end
+
+          describe 'contributors_over_time' do
+            let(:metric_name) { 'contributors_over_time' }
+
+            it 'returns points per date' do
+              perform
+              expect(csv_data.headers).to eq %w[date count]
+              expect(csv_data.first['date']).to eq(monday.to_s)
+              expect(csv_data.first['count'].to_f).to eq(1)
+            end
+          end
+
+          describe 'contributions_over_time' do
+            let(:metric_name) { 'contributions_over_time' }
+
+            it 'returns points per date' do
+              perform
+              expect(csv_data.headers).to eq %w[date points]
+              expect(csv_data.first['date']).to eq(monday.to_s)
+              expect(csv_data.first['points'].to_f).to eq(42)
+            end
+          end
+
+          describe 'comments_over_time' do
+            let(:metric_name) { 'comments_over_time' }
+
+            it 'returns points per week' do
+              perform
+              expect(csv_data.headers).to eq %w[date comments]
+              expect(csv_data.first['date']).to eq(friday.beginning_of_week.to_date.to_s)
+              expect(csv_data.first['comments'].to_i).to eq(1)
+            end
+          end
+
+          describe 'hour_of_pull_request_merged' do
+            let(:format) { 'json' }
+            let(:metric_name) { 'hour_of_pull_request_merged' }
+            let(:data) { perform ; json_data.first }
+
+            it 'returns an array' do
+              perform
+              expect(json_data.length).to eq(1)
+            end
+
+            describe 'the response object' do
+              let(:subject) { data }
+
+              it { expect(subject['name']).to eq('Merges') }
+              it { expect(subject.keys - ['name']).to match((0..23).map(&:to_s)) }
+              it { expect(subject['12']).to eq(1) } # the only PR was merged last Friday at noon
+            end
+          end
+        end # output data
+      end # without team filter
+    end # org metrics
+  end # GET #show
 end
