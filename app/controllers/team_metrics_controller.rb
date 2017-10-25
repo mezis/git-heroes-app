@@ -1,3 +1,5 @@
+# TeamMetricsController exposes enough data to build a chord graph
+# of commenting interactions between teams or users.
 class TeamMetricsController < ApplicationController
   require_authentication!
 

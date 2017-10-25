@@ -14,14 +14,6 @@ RSpec.describe MetricsController, type: :controller do
   let(:monday) { Date.today.beginning_of_week }
   let(:friday) { monday.beginning_of_day - 2.5.days }
 
-  def csv_data
-    CSV.parse(response.body, headers: true)
-  end
-
-  def json_data
-    JSON.parse(response.body)
-  end
-
   def setup_data
     create(:organisation_user_score,
            user:          user,
