@@ -8,6 +8,7 @@ class OrganisationsController < ApplicationController
   end
 
   def show
+    authorize current_organisation
     @organisation = current_organisation
     @hottest_pull_requests = leaderboard_service.hottest_pull_requests
     @slowest_pull_requests = leaderboard_service.slowest_pull_requests
@@ -15,7 +16,7 @@ class OrganisationsController < ApplicationController
   end
 
   def update
-    # TODO: authorization
+    authorize current_organisation
     update_to = _parse_boolean params.require(:enabled)
     current_organisation.update_attributes!(enabled: update_to)
     render current_organisation
@@ -33,6 +34,5 @@ class OrganisationsController < ApplicationController
 
   def load_organisation
     current_organisation! Organisation.find_by!(name: params.require(:id))
-    authorize current_organisation
   end
 end
