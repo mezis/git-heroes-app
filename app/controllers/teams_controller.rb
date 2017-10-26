@@ -11,7 +11,7 @@ class TeamsController < ApplicationController
   end
 
   def show
-    @team = current_organisation.teams.find_by_slug params.require(:id)
+    @team = current_organisation.teams.find_by! slug: params.require(:id)
     authorize @team
 
     leaderboard_service = LeaderboardService.new(organisation: current_organisation, team: @team)
@@ -33,7 +33,7 @@ class TeamsController < ApplicationController
       authorize current_organisation
       to_render = organisation_teams
     end
-    render partial: 'shared/loner', collection: [{ partial: 'dupe_users', locals: { dupe_users: compute_dupe_users } }, *organisation_teams]
+    render partial: 'shared/loner', collection: [{ partial: 'dupe_users', locals: { dupe_users: compute_dupe_users } }, *to_render]
   end
 
   private
