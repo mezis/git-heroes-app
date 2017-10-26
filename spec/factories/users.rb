@@ -5,6 +5,7 @@ FactoryGirl.define do
     token       nil
     github_id   { Faker::Number.number(9).to_i }
     login       { Faker::Internet.user_name }
+    admin       false
 
     trait :logged_in do
       token { Faker::Crypto.sha1 }

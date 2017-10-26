@@ -1,6 +1,7 @@
 RSpec.configure do |config|
   module Helpers
     def log_in!(user)
+      user.update_attributes!(token: SecureRandom.hex) if user.token.nil?
       request.session[:token] = user.token
     end
 

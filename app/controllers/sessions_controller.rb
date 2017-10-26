@@ -1,6 +1,7 @@
 class SessionsController < ApplicationController
-  before_filter :skip_authorization
+  before_filter :skip_authorization, except: %i[update]
   before_filter :skip_policy_scope
+  require_authentication! only: %i[update]
 
   def show
     flash[:alert] = "Sorry, we couldn't log you in... something weird seems to have happened"
@@ -36,7 +37,7 @@ class SessionsController < ApplicationController
     if permanent_cookie.intermission_viewed.present?
       redirect_to session_path(origin: request.referer)
     else
-      permanent_cookie.intermission_viewed = true
+      permanent_cookie.intermission_viewed = 'yes'
       set_permanent_cookie
     end
   end
