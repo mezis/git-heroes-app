@@ -11,7 +11,6 @@ class RepositoriesController < ApplicationController
   
 
   def update
-    # TODO: authorization
     update_to = _parse_boolean params.require(:enabled)
     if id = params[:id]
       repository = all_repositories.find_by_name(id)
@@ -31,7 +30,7 @@ class RepositoriesController < ApplicationController
   private
 
   def decorate(repos)
-    RepositoriesDecorator.new(repos, organisation: current_organisation)
+    RepositoriesDecorator.new(repos)
   end
 
   def _parse_boolean(x)
