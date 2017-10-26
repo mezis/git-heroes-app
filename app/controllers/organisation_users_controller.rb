@@ -2,9 +2,9 @@ class OrganisationUsersController < ApplicationController
   require_authentication!
 
   def update
-    @user =     User.find_by(login: params.require(:id))
-    @org =      Organisation.find_by(name: params.require(:organisation_id))
-    @org_user = OrganisationUser.find_by(organisation_id: @org.id, user_id: @user.id)
+    @user =     User.find_by!(login: params.require(:id))
+    @org =      Organisation.find_by!(name: params.require(:organisation_id))
+    @org_user = OrganisationUser.find_by!(organisation_id: @org.id, user_id: @user.id)
 
     authorize @org_user
 
@@ -15,8 +15,6 @@ class OrganisationUsersController < ApplicationController
     else
       flash[:alert] = 'Oops...'
     end
-
-    # binding.pry
 
     if request.xhr?
       render partial: 'shared/loner', collection: [
