@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 describe SessionsController, type: :controller do
+  render_views
 
   describe 'GET #show' do
     let(:perform) { get :show }

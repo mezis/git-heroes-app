@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe RepositoriesController, type: :controller do
+describe RepositoriesController, type: :controller do
   render_views
 
   let(:user) { create(:user, :logged_in) }

@@ -2,7 +2,7 @@ class UserSettingsController < ApplicationController
   require_authentication!
 
   def update
-    @user = User.includes(:settings).find_by(login: params.require(:id))
+    @user = User.includes(:settings).find_by!(login: params.require(:id))
     authorize @user.settings
 
     data = {
@@ -10,7 +10,7 @@ class UserSettingsController < ApplicationController
         :daily_email_enabled,
         :weekly_email_enabled,
         :newsletter_enabled,
-        :snooze_until
+        :snooze_until,
       )
     }
 
@@ -20,10 +20,14 @@ class UserSettingsController < ApplicationController
       flash[:alert] = "Sorry, we did not quite get that. #{@user.errors.full_messages.to_sentence}."
     end
 
-    render partial: 'shared/loner', collection: [
-      { partial: 'flashes' },
-      @user.settings
-    ]
-    flash.clear
+    if request.xhr?
+      render partial: 'shared/loner', collection: [
+        { partial: 'flashes' },
+        @user.settings
+      ]
+      flash.clear
+    else
+      redirect_to :back
+    end
   end
 end

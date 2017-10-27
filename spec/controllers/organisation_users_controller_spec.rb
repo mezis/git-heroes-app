@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 describe OrganisationUsersController, type: :controller do
+  render_views
+
   let(:user) { create(:user, :logged_in) }
   let(:ou) { create(:organisation_user, user: user) }
   let(:org) { ou.organisation }

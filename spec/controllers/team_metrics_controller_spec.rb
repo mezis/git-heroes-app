@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 describe TeamMetricsController, type: :controller do
+  render_views
+
   describe "GET #show" do
     let!(:org) { create(:organisation, enabled: true) }
     let!(:user) { create(:user, :logged_in) }

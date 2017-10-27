@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe MetricsController, type: :controller do
+describe MetricsController, type: :controller do
   # params:
   # id - metric name
   # organisation_id
