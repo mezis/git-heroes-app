@@ -8,7 +8,7 @@ class UsersController < ApplicationController
     authorize User
     authorize current_organisation, :show?
     @users = policy_scope current_organisation.users
-    
+
     all_user_ids = current_organisation.pull_requests.pluck(:created_by_id).uniq
     @former_users = User.where(id: all_user_ids) - @users
   end
@@ -25,7 +25,7 @@ class UsersController < ApplicationController
     end
 
     if current_organisation
-      org_user = OrganisationUser.find_by(user_id: @user.id, organisation_id: current_organisation.id)
+      org_user = OrganisationUser.find_by!(user_id: @user.id, organisation_id: current_organisation.id)
       @user = decorate org_user
       @teams = @user.teams
       @recent_pull_requests = @user.recent_pull_requests

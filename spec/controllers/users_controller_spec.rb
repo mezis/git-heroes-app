@@ -34,6 +34,11 @@ describe UsersController, type: :controller do
     context 'org user' do
       let(:params) { super().merge(organisation_id: org.name) }
       include_examples 'success'
+
+      context 'when the user is not an org member' do
+        before { ou.destroy }
+        it { expect { perform }.to raise_error(ActiveRecord::RecordNotFound) }
+      end
     end
   end
 
