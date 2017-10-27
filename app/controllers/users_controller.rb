@@ -15,7 +15,7 @@ class UsersController < ApplicationController
 
   def show
     @user = load_user
-    load_organisation if params[:organisation_id]
+    load_organisation
     authorize @user
 
     if policy(@user).update?
@@ -61,10 +61,11 @@ class UsersController < ApplicationController
   private
 
   def load_user
-    User.find_by_login(params.require(:id))
+    User.find_by!(login: params.require(:id))
   end
 
   def load_organisation
-    current_organisation! Organisation.find_by(name: params[:organisation_id])
+    return unless params[:organisation_id]
+    current_organisation! Organisation.find_by!(name: params[:organisation_id])
   end
 end
