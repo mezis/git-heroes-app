@@ -1,10 +1,11 @@
 namespace :db do
+  desc 'Pull production database into local dev database'
   task :pull => :drop do
     ENV.each_key do |k|
       next unless k =~ /^(BUNDLE|GEM|RUBY)/
       ENV.delete(k)
     end
-    system 'heroku pg:pull DATABASE_URL postgres://localhost/gh_dev'
+    system 'heroku pg:pull DATABASE_URL postgres:///gh_dev'
   end
 
   def anonymise(model, field)
@@ -17,6 +18,7 @@ namespace :db do
     end
   end
 
+  desc 'Anonymises default database'
   task :anon => :environment do
     raise 'probably not in production!' if Rails.env.production?
     require 'faker'
@@ -26,6 +28,7 @@ namespace :db do
     anonymise(Team, :name)          { Faker::Company.profession }
   end
 
+  desc 'Bulk updates Rails counter caches'
   task :reset_counters => :environment do
     models = {
       Organisation  => %i[users repositories],

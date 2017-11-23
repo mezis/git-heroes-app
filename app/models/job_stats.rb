@@ -111,7 +111,7 @@ class JobStats
   private
 
   def ancestors
-    ancestors = [parent, (root if root_id != id && root_id != parent_id)].compact
+    [parent, (root if root_id != id && root_id != parent_id)].compact
   end
 
   def _timestamp
